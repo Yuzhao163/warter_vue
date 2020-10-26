@@ -1,6 +1,6 @@
 <template>
 <div class="com-page">
-  <div style="width: 600px;height:400px;">
+  <div style="width: 600px;height:401px;">
     <rank></rank>
   </div>
   <div style="width: 600px;height:400px;">
