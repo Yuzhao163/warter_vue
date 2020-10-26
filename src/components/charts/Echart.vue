@@ -1,43 +1,32 @@
 <template>
-  <div>
-    <div class="com-page">
-      <div style="width: 600px;height:400px;">
-        <rank></rank>
-      </div>
-      <div style="width: 600px;height:400px;">
-        <gauge></gauge>
-      </div>
-      <div style="width: 600px;height:600px;">
-        <temperature></temperature>
-      </div>
-      <div style="width: 600px;height:400px;">
-        <rank></rank>
-      </div>
-    </div>
-    <div>
-
-    </div>
+<div class="com-page">
+  <div style="width: 600px;height:401px;">
+    <rank></rank>
   </div>
-
+  <div style="width: 600px;height:400px;">
+    <tree></tree>
+  </div>
+  <div style="width: 600px;height:400px;">
+    <rank></rank>
+  </div>
+  <div style="width: 600px;height:400px;">
+    <rank></rank>
+  </div>
+  <div style="width: 600px;height:400px;">
+    <rank></rank>
+  </div>
+</div>
 </template>
 
 <script>
 import Rank from "@/components/charts/Rank";
-import Gauge from "@/components/charts/Gauge";
-
-import Temperature from "@/components/charts/Temperature";
+import Tree from "@/components/charts/Tree";
 export default {
   name: "Echart",
-  components: {Temperature, Rank,Gauge}
+  components: {Rank,Tree}
 }
 </script>
 
-<style scoped>
-.com-page {
-  width: 100%;
-  height: 800px;
-  margin: auto;
+<style lang="less" scoped>
 
-  display: flex;
-}
 </style>
