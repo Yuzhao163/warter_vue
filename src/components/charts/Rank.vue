@@ -1,6 +1,6 @@
 <template>
   <div  class="com-container" >
-    <div style="width: 600px;height:400px;" class="com-chart" ref="rank_ref" ></div>
+    <div  class="com-chart" ref="rank_ref" ></div>
   </div>
 </template>
 
@@ -35,6 +35,10 @@ export default {
         ],
       };
       myChart.setOption(option);
+      // window.addEventListener('resize', () => {
+      //   // 自动渲染echarts
+      //   this.myChart.resize();
+      // })
     }
   }
 }

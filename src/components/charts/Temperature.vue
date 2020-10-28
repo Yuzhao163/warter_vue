@@ -20,7 +20,7 @@ export default {
     this.gettemp();
     this.timer = setInterval(() => {
       setTimeout(this.gettemp, 0);
-    }, 1000);
+    }, 1000*60);
   },
   methods: {
     gettemp() {

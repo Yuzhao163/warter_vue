@@ -1,18 +1,16 @@
 <template>
-  <div>
+  <div class="com-main">
     <div class="com-page">
-      <div style="width: 600px;height:400px;">
+      <div style="width: 50%;height:400px;">
         <rank></rank>
       </div>
-      <div style="width: 600px;height:400px;">
+      <div style="width: 50%;height:400px;">
         <gauge></gauge>
       </div>
-      <div style="width: 600px;height:600px;">
-        <temperature></temperature>
-      </div>
-      <div style="width: 600px;height:400px;">
+      <div style="width: 50%;height:400px;">
         <rank></rank>
       </div>
+
     </div>
     <div>
 
@@ -25,10 +23,10 @@
 import Rank from "@/components/charts/Rank";
 import Gauge from "@/components/charts/Gauge";
 
-import Temperature from "@/components/charts/Temperature";
+
 export default {
   name: "Echart",
-  components: {Temperature, Rank,Gauge}
+  components: { Rank,Gauge}
 }
 </script>
 
@@ -37,7 +35,8 @@ export default {
   width: 100%;
   height: 800px;
   margin: auto;
-
-  display: flex;
+}
+.com-main{
+  width: 100%;
 }
 </style>

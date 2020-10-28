@@ -74,7 +74,7 @@ export default {
     this.getdata();
     this.timer = setInterval(() => {
       setTimeout(this.getdata, 0);
-    }, 1000);
+    }, 1000*100);
   },
   data() {
     return {

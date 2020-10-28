@@ -1,6 +1,6 @@
 <template>
     <div class="com-container">
-        <div style="width: 600px;height:400px;" class="com-chart" ref="rank_ref"></div>
+        <div class="com-chart" ref="rank_ref"></div>
     </div>
 </template>
 
@@ -17,7 +17,7 @@ var a=0;
             this.getdata();
             this.timer = setInterval(() => {
                 setTimeout(this.getdata, 0);
-            }, 1000);
+            }, 1000*60);
 
         },
         methods:{
@@ -30,7 +30,7 @@ var a=0;
                         //获取json中的data部分
                         // var jsonObj = JSON.parse(successResponse.data);
                         console.log(successResponse.data)
-                        console.log(successResponse.data[0].v_per)
+                        // console.log(successResponse.data[0].v_per)
                         a=parseInt(successResponse.data[0].v_per)
                         this.initChart();
                     })
