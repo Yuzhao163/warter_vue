@@ -18,9 +18,9 @@
                         <i class="el-icon-caret-bottom"></i>
                     </span>
         <el-dropdown-menu slot="dropdown">
-          <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
+          <a href="https://github.com/Yuzhao163/warter_vue" target="_blank">
             <el-dropdown-item>前端项目仓库</el-dropdown-item>
-          </a><a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
+          </a><a href="https://github.com/Yuzhao163/warter" target="_blank">
             <el-dropdown-item>后台项目仓库</el-dropdown-item>
           </a>
           <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>

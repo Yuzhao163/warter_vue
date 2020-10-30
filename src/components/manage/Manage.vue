@@ -174,7 +174,7 @@
         flex-basis: auto;
         overflow: auto;
         box-sizing: border-box;
-        padding: 20px;
-        background: white !important;
+        padding: 0px;
+        background: white
     }
 </style>

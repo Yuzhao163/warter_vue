@@ -1,61 +1,80 @@
 <template>
   <div>
     <div class="famen">
-      <img src="../../assets/img/pipes/阀门3d.png" />
-      <img src="../../assets/img/pipes/阀门3d.png" />
-      <img src="../../assets/img/pipes/阀门3d.png" />
+      <ul>
+        <li v-for="(item,index) in v_pershow"
+            :key="index"
+            @mouseenter="enter(index)"
+            @mouseleave="leave"
+            @mousemove="updateXY"
+        >
+          <img src="../../assets/img/pipes/阀门3d.png"/>
+
+        </li>
+      </ul>
     </div>
+
+    <!--    <div class="famen">-->
+    <!--      <img @mouseenter="enter" @mouseleave="leave" @mousemove="updateXY" src="../../assets/img/pipes/阀门3d.png"/>-->
+    <!--      <img src="../../assets/img/pipes/阀门3d.png"/>-->
+    <!--      <img src="../../assets/img/pipes/阀门3d.png"/>-->
+    <!--    </div>-->
     <div class="pipe">
-      <img src="../../assets/img/pipes/pipe-L.png" />
+      <img src="../../assets/img/pipes/pipe-L.png"/>
       <!--      <img src="../../assets/img/pipes/pipe-25.png"/>-->
-      <img id="pip1" />
-      <img id="pip2" />
-      <img id="pip3" />
-      <img id="pip4" />
-      <img src="../../assets/img/pipes/pipe-R.png" />
+      <img id="pip1"/>
+      <img id="pip2"/>
+      <img id="pip3"/>
+      <img id="pip4"/>
+      <img src="../../assets/img/pipes/pipe-R.png"/>
       <div class="message-box">
         <div class="message">
-          流量：{{ pips[0].pipflow }}<br />
+          流量：{{ pips[0].pipflow }}<br/>
           流速：{{ speed }}
         </div>
         <div class="message">
-          流量：{{ pips[1].pipflow }}<br />
+          流量：{{ pips[1].pipflow }}<br/>
           流速：{{ speed }}
         </div>
         <div class="message">
-          流量：{{ pips[2].pipflow }}<br />
+          流量：{{ pips[2].pipflow }}<br/>
           流速：{{ speed }}
         </div>
         <div class="message">
-          流量：{{ pips[3].pipflow }}<br />
+          流量：{{ pips[3].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
     </div>
     <div class="setting">
       <el-form
-        v-model="setVpre"
-        ref="setVpre"
-        label-position="right"
-        label-width="50px"
-        class="setForm"
+          v-model="setVpre"
+          ref="setVpre"
+          label-position="right"
+          label-width="50px"
+          class="setForm"
       >
         <el-form-item label="阀位" prop="V_pre">
           <el-input
-            type="V_pre"
-            v-model="setVpre.V_pre"
-            autocomplete="off"
-            :placeholder="setVpre.V_pre"
-            :disabled="disabled"
+              type="V_pre"
+              v-model="setVpre.V_pre"
+              autocomplete="off"
+              :placeholder="setVpre.V_pre"
+              :disabled="disabled"
           ></el-input>
         </el-form-item>
-        <el-form-item class="el-form-item__content">
+        <el-form-item class="item">
           <el-button size="mini" @click="modifyForm('setVpre')">修改</el-button>
           <el-button size="mini" type="primary" @click="submitForm('setVpre')"
-            >提交</el-button
+          >提交
+          </el-button
           >
         </el-form-item>
       </el-form>
+    </div>
+    <div v-show="seen" class="showvper" :style="positionStyle">
+      管线id： {{ t_vper.id }}<br>
+      阀位： {{ t_vper.vper }}
     </div>
   </div>
 </template>
@@ -74,11 +93,15 @@ export default {
     this.getdata();
     this.timer = setInterval(() => {
       setTimeout(this.getdata, 0);
-    }, 1000*100);
+    }, 1000 * 900);
   },
   data() {
     return {
+      seen: false,//控制悬浮窗是否显示
       timer: null, //定时器
+      x: 0,
+      y: 0,
+      positionStyle: {top: '20px', left: '20px'},
       pip25: pip25,
       pip50: pip50,
       pip75: pip75,
@@ -90,6 +113,25 @@ export default {
       setVpre: {
         V_pre: " "
       },
+      t_vper: {
+        id: '',
+        vper: '',
+      },
+      v_pershow: [
+        {
+          v_perid: '1',
+          v_per: ""
+        },
+        {
+          v_perid: '2',
+          v_per: ""
+        },
+        {
+          v_perid: '3',
+          v_per: ''
+        }
+      ]
+      ,
       pips: [
         {
           pipid: "1",
@@ -116,11 +158,19 @@ export default {
         for (var i = 0; i < successResponse.data.length; i++) {
           for (var j = 0; j < this.pips.length; j++) {
             if (successResponse.data[i].tmnID === this.pips[j].pipid) {
-              this.pips[j].pipflow = successResponse.data[i].v_per;
+              this.pips[j].pipflow = successResponse.data[i].w_line;//存水流量
+              // this.v_pershow[j].v_per = successResponse.data[i].v_per;
+            }
+          }
+          for (var k = 0; k < this.v_pershow.length; k++) {
+            if (successResponse.data[i].tmnID === this.v_pershow[k].v_perid) {
+              this.v_pershow[k].v_per = successResponse.data[i].v_per;//存阀位
+              // this.v_pershow[j].v_per = successResponse.data[i].v_per;
             }
           }
         }
         this.change_pip();
+
       });
     },
     submitForm() {
@@ -150,26 +200,40 @@ export default {
       for (var i = 0; i < this.pips.length; i++) {
         if (this.pips[i].pipid === "1") {
           document.getElementById("pip1").src = this.changepip(
-            this.pips[i].pipflow
+              this.pips[i].pipflow
           );
         }
         if (this.pips[i].pipid === "2") {
           document.getElementById("pip2").src = this.changepip(
-            this.pips[i].pipflow
+              this.pips[i].pipflow
           );
         }
         if (this.pips[i].pipid === "3") {
           document.getElementById("pip3").src = this.changepip(
-            this.pips[i].pipflow
+              this.pips[i].pipflow
           );
         }
         if (this.pips[i].pipid === "4") {
           document.getElementById("pip4").src = this.changepip(
-            this.pips[i].pipflow
+              this.pips[i].pipflow
           );
         }
       }
     },
+    enter(index) {
+      this.seen = true;
+      this.t_vper.id = this.v_pershow[index].v_perid;
+      this.t_vper.vper = this.v_pershow[index].v_per
+
+    },
+    leave() {
+      this.seen = false;
+    },
+    updateXY(event) {
+      this.x = event.clientX;
+      this.y = event.clientY;
+      this.positionStyle = {top: this.y + 'px', left: this.x + 20 + 'px'};
+    }
   },
   beforeDestroy() {
     clearInterval(this.timer);
@@ -184,6 +248,17 @@ export default {
   padding: 0px;
   width: auto;
   height: 73px;
+
+}
+
+.famen ul {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+.famen li {
+  display: inline;
 }
 
 .pipe {
@@ -232,13 +307,20 @@ export default {
 }
 
 .item /deep/ .el-form-item__content {
-  margin: 0px 100px 0px 0px;
+  margin: 0px 100px 0px 0px !important;
   width: 200px;
-  background-color: #2c3e50;
+  background-color: #c6eafd;
+}
+
+.showvper {
+  width: auto;
+  height: auto;
+  position: absolute;
+  background-color: #a0d3fa;
+  line-height: 30px;
 }
 
 .el-form-item__content {
-  margin: 0px 100px 0px 0px !important;
   width: 200px;
   background-color: #2c3e50;
 }

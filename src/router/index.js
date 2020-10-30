@@ -34,7 +34,7 @@ export default new Router({
         children: [
             {
                 path: '/index',
-                name: 'AppIndex',
+                name: '系统首页',
                 component: AppIndex,
                 meta: {
                     requireAuth: true
@@ -50,7 +50,7 @@ export default new Router({
             },
             {
                 path: '/colchart',
-                name: 'Colchart',
+                name: '列表展示',
                 component: Colchart,
                 meta: {
                     requireAuth: true
@@ -58,7 +58,7 @@ export default new Router({
             },
             {
                 path: '/echart',
-                name: 'Echart',
+                name: '图表展示',
                 component: Echart,
                 meta: {
                     requireAuth: true
@@ -66,7 +66,7 @@ export default new Router({
                 },
             {
                 path: '/pipepic',
-                name: 'PipePic',
+                name: '管线可视化',
                 component: PipePic,
                 meta: {
                     requireAuth: true
@@ -74,7 +74,7 @@ export default new Router({
             },
             {
                 path: '/wiring',
-                name: 'Wiring',
+                name: '线路分布图',
                 component: Wiring,
                 meta: {
                     requireAuth: true
@@ -82,7 +82,7 @@ export default new Router({
             },
             {
                 path: '/manage',
-                name: 'Manage',
+                name: '设备管理',
                 component: Manage,
                 meta: {
                     requireAuth: true
@@ -90,7 +90,7 @@ export default new Router({
             },
             {
                 path: '/usetting',
-                name: 'UserSetting',
+                name: '用户设置',
                 component: UserSetting,
                 meta: {
                     requireAuth: true
@@ -98,7 +98,7 @@ export default new Router({
             },
             {
                 path: '/testv',
-                name: 'Testv',
+                name: '视频练习',
                 component: Testv,
                 meta: {
                     requireAuth: true
