@@ -1,5 +1,5 @@
 <template>
-  <div  class="com-container" >
+  <div  class="com-container" style="height: 100%" >
     <div class="com-chart" ref="tree_ref" ></div>
   </div>
 </template>

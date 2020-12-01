@@ -1,8 +1,10 @@
 <template>
   <div>
+    <!--    1-5阀门和管道-->
     <div class="famen">
       <ul>
-        <li v-for="(item,index) in v_pershow"
+        <li
+            v-for="(item, index) in v_pershow"
             :key="index"
             @mouseenter="enter(index)"
             @mouseleave="leave"
@@ -13,39 +15,94 @@
         </li>
       </ul>
     </div>
-
-    <!--    <div class="famen">-->
-    <!--      <img @mouseenter="enter" @mouseleave="leave" @mousemove="updateXY" src="../../assets/img/pipes/阀门3d.png"/>-->
-    <!--      <img src="../../assets/img/pipes/阀门3d.png"/>-->
-    <!--      <img src="../../assets/img/pipes/阀门3d.png"/>-->
-    <!--    </div>-->
     <div class="pipe">
       <img src="../../assets/img/pipes/pipe-L.png"/>
-      <!--      <img src="../../assets/img/pipes/pipe-25.png"/>-->
-      <img id="pip1"/>
-      <img id="pip2"/>
-      <img id="pip3"/>
-      <img id="pip4"/>
-      <img src="../../assets/img/pipes/pipe-R.png"/>
-      <div class="message-box">
+      <div class="imgbox">
+        <img id="pip1"/>
         <div class="message">
           流量：{{ pips[0].pipflow }}<br/>
           流速：{{ speed }}
         </div>
+      </div>
+      <div class="imgbox"><img id="pip2"/>
         <div class="message">
           流量：{{ pips[1].pipflow }}<br/>
           流速：{{ speed }}
         </div>
+      </div>
+      <div class="imgbox"><img id="pip3"/>
         <div class="message">
           流量：{{ pips[2].pipflow }}<br/>
           流速：{{ speed }}
         </div>
+      </div>
+      <div class="imgbox"><img id="pip4"/>
         <div class="message">
           流量：{{ pips[3].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
+      <div class="imgbox"><img id="pip5"/>
+        <div class="message">
+          流量：{{ pips[3].pipflow }}<br/>
+          流速：{{ speed }}
+        </div>
+      </div>
+      <img src="../../assets/img/pipes/pipe-R.png"/>
     </div>
+
+    <!--    6-10阀门和管道-->
+    <div class="famen">
+      <ul>
+        <li
+            v-for="(item, index) in v_pershow"
+            :key="index"
+            @mouseenter="enter(index)"
+            @mouseleave="leave"
+            @mousemove="updateXY"
+        >
+          <img src="../../assets/img/pipes/阀门3d.png"/>
+
+        </li>
+      </ul>
+    </div>
+    <div class="pipe">
+      <img src="../../assets/img/pipes/pipe-L.png"/>
+      <div class="imgbox"><img id="pip6"/>
+        <div class="message">
+          流量：{{ pips[3].pipflow }}<br/>
+          流速：{{ speed }}
+        </div>
+      </div>
+      <div class="imgbox"><img id="pip7"/>
+        <div class="message">
+          流量：{{ pips[3].pipflow }}<br/>
+          流速：{{ speed }}
+        </div>
+      </div>
+      <div class="imgbox"><img id="pip8"/>
+        <div class="message">
+          流量：{{ pips[3].pipflow }}<br/>
+          流速：{{ speed }}
+        </div>
+      </div>
+      <div class="imgbox"><img id="pip9"/>
+        <div class="message">
+          流量：{{ pips[3].pipflow }}<br/>
+          流速：{{ speed }}
+        </div>
+      </div>
+      <div class="imgbox"><img id="pip10"/>
+        <div class="message">
+          流量：{{ pips[3].pipflow }}<br/>
+          流速：{{ speed }}
+        </div>
+      </div>
+      <img src="../../assets/img/pipes/pipe-R.png"/>
+
+    </div>
+
+    <!--    调整阀度按钮-->
     <div class="setting">
       <el-form
           v-model="setVpre"
@@ -72,6 +129,10 @@
         </el-form-item>
       </el-form>
     </div>
+
+    <!--    一键开阀-->
+    <el-button type="danger" round v-on:click="openall">一键开阀</el-button>
+    <!--    悬浮窗-->
     <div v-show="seen" class="showvper" :style="positionStyle">
       管线id： {{ t_vper.id }}<br>
       阀位： {{ t_vper.vper }}
@@ -129,6 +190,10 @@ export default {
         {
           v_perid: '3',
           v_per: ''
+        },
+        {
+          v_perid: '4',
+          v_per: ''
         }
       ]
       ,
@@ -147,6 +212,24 @@ export default {
         },
         {
           pipid: "4",
+          pipflow: ""
+        }, {
+          pipid: "5",
+          pipflow: ""
+        }, {
+          pipid: "6",
+          pipflow: ""
+        }, {
+          pipid: "7",
+          pipflow: ""
+        }, {
+          pipid: "8",
+          pipflow: ""
+        }, {
+          pipid: "9",
+          pipflow: ""
+        }, {
+          pipid: "10",
           pipflow: ""
         }
       ]
@@ -218,7 +301,52 @@ export default {
               this.pips[i].pipflow
           );
         }
+        if (this.pips[i].pipid === "5") {
+          document.getElementById("pip5").src = this.changepip(
+              this.pips[i].pipflow
+          );
+        }
+        if (this.pips[i].pipid === "6") {
+          document.getElementById("pip6").src = this.changepip(
+              this.pips[i].pipflow
+          );
+        }
+        if (this.pips[i].pipid === "7") {
+          document.getElementById("pip7").src = this.changepip(
+              this.pips[i].pipflow
+          );
+        }
+        if (this.pips[i].pipid === "8") {
+          document.getElementById("pip8").src = this.changepip(
+              this.pips[i].pipflow
+          );
+        }
+        if (this.pips[i].pipid === "9") {
+          document.getElementById("pip9").src = this.changepip(
+              this.pips[i].pipflow
+          );
+        }
+        if (this.pips[i].pipid === "10") {
+          document.getElementById("pip10").src = this.changepip(
+              this.pips[i].pipflow
+          );
+        }
+
       }
+    },
+    openall(){
+      this.$confirm('此操作将完全开启辖区内全部阀门, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '开启成功!'
+        });
+      }).catch(() => {
+
+      });
     },
     enter(index) {
       this.seen = true;
@@ -253,6 +381,7 @@ export default {
 
 .famen ul {
   list-style: none;
+  margin-top: 0px;
   margin-left: 0px;
   padding-left: 0px;
 }
@@ -263,8 +392,12 @@ export default {
 
 .pipe {
   position: relative;
-  width: 100%;
+
   height: 120px;
+}
+
+.pipe img {
+  display: inline-block;
 }
 
 .famen img {
@@ -273,27 +406,29 @@ export default {
   height: 73px;
 }
 
-.message-box {
-  position: absolute;
-  left: 50%;
-  top: 20px;
-  margin-left: -400px;
-  width: 100%;
-  line-height: 40px;
-  display: flex;
+.imgbox {
+  position: relative;
+  width: 220px;
+  height: 120px;
+  display: inline-block;
+
 }
 
+
 .message {
-  width: 140px;
-  margin-right: 80px;
-  font-size: 22px;
+  position: absolute;
+  top: 0px;
+  left: 40px;
+  height: 120px;
+  font-size: 28px;
+  line-height: 60px;
 }
 
 .setting {
   width: 200px;
   height: 120px;
   background-color: #93d2fa;
-  margin: auto;
+  margin: 10PX auto;
   border-radius: 10px;
 }
 

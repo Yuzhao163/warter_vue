@@ -1,6 +1,6 @@
 <template>
-
-  <el-container style="height: 100%">
+<!--<div class="wrapper">-->
+  <el-container style="height: 100% ">
     <el-header style="height:80px;padding: 0px;" >
       <Head></Head>
       <div class="head-tag">
@@ -9,18 +9,21 @@
       </div>
 
     </el-header>
-    <el-container>
-      <el-aside  width="15%" style="height: auto; background-color:#3D7797">
+    <el-container style="overflow: hidden">
+      <el-aside  width="15%" style="background-color:#3D7797">
         <nav-menu class="nav-menu"></nav-menu>
       </el-aside>
-      <el-container style="height: 90%">
-        <el-main style="background-color: #E5F1F6;height: 100%;margin-top:40px">
 
-          <router-view/></el-main>
-        <el-footer>Footer</el-footer>
+      <div class="view">
+        <div></div>
+        <el-main style=" height: 100%; background-color: #E5F1F6;">
+          <router-view/>
+        </el-main>
+      </div>
+<!--        <el-footer>Footer</el-footer>-->
       </el-container>
     </el-container>
-  </el-container>
+<!--  </div>-->
 </template>
 
 <script>
@@ -56,6 +59,21 @@ export default {
 </script>
 
 <style scoped>
+.view{
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: #E5F1F6;
+  box-sizing: border-box;
+}
+/*.view::-webkit-scrollbar {*/
+/*  width: 0;*/
+/*}*/
+.view div{
+  position: relative;
+  height: 40px;
+
+}
 .nav-menu {
   /*margin-bottom: 40px;*/
   box-shadow: 0 2px 4px 0 rgba(0,0,0,.05);
@@ -72,10 +90,5 @@ export default {
   width: 85%;
   z-index: 10;
 }
-.el-main {
-  background-color: #E9EEF3;
-  color: #333;
-  text-align: center;
-  line-height: 160px;
-}
+
 </style>

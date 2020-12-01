@@ -2,6 +2,11 @@ import Vue from "vue";
 import Router from "vue-router";
 
 import AppIndex from "@/components/home/AppIndex";
+import PublicFault from "@/components/home/PublicFault";
+import PrivateFault from "@/components/home/PrivateFault";
+import UserMessage from "@/components/home/UserMessage";
+import Staff from "@/components/home/Staff";
+import Device from "@/components/home/Device";
 import Login from "@/components/Login";
 import Home from "@/components/Home";
 import HelloWorld from '@/components/HelloWorld'
@@ -41,6 +46,14 @@ export default new Router({
                 }
             },
             {
+                path: '/publicfault',
+                name: '异常展示',
+                component: PublicFault,
+                meta: {
+                    requireAuth: true
+                }
+            },
+            {
                 path: '/hello',
                 name: 'HelloWorld',
                 component: HelloWorld,
@@ -66,7 +79,7 @@ export default new Router({
                 },
             {
                 path: '/pipepic',
-                name: '管线可视化',
+                name: '管路状态',
                 component: PipePic,
                 meta: {
                     requireAuth: true
@@ -74,7 +87,7 @@ export default new Router({
             },
             {
                 path: '/wiring',
-                name: '线路分布图',
+                name: '管线分部',
                 component: Wiring,
                 meta: {
                     requireAuth: true
@@ -82,8 +95,36 @@ export default new Router({
             },
             {
                 path: '/manage',
-                name: '设备管理',
+                name: '命令下发',
                 component: Manage,
+                meta: {
+                    requireAuth: true
+                }
+            },{
+                path: '/privatefault',
+                name: '故障处理',
+                component: PrivateFault,
+                meta: {
+                    requireAuth: true
+                }
+            },{
+                path: '/usermessage',
+                name: '个人信息',
+                component: UserMessage,
+                meta: {
+                    requireAuth: true
+                }
+            },{
+                path: '/staff',
+                name: '员工管理',
+                component: Staff,
+                meta: {
+                    requireAuth: true
+                }
+            },{
+                path: '/device',
+                name: '设备维护',
+                component: Device,
                 meta: {
                     requireAuth: true
                 }

@@ -71,6 +71,21 @@ export default {
         },
         {
           icon: 'el-icon-setting',
+          index: 'publicfault',
+          title: '异常展示',
+        },
+        {
+          icon: 'el-icon-setting',
+          index: 'wiring',
+          title: '管线分布',
+        },
+        {
+          icon: 'el-icon-setting',
+          index: 'pipepic',
+          title: '管路状态',
+        },
+        {
+          icon: 'el-icon-setting',
           index: '1',
           title: '数据展示',
           subs: [
@@ -92,13 +107,28 @@ export default {
         {
           icon: 'el-icon-setting',
           index: 'manage',
-          title: '设备管理',
+          title: '命令下发',
         },
         {
           icon: 'el-icon-setting',
-          index: 'usetting',
-          title: '用户设置',
+          index: 'privatefault',
+          title: '故障处理',
+        },
+        {
+          icon: 'el-icon-setting',
+          index: 'usermessage',
+          title: '个人信息',
 
+        },
+        {
+          icon: 'el-icon-setting',
+          index: 'device',
+          title: '设备维护',
+        },
+        {
+          icon: 'el-icon-setting',
+          index: 'staff',
+          title: '人员管理',
         },
         {
           icon: 'el-icon-setting',
