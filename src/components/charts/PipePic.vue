@@ -151,6 +151,7 @@ export default {
   name: "PipePic",
 
   mounted() {
+    this.change_pip();
     this.getdata();
     this.timer = setInterval(() => {
       setTimeout(this.getdata, 0);
