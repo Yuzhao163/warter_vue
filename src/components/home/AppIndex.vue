@@ -1,6 +1,6 @@
 <template>
   <div>
-    Hello World!
+    <h1>Hello World!</h1>
   </div>
 </template>
 //首页组件
