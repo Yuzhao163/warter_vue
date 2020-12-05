@@ -15,8 +15,8 @@
       </el-aside>
 
       <div class="view">
-        <div></div>
-        <el-main style=" height: 100%; background-color: #E5F1F6;">
+        <div class="whitebox"></div>
+        <el-main style=" height: 100%; background-color: #e5f1f6;">
           <router-view/>
         </el-main>
       </div>
@@ -69,7 +69,7 @@ export default {
 /*.view::-webkit-scrollbar {*/
 /*  width: 0;*/
 /*}*/
-.view div{
+.view .whitebox{
   position: relative;
   height: 40px;
 
