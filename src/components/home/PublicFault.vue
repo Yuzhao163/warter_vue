@@ -12,16 +12,16 @@
       <el-table-column
           prop="TmnName"
           label="控制柜名称"
-          width="90">
+          width="120">
       </el-table-column>
       <el-table-column
           prop="Time"
           label="故障时间"
-          width="80">
+          width="160">
       </el-table-column>
       <el-table-column
           prop="Error_Psition"
-          label="故障内容"
+          label="异常部位"
           width="80">
       </el-table-column>
       <el-table-column
@@ -40,12 +40,12 @@
           </el-button>
         </template>
       </el-table-column>
-<!--      <el-table-column-->
-<!--          prop="ov_period"-->
-<!--          label="处理方式"-->
-<!--          width="80">-->
+      <!--      <el-table-column-->
+      <!--          prop="ov_period"-->
+      <!--          label="处理方式"-->
+      <!--          width="80">-->
 
-<!--      </el-table-column>-->
+      <!--      </el-table-column>-->
     </el-table>
     <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
       <div>控制柜名称：{{ Tmnname }}</div>
@@ -85,8 +85,15 @@ export default {
   },
   data() {
     return {
-      tableData: [{TmnName:"石景山控制柜",Time:"",Error_Psition:"",error_level:"",
-      },{},{},{}],
+      tableData: [{
+        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
+      }, {
+        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
+      }, {
+        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
+      }, {
+        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
+      }],
       details: false,
       form: {
         name: '',
@@ -108,11 +115,11 @@ export default {
       ],
       Tmnname: "北方工业大学",
       TmnID: '10009',
-      ERId:'',
+      ERId: '',
     }
   },
   methods: {
-    getdata(){
+    getdata() {
       this.$axios.post('故障列表').then(res => {
         console.log("请求成功")
         this.Tmn = res.data;
@@ -122,9 +129,9 @@ export default {
             alert(failResponse)
           })
     },
-    detaildata(){
+    detaildata() {
 
-      this.$axios.post('故障详情',this.ERId).then(res => {
+      this.$axios.post('故障详情', this.ERId).then(res => {
         console.log("请求成功")
         this.Tmn = res.data;
       })
@@ -157,9 +164,11 @@ export default {
   border: 1px solid #ddd;
   border-radius: 5px;
 }
-.pipearea{
+
+.pipearea {
   margin: 10px 0;
 }
+
 .pipearea .PA {
   display: inline-block;
 }
@@ -168,19 +177,22 @@ export default {
   display: inline-block;
   margin: 0px 20px;
 }
-.faultdetail{
+
+.faultdetail {
   display: flex;
 }
-.fault-text{
+
+.fault-text {
 
   width: 480px;
   height: 230px;
-  padding:20px;
+  padding: 20px;
   background-color: #e5f1f6;
   border-radius: 20px;
   text-align: left;
-font-size: 16px;
+  font-size: 16px;
 }
+
 /deep/ .el-dialog__body {
   padding: 10px 20px;
 

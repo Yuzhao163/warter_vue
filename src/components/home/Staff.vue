@@ -72,6 +72,9 @@
 <script>
 export default {
   name: "Staff",
+  mounted() {
+    this.Index_TableData();
+  },
   data() {
     return {
       tableData: [],
