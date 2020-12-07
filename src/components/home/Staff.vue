@@ -22,32 +22,32 @@
         :default-sort="{prop: 'date', order: 'descending'}"
     >
       <el-table-column
-          prop="id"
+          prop="UserName"
           label="用户名称"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="tmnID"
+          prop="RealName"
           label="真实姓名"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="v_actiontime"
+          prop="UClassName"
           label="用户类别"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="ov_waterline"
+          prop="MoPhone"
           label="联系电话"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="cv_waterline"
+          prop="DPTName"
           label="单位名称"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="ov_period"
+          prop="RegTime"
           label="注册时间"
           width="80">
       </el-table-column>
@@ -80,6 +80,22 @@ export default {
         selectcontent:''
       },
     }
+  },
+  methods:{
+    Index_TableData() {
+      console.log("调用了")
+      this.$axios
+          .get('/staff')
+          .then(res => {
+            console.log("请求成功")
+            this.tableData = res.data;
+          })
+          .catch(failResponse => {
+            console.log(failResponse)
+            alert(failResponse)
+          })
+    },
+
   }
 }
 </script>

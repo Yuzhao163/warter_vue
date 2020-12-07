@@ -15,38 +15,37 @@
           width="90">
       </el-table-column>
       <el-table-column
-          prop="tmnID"
+          prop="Time"
           label="故障时间"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="v_actiontime"
+          prop="Error_Psition"
           label="故障内容"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="ov_waterline"
+          prop="error_level"
           label="异常等级"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="cv_waterline"
           label="查看详情"
           width="80">
         <template>
           <el-button
               size="mini"
               type="primary"
-              @click="details()">'详情
+              @click="details=true;details()">详情
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column
-          prop="ov_period"
-          label="处理方式"
-          width="80">
+<!--      <el-table-column-->
+<!--          prop="ov_period"-->
+<!--          label="处理方式"-->
+<!--          width="80">-->
 
-      </el-table-column>
+<!--      </el-table-column>-->
     </el-table>
     <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
       <div>控制柜名称：{{ Tmnname }}</div>
@@ -86,7 +85,8 @@ export default {
   },
   data() {
     return {
-      tableData: [],
+      tableData: [{TmnName:"石景山控制柜",Time:"",Error_Psition:"",error_level:"",
+      },{},{},{}],
       details: false,
       form: {
         name: '',
@@ -123,6 +123,7 @@ export default {
           })
     },
     detaildata(){
+
       this.$axios.post('故障详情',this.ERId).then(res => {
         console.log("请求成功")
         this.Tmn = res.data;
