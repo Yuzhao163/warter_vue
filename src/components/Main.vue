@@ -1,5 +1,5 @@
 <template>
-  <body id="poster" style="margin: 0px">
+  <body id="poster" style="margin: 0px;overflow: auto">
   <img class="logo_css" alt="Vue logo" src="../assets/logo.png" />
   <router-view></router-view>
   </body>

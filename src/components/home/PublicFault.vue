@@ -47,6 +47,8 @@
 
       <!--      </el-table-column>-->
     </el-table>
+
+    <!--    弹框内容-->
     <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
       <div>控制柜名称：{{ Tmnname }}</div>
       <div>控制柜编号：{{ TmnID }}</div>
@@ -146,7 +148,7 @@ export default {
           this.AreaName = this.Tmn[i].AreaName
         }
       }
-    }
+    },
   },
   watch: {
     PipName() {

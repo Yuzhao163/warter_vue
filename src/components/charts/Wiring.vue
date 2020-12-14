@@ -1,14 +1,16 @@
 <template>
-  <tree></tree>
+  <AreaPipe></AreaPipe>
+<!--  <tree></tree>-->
 </template>
 
 <script>
 
-import Tree from "@/components/charts/Tree";
+// import Tree from "@/components/charts/Tree";
+import AreaPipe from "@/components/charts/AreaPipe";
 
 export default {
   name: "Wiring",
-  components: {Tree}
+  components: {AreaPipe}
 
 }
 </script>
