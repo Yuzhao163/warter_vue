@@ -2,7 +2,7 @@
   <div class="container">
     <div class="toptable">
       <div class="select">
-        <el-select id="select1" v-model="screendata.condition"  clearable placeholder="--搜索条件--" class="handle-select"
+        <el-select id="select1" v-model="screendata.condition" clearable placeholder="--搜索条件--" class="handle-select"
                    style=" margin-right: 10px">
           <el-option key="1" label="按员工编号搜索" value="11"></el-option>
           <el-option key="2" label="按姓名搜索" value="21"></el-option>
@@ -11,7 +11,7 @@
         </el-select>
       </div>
       <div class="rightbutton">
-        <button class="addbutton">添加</button>
+        <button class="addbutton" @click="addbox=true">添加</button>
       </div>
     </div>
 
@@ -22,32 +22,32 @@
         :default-sort="{prop: 'date', order: 'descending'}"
     >
       <el-table-column
-          prop="UserName"
+          prop="userName"
           label="用户名称"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="RealName"
+          prop="realName"
           label="真实姓名"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="UClassName"
+          prop="uclassID"
           label="用户类别"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="MoPhone"
+          prop="moPhone"
           label="联系电话"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="DPTName"
+          prop="dptname"
           label="单位名称"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="RegTime"
+          prop="regTime"
           label="注册时间"
           width="80">
       </el-table-column>
@@ -66,6 +66,48 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <!--    弹框内容-->
+    <el-dialog class="dialog" style="text-align: left" title="添加用户" :visible.sync="addbox">
+      <div class="input">
+        <div class="left">
+          <div class="text"><span style="color: red">*</span>用户名：</div>
+          <el-input v-model="addmessage.UserName" placeholder="请输入用户名"></el-input>
+          <div class="text"><span style="color: red">*</span>密码：</div>
+          <el-input v-model="addmessage.UserPswd" placeholder="请输入密码"></el-input>
+          <span style="color:#2496ee;font-size: 10px">不填写则设置初始密码为123456</span>
+          <div class="text">真实姓名：</div>
+          <el-input v-model="addmessage.RealName" placeholder="请输入真实名称"></el-input>
+          <div class="text">手机号：</div>
+          <el-input v-model="addmessage.MoPhone" placeholder="请输入手机号"></el-input>
+          <div class="text">单位名称：</div>
+          <el-input v-model="addmessage.DPTName" placeholder="请输入单位名称"></el-input>
+        </div>
+        <div class="right">
+          <div class="text"><span style="color: red">*</span>用户类别：</div>
+          <el-select v-model="addmessage.UClassID" ref="select1" placeholder="--用户类别--"
+                     style=" margin-right: 10px">
+            <el-option key="1" label="操作人员" value="101"></el-option>
+            <el-option key="2" label="管理人员" value="102"></el-option>
+          </el-select>
+          <div>
+            <div class="text"><span style="color: red">*</span>权限分配：</div>
+            <el-tree
+                :props="props"
+                :load="loadNode"
+                lazy
+                show-checkbox
+                @check-change="handleCheckChange">
+            </el-tree>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="dialog-footer">
+
+        <el-button @click="addbox = false">取 消</el-button>
+        <el-button type="primary" @click="addbox = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -77,14 +119,23 @@ export default {
   },
   data() {
     return {
+      addbox: false,
       tableData: [],
-      screendata:{
-        condition:'',
-        selectcontent:''
+      screendata: {
+        condition: '',
+        selectcontent: ''
       },
+      addmessage: {
+        UserName: '',
+        UserPswd: '',
+        UClassID: '',
+        MoPhone: '',
+        RealName: '',
+        DPTName: '',
+      }
     }
   },
-  methods:{
+  methods: {
     Index_TableData() {
       console.log("调用了")
       this.$axios
@@ -110,13 +161,16 @@ export default {
   border: 1px solid #ddd;
   border-radius: 5px;
 }
-.rightbutton{
+
+.rightbutton {
   float: right;
 }
+
 .select {
   float: left;
 }
-.addbutton{
+
+.addbutton {
   display: inline-block;
   line-height: 1;
   white-space: nowrap;
@@ -135,4 +189,20 @@ export default {
   font-size: 12px;
   border-radius: 20px;
 }
+
+.input {
+  display: flex;
+}
+
+.right {
+  margin-left: 40px;
+
+
+}
+
+.text {
+  margin: 10px 0;
+}
+
+
 </style>
