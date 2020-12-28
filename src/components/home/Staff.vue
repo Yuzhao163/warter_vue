@@ -22,32 +22,32 @@
         :default-sort="{prop: 'date', order: 'descending'}"
     >
       <el-table-column
-          prop="UserName"
+          prop="userName"
           label="用户名称"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="RealName"
+          prop="realName"
           label="真实姓名"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="UClassName"
+          prop="uclassID"
           label="用户类别"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="MoPhone"
+          prop="moPhone"
           label="联系电话"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="DPTName"
+          prop="dptname"
           label="单位名称"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="RegTime"
+          prop="regTime"
           label="注册时间"
           width="80">
       </el-table-column>
