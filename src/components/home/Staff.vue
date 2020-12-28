@@ -12,6 +12,7 @@
       </div>
       <div class="rightbutton">
         <button class="addbutton" @click="addbox=true">添加</button>
+        <button class="addbutton" @click="delconfirm">测试</button>
       </div>
     </div>
 
@@ -21,6 +22,11 @@
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}"
     >
+      <el-table-column
+          prop="userID"
+          label="用户名称"
+          width="80">
+      </el-table-column>
       <el-table-column
           prop="userName"
           label="用户名称"
@@ -61,13 +67,13 @@
           <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click="delconfirm(scope.row.UserID)">删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <!--    弹框内容-->
+    <!--    添加员工弹框内容-->
     <el-dialog class="dialog" style="text-align: left" title="添加用户" :visible.sync="addbox">
       <div class="input">
         <div class="left">
@@ -108,10 +114,13 @@
         <el-button type="primary" @click="addbox = false">确 定</el-button>
       </div>
     </el-dialog>
+    <!--    删除弹框内容-->
+
   </div>
 </template>
 
 <script>
+import qs from 'qs';
 export default {
   name: "Staff",
   mounted() {
@@ -120,6 +129,7 @@ export default {
   data() {
     return {
       addbox: false,
+
       tableData: [],
       screendata: {
         condition: '',
@@ -149,7 +159,26 @@ export default {
             alert(failResponse)
           })
     },
-
+    delconfirm(userid) {
+      this.$confirm('将删除该用户, 是否确定?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var params = qs.stringify({
+          UserID:userid,
+        })
+        this.$axios
+            .post('/delstaff', params).then(res => {
+          console.log(res)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    }
   }
 }
 </script>
