@@ -24,7 +24,7 @@
     >
       <el-table-column
           prop="userID"
-          label="用户名称"
+          label="用户ID"
           width="80">
       </el-table-column>
       <el-table-column
@@ -67,7 +67,7 @@
           <el-button
               size="mini"
               type="danger"
-              @click="delconfirm(scope.row.UserID)">删除
+              @click="delconfirm(scope.$index,scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -159,15 +159,17 @@ export default {
             alert(failResponse)
           })
     },
-    delconfirm(userid) {
+    delconfirm(index,row) {
       this.$confirm('将删除该用户, 是否确定?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         var params = qs.stringify({
-          UserID:userid,
-        })
+          UserID:row.userID,
+        });
+        console.log(row.userID)
+        console.log(index)
         this.$axios
             .post('/delstaff', params).then(res => {
           console.log(res)
