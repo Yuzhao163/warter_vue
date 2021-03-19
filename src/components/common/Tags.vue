@@ -9,7 +9,7 @@
       </li>
     </ul>
     <div class="tags-close-box">
-      <el-dropdown @command="handleTags">
+      <el-dropdown style="display: block" @command="handleTags">
         <el-button class="drop_button" size="mini" type="success">
           标签选项<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
@@ -18,6 +18,7 @@
           <el-dropdown-item command="all">关闭所有</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
+
     </div>
   </div>
 </template>
@@ -188,16 +189,13 @@ export default {
   z-index: 10;
 
 }
-.tags-close-box/deep/.el-dropdown{
-  position: absolute;
-  right: 0;
-  top: 0;
-  display: inline-block;
-  width: 110px;
-  height: 30px;
-  color: #606266;
-  font-size: 14px;
-}
+/*.tags-close-box >>> .el-dropdown{*/
+/*  display: block;*/
+/*  width: 110px;*/
+/*  height: 30px;*/
+/*  color: #606266;*/
+/*  font-size: 14px;*/
+/*}*/
 .drop_button{
   position: absolute;
   right: 0;
