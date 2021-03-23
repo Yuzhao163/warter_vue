@@ -172,7 +172,7 @@ export default {
         console.log(index)
         this.$axios
             .post('/delstaff', params).then(res => {
-          console.log(res)
+          console.log(res);this.updateTable()
         })
       }).catch(() => {
         this.$message({
@@ -180,7 +180,18 @@ export default {
           message: '已取消删除'
         });
       });
-    }
+    },
+    // 触发更新事件
+    updateTable(){
+      // 卸载
+      this.tableShow= false
+      // 建议加上 nextTick 微任务
+      // 否则在同一事件内同时将tableShow设置false和true有可能导致组件渲染失败
+      this.$nextTick(function(){
+        // 加载
+        this.tableShow= true
+      })
+    },
   }
 }
 </script>

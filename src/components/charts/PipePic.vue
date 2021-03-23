@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div style="position: relative">
+      <div class="opall" v-on:click="openall">一键开阀</div>
+    </div>
     <!--    1-5阀门和管道-->
     <div class="famen">
       <ul>
@@ -335,7 +338,7 @@ export default {
 
       }
     },
-    openall(){
+    openall() {
       this.$confirm('此操作将完全开启辖区内全部阀门, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -461,4 +464,34 @@ export default {
   background-color: #2c3e50;
 }
 
+.opall {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 100px;
+  height: 100px;
+  background-color: #ff6363;
+  border-radius: 50px;
+  font-size: 20px;
+  color: #E5F1F6;
+  text-align: inherit;
+  line-height: 100px;
+  z-index: 10;
+  cursor:pointer;
+}
+:hover.opall {
+   position: absolute;
+   top: 20px;
+   left: 20px;
+   width: 100px;
+   height: 100px;
+   background-color: #ff9999;
+   border-radius: 50px;
+   font-size: 20px;
+   color: #ffffff;
+   text-align: inherit;
+   line-height: 100px;
+   z-index: 10;
+   cursor:pointer;
+ }
 </style>
