@@ -26,37 +26,37 @@
       <el-table-column
           prop="userID"
           label="用户ID"
-          >
+      >
       </el-table-column>
       <el-table-column
           prop="userName"
           label="用户名称"
-          >
+      >
       </el-table-column>
       <el-table-column
           prop="realName"
           label="真实姓名"
-          >
+      >
       </el-table-column>
       <el-table-column
           prop="uclassID"
           label="用户类别"
-          >
+      >
       </el-table-column>
       <el-table-column
           prop="moPhone"
           label="联系电话"
-          >
+      >
       </el-table-column>
       <el-table-column
           prop="dptname"
           label="单位名称"
-          >
+      >
       </el-table-column>
       <el-table-column
           prop="regTime"
           label="注册时间"
-          >
+      >
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -112,7 +112,7 @@
       <div slot="footer" class="dialog-footer">
 
         <el-button @click="addbox = false">取 消</el-button>
-        <el-button type="primary" @click="addstaff();addbox = false">确 定</el-button>
+        <el-button type="primary" @click="addstaff(),addbox = false">确 定</el-button>
       </div>
     </el-dialog>
     <!--    删除弹框内容-->
@@ -122,6 +122,7 @@
 
 <script>
 import qs from 'qs';
+
 export default {
   name: "Staff",
   mounted() {
@@ -160,20 +161,21 @@ export default {
             alert(failResponse)
           })
     },
-    delconfirm(index,row) {
+    delconfirm(index, row) {
       this.$confirm('将删除该用户, 是否确定?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         var params = qs.stringify({
-          UserID:row.userID,
+          UserID: row.userID,
         });
         console.log(row.userID)
         console.log(index)
         this.$axios
             .post('/delstaff', params).then(res => {
-          console.log(res);this.updateTable()
+          console.log(res);
+          this.Index_TableData()
         })
       }).catch(() => {
         this.$message({
@@ -182,35 +184,27 @@ export default {
         });
       });
     },
-    addstaff(){
+    addstaff() {
       var params = qs.stringify({
-        UserName:this.addmessage.UserName,
-        UserPswd:this.addmessage.UserPswd,
-        UClassID:this.addmessage.UClassID,
-        MoPhone:this.addmessage.MoPhone,
-        RealName:this.addmessage.RealName,
-        DPTName:this.addmessage.DPTName,
+        UserName: this.addmessage.UserName,
+        UserPswd: this.addmessage.UserPswd,
+        UClassID: this.addmessage.UClassID,
+        MoPhone: this.addmessage.MoPhone,
+        RealName: this.addmessage.RealName,
+        DPTName: this.addmessage.DPTName,
       })
       this.$axios.post('/addstaff', params).then(res => {
         if (res.data.code === 200)
-        console.log(res)
+          console.log(res);
+        this.Index_TableData()
       })
           .catch(failResponse => {
+            console.log(params)
             console.log(failResponse)
             alert(failResponse)
           })
     },
-    // 触发更新事件
-    updateTable(){
-      // 卸载
-      this.tableShow= false
-      // 建议加上 nextTick 微任务
-      // 否则在同一事件内同时将tableShow设置false和true有可能导致组件渲染失败
-      this.$nextTick(function(){
-        // 加载
-        this.tableShow= true
-      })
-    },
+
   }
 }
 </script>

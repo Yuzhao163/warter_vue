@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div>
-      <el-button @click="details=true">详情测试</el-button>
+      <el-button @click="details=true,test()">详情测试</el-button>
     </div>
     <el-table
         :data="tableData"
@@ -10,7 +10,7 @@
         :default-sort="{prop: 'date', order: 'descending'}"
     >
       <el-table-column
-          prop="TmnName"
+          prop="tmnName"
           label="控制柜名称"
           width="120">
       </el-table-column>
@@ -32,11 +32,11 @@
       <el-table-column
           label="查看详情"
           width="80">
-        <template>
+        <template slot-scope="scope">
           <el-button
               size="mini"
               type="primary"
-              @click="details=true;details()">详情
+              @click="details=true;detailbutton(scope.$index,scope.row)">详情
           </el-button>
         </template>
       </el-table-column>
@@ -50,8 +50,8 @@
 
     <!--    弹框内容-->
     <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
-      <div>控制柜名称：{{ Tmnname }}</div>
-      <div>控制柜编号：{{ TmnID }}</div>
+            <div>控制柜名称：{{ tableData[this.tableindex].tmnName }}</div>
+            <div>控制柜编号：{{ tableData[this.tableindex].tmnId }}</div>
       <div class="pipearea">
         <span>所属管线：</span>
         <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="--所属管线--" class="handle-select"
@@ -68,11 +68,14 @@
       </div>
       <div class="faultdetail">
         <div>故障详情：</div>
-        <div class="fault-text">{{ this.faultdetil }}</div>
+        <div class="fault-text">{{ tableData[this.tableindex].exception }}</div>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="details = false">取 消</el-button>
         <el-button type="primary" @click="details = false">确 定</el-button>
+      </div>
+      <div>
+        <button @click="test()">test</button>
       </div>
     </el-dialog>
   </div>
@@ -87,8 +90,9 @@ export default {
   },
   data() {
     return {
-      tableData: [ ],
+      tableData: [],
       details: false,
+      tableindex: '',
       form: {
         name: '',
         region: '',
@@ -137,12 +141,22 @@ export default {
             alert(failResponse)
           })
     },
+    detailbutton(index, row) {
+      this.tableindex = index
+      console.log(row)
+    },
     setArea(pipname) {
       for (var i = 0; i < this.Tmn.length; i++) {
         if (pipname == this.Tmn[i].PipName) {
           this.AreaName = this.Tmn[i].AreaName
         }
       }
+    },
+    test() {
+      console.log('11111')
+      console.log(this.tableindex)
+      console.log(this.tableData[0].tmnName)
+
     },
   },
   watch: {
