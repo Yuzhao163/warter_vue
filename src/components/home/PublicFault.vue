@@ -20,13 +20,13 @@
           width="160">
       </el-table-column>
       <el-table-column
-          prop="Error_Psition"
+          prop="exception"
           label="异常部位"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="error_level"
-          label="异常等级"
+          prop="user"
+          label="维护人员"
           width="80">
       </el-table-column>
       <el-table-column
@@ -68,7 +68,7 @@
       </div>
       <div class="faultdetail">
         <div>故障详情：</div>
-        <div class="fault-text">1111111111111111111111111111111111111111111111111111111111111111111111111111</div>
+        <div class="fault-text">{{ this.faultdetil }}</div>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="details = false">取 消</el-button>
@@ -83,19 +83,11 @@
 export default {
   name: "PublicFault",
   mounted() {
-
+    this.getdata()
   },
   data() {
     return {
-      tableData: [{
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }, {
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }, {
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }, {
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }],
+      tableData: [ ],
       details: false,
       form: {
         name: '',
@@ -118,13 +110,16 @@ export default {
       Tmnname: "北方工业大学",
       TmnID: '10009',
       ERId: '',
+      faultdetil: '222',//故障详情
     }
   },
   methods: {
     getdata() {
-      this.$axios.post('故障列表').then(res => {
+      this.$axios.post("/error").then(res => {
         console.log("请求成功")
-        this.Tmn = res.data;
+        console.log(res.data[0])
+        this.tableData = res.data;
+
       })
           .catch(failResponse => {
             console.log(failResponse)

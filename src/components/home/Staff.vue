@@ -18,6 +18,7 @@
 
     <el-table
         :data="tableData"
+
         stripe
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}"
@@ -25,37 +26,37 @@
       <el-table-column
           prop="userID"
           label="用户ID"
-          width="80">
+          >
       </el-table-column>
       <el-table-column
           prop="userName"
           label="用户名称"
-          width="80">
+          >
       </el-table-column>
       <el-table-column
           prop="realName"
           label="真实姓名"
-          width="80">
+          >
       </el-table-column>
       <el-table-column
           prop="uclassID"
           label="用户类别"
-          width="80">
+          >
       </el-table-column>
       <el-table-column
           prop="moPhone"
           label="联系电话"
-          width="80">
+          >
       </el-table-column>
       <el-table-column
           prop="dptname"
           label="单位名称"
-          width="80">
+          >
       </el-table-column>
       <el-table-column
           prop="regTime"
           label="注册时间"
-          width="80">
+          >
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -111,7 +112,7 @@
       <div slot="footer" class="dialog-footer">
 
         <el-button @click="addbox = false">取 消</el-button>
-        <el-button type="primary" @click="addbox = false">确 定</el-button>
+        <el-button type="primary" @click="addstaff();addbox = false">确 定</el-button>
       </div>
     </el-dialog>
     <!--    删除弹框内容-->
@@ -180,6 +181,24 @@ export default {
           message: '已取消删除'
         });
       });
+    },
+    addstaff(){
+      var params = qs.stringify({
+        UserName:this.UserName,
+        UserPswd:this.UserPswd,
+        UClassID:this.UClassID,
+        MoPhone:this.MoPhone,
+        RealName:this.RealName,
+        DPTName:this.DPTName,
+      })
+      this.$axios.post('/addstaff', params).then(res => {
+        if (res.data.code === 200)
+        console.log(res)
+      })
+          .catch(failResponse => {
+            console.log(failResponse)
+            alert(failResponse)
+          })
     },
     // 触发更新事件
     updateTable(){
