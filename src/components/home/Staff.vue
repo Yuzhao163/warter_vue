@@ -184,12 +184,12 @@ export default {
     },
     addstaff(){
       var params = qs.stringify({
-        UserName:this.UserName,
-        UserPswd:this.UserPswd,
-        UClassID:this.UClassID,
-        MoPhone:this.MoPhone,
-        RealName:this.RealName,
-        DPTName:this.DPTName,
+        UserName:this.addmessage.UserName,
+        UserPswd:this.addmessage.UserPswd,
+        UClassID:this.addmessage.UClassID,
+        MoPhone:this.addmessage.MoPhone,
+        RealName:this.addmessage.RealName,
+        DPTName:this.addmessage.DPTName,
       })
       this.$axios.post('/addstaff', params).then(res => {
         if (res.data.code === 200)
