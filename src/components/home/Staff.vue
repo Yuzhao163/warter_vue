@@ -258,6 +258,8 @@ export default {
         type: 'warning'
       }).then(() => {
         var params = qs.stringify({
+
+          UserID: this.staffData.userID,
           UserName: this.staffData.userName,
           UserPswd: this.staffData.userPswd,
           UClassID: this.staffData.uclassID,
