@@ -12,7 +12,7 @@
       </div>
       <div class="rightbutton">
         <button class="addbutton" @click="addbox=true">添加</button>
-        <button class="addbutton" @click="delconfirm">测试</button>
+        <button class="addbutton" @click="test()">测试</button>
       </div>
     </div>
 
@@ -112,7 +112,7 @@
       <div slot="footer" class="dialog-footer">
 
         <el-button @click="editbox = false, this.Index_TableData()">取 消</el-button>
-        <el-button type="primary" @click="editbox = false,updatastaff(), this.Index_TableData()">修 改</el-button>
+        <el-button type="primary" @click="editbox = false,updatastaff()">修 改</el-button>
       </div>
     </el-dialog>
     <!--    添加员工弹框内容-->
@@ -174,7 +174,7 @@ export default {
       addbox: false,
       editbox: false,
       tableData: [],
-      staffData:[],
+      staffData:[],//修改数据时用于存放行数据
       screendata: {
         condition: '',
         selectcontent: ''
@@ -248,7 +248,7 @@ export default {
     },
     handleEdit(index,row){
       console.log(index, row);
-      this.staffData=row;
+      this.staffData=JSON.parse(JSON.stringify(row));
       console.log(this.staffData)
     },
     updatastaff(){
@@ -266,7 +266,7 @@ export default {
           DPTName: this.staffData.dptName,
         });
         this.$axios
-            .post('/updatastaff', params).then(res => {
+            .post('/updstaff', params).then(res => {
           console.log(res);
           this.Index_TableData()
         })
@@ -276,7 +276,11 @@ export default {
           message: '已取消修改'
         });
       });
+    },
+    test(){
+      console.log(this.tableData[0])
     }
+
   }
 }
 </script>
