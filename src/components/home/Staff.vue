@@ -265,7 +265,7 @@ export default {
           UClassID: this.staffData.uclassID,
           MoPhone: this.staffData.moPhone,
           RealName: this.staffData.realName,
-          DPTName: this.staffData.dptName,
+          DPTName: this.staffData.dptname,
         });
         this.$axios
             .post('/updstaff', params).then(res => {
