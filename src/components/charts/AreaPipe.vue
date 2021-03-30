@@ -2,23 +2,23 @@
   <div class="maindiv">
     <button @click="test">test</button>
     <div class="select">
-    <el-select v-model="sarea" @change="getPipeData" >
-      <el-option
-          v-for="item in areadata"
-          :key="item.areaID"
-          :label="item.areaName"
-          :value="item.areaName"
-      >
-      </el-option>
-    </el-select>
-    <el-select v-model="spipe" @change="getTmnData" >
-      <el-option
-          v-for="item in pipedata"
-          :key="item.pipID"
-          :label="item.pipName"
-          :value="item.pipID">
-      </el-option>
-    </el-select>
+      <el-select v-model="sarea" @change="getPipeData">
+        <el-option
+            v-for="item in areadata"
+            :key="item.areaID"
+            :label="item.areaName"
+            :value="item.areaName"
+        >
+        </el-option>
+      </el-select>
+      <el-select v-model="spipe.pipName" @change="getTmnData">
+        <el-option
+            v-for="item in pipedata"
+            :key="item.pipID"
+            :label="item.pipName"
+            :value="item.pipName">
+        </el-option>
+      </el-select>
     </div>
     <div class="card">
       <div>
@@ -35,7 +35,8 @@
       </div>
     </div>
     <div class="linetitle">
-      <span id="1" >{{ this.areas[area].AreaName }}</span><span style="color:#4290d0 ">---</span><span id="2">{{ this.areas[area].pipes[pipe].PipName }}</span>
+      <span id="1">{{ this.areas[area].AreaName }}</span><span style="color:#4290d0 ">---</span><span
+        id="2">{{ this.areas[area].pipes[pipe].PipName }}</span>
       控制柜分布情况:
     </div>
     <div class="TmnLine">
@@ -62,55 +63,55 @@ export default {
       area: '0',//存选择的分区index
       pipe: '0',//存选择的管线index
       areas: [
-          {
-        AreaID: '1',
-        AreaName: '1分区',
-        pipes: [
-          {
-            PipID: 'a',
-            PipName: 'a管线',
-            tmns: [
-              {
-                TmnId: '10001',
-                TmnName: '赵家庄',
-              },
-              {
-                TmnId: '10002',
-                TmnName: '钱家庄',
-              },
-              {
-                TmnId: '10003',
-                TmnName: '孙家庄',
-              },
-              {
-                TmnId: '10004',
-                TmnName: '李家庄',
-              }
-            ]
-          },
-          {
-            PipID: 'b',
-            PipName: 'b管线',
-            tmns: [
-              {
-                TmnId: '10005',
-                TmnName: '周家庄',
-              },
-              {
-                TmnId: '10006',
-                TmnName: '吴家庄',
-              },
-              {
-                TmnId: '10007',
-                TmnName: '郑家庄',
-              },
-              {
-                TmnId: '10008',
-                TmnName: '王家庄',
-              }
-            ]
-          }],
-      },
+        {
+          AreaID: '1',
+          AreaName: '1分区',
+          pipes: [
+            {
+              PipID: 'a',
+              PipName: 'a管线',
+              tmns: [
+                {
+                  TmnId: '10001',
+                  TmnName: '赵家庄',
+                },
+                {
+                  TmnId: '10002',
+                  TmnName: '钱家庄',
+                },
+                {
+                  TmnId: '10003',
+                  TmnName: '孙家庄',
+                },
+                {
+                  TmnId: '10004',
+                  TmnName: '李家庄',
+                }
+              ]
+            },
+            {
+              PipID: 'b',
+              PipName: 'b管线',
+              tmns: [
+                {
+                  TmnId: '10005',
+                  TmnName: '周家庄',
+                },
+                {
+                  TmnId: '10006',
+                  TmnName: '吴家庄',
+                },
+                {
+                  TmnId: '10007',
+                  TmnName: '郑家庄',
+                },
+                {
+                  TmnId: '10008',
+                  TmnName: '王家庄',
+                }
+              ]
+            }],
+        },
         {
           AreaID: '2',
           AreaName: '2分区',
@@ -154,22 +155,25 @@ export default {
             }],
 
         }],
-      areadata:[{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"shijingshan","areaID":"1"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"miyun","areaID":"10"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"chaoyang","areaID":"2"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"dongcheng","areaID":"3"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"xicheng","areaID":"4"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"haidian","areaID":"5"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"fengtai","areaID":"6"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"daxing","areaID":"7"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"changping","areaID":"8"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"fangshan","areaID":"9"}],
-      pipedata:[{"pipID":"1","areaID":null,"pipName":"shichao","pipLeadPhone":null,"pipDesc":null,"pipCreateDate":null}],
-      tmndata:[],
-sarea:'',//暂存区域选择框数据
-spipe:'',//暂存管线选择框数据
+      areadata: [],
+      pipedata: [],
+      tmndata: [],
+      sarea: '',//暂存区域选择框数据
+      spipe: {
+        pipName:'',
+        pipID:''
+      },//暂存管线选择框数据
 
     }
 
   },
   methods: {
-    getAreaData(){
-      this.$axios.post("/请求分区").then(res => {
+    getAreaData() {
+      this.$axios.post("/getAreas").then(res => {
         console.log("请求成功")
         console.log(res.data[0])
         this.areadata = res.data;
-        this.sarea=this.areadata[0].areaName
+        this.sarea = this.areadata[0].areaName
         this.getPipeData()
       })
           .catch(failResponse => {
@@ -177,26 +181,32 @@ spipe:'',//暂存管线选择框数据
             alert(failResponse)
           })
     },
-    getPipeData(){
-      console.log('yeyeye')
-      var params = qs.stringify({AreaName:this.sarea})
-      this.$axios.post("/请求管线",params).then(res => {
+    getPipeData() {
+      var params = qs.stringify({AreaName: this.sarea})
+      this.$axios.post("/getPipes", params).then(res => {
         console.log("请求成功")
         console.log(res.data[0])
         this.pipedata = res.data;
-        this.spipe=this.pipedata[0].pipName
+        this.spipe.pipName = this.pipedata[0].pipName
+        this.spipe.pipID = this.pipedata[0].pipID
         this.getTmnData()
       })
           .catch(failResponse => {
             console.log(failResponse)
             alert(failResponse)
           })
-    },getTmnData(){
+    }, getTmnData() {
+      for(var i=0;i<this.pipedata.length;i++)
+      {
+        if(this.spipe.pipName==this.pipedata.pipName)
+          this.spipe.pipID=this.pipedata.pipID
+      }
       var params = qs.stringify({
-      PipID:this.spipe})
-      this.$axios.post("/请求控制柜",params).then(res => {
+        PipID: this.spipe.pipID
+      })
+      this.$axios.post("/getTerminals", params).then(res => {
         console.log("请求成功")
-        console.log(res.data[0])
+        console.log(res.data)
         this.tmndata = res.data;
       })
           .catch(failResponse => {
@@ -208,7 +218,7 @@ spipe:'',//暂存管线选择框数据
 
     },
     test() {
-      console.log(this.area);
+      console.log(this.sarea);
       console.log(this.spipe)
     }
   }
@@ -234,7 +244,7 @@ spipe:'',//暂存管线选择框数据
   line-height: 40px
 }
 
-span{
+span {
   font-size: 18px;
   color: #fd8c10;
 }
