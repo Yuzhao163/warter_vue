@@ -2,7 +2,7 @@
   <div class="maindiv">
     <button @click="test">test</button>
     <div class="select">
-      <el-select v-model="sarea" @change="getPipeData">
+      <el-select class="selecttext" v-model="sarea" @change="getPipeData">
         <el-option
             v-for="item in areadata"
             :key="item.areaID"
@@ -11,7 +11,7 @@
         >
         </el-option>
       </el-select>
-      <el-select v-model="spipe.pipName" @change="getTmnData">
+      <el-select class="selecttext" v-model="spipe.pipName" @change="getTmnData">
         <el-option
             v-for="item in pipedata"
             :key="item.pipID"
@@ -20,29 +20,29 @@
         </el-option>
       </el-select>
     </div>
-    <div class="card">
-      <div>
-        <el-tabs v-model="area" type="card" @tab-click="handleClick">
-          <el-tab-pane v-for="item in areas" :label="item.AreaName" :key="item.AreaName"
-                       :name="item.index"></el-tab-pane>
-        </el-tabs>
-      </div>
-      <div>
-        <el-tabs v-model="pipe" type="card" @tab-click="handleClick">
-          <el-tab-pane v-for="item in areas[area].pipes" :label="item.PipName" :key="item.PipName"
-                       :name="item.index"></el-tab-pane>
-        </el-tabs>
-      </div>
-    </div>
+<!--    <div class="card">-->
+<!--      <div>-->
+<!--        <el-tabs v-model="area" type="card" @tab-click="handleClick">-->
+<!--          <el-tab-pane v-for="item in areas" :label="item.AreaName" :key="item.AreaName"-->
+<!--                       :name="item.index"></el-tab-pane>-->
+<!--        </el-tabs>-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        <el-tabs v-model="pipe" type="card" @tab-click="handleClick">-->
+<!--          <el-tab-pane v-for="item in areas[area].pipes" :label="item.PipName" :key="item.PipName"-->
+<!--                       :name="item.index"></el-tab-pane>-->
+<!--        </el-tabs>-->
+<!--      </div>-->
+<!--    </div>-->
     <div class="linetitle">
-      <span id="1">{{ this.areas[area].AreaName }}</span><span style="color:#4290d0 ">---</span><span
-        id="2">{{ this.areas[area].pipes[pipe].PipName }}</span>
+      <span id="1">{{ this.sarea }}</span><span style="color:#4290d0 ">---</span><span
+        id="2">{{ this.spipe.pipName }}</span>
       控制柜分布情况:
     </div>
     <div class="TmnLine">
-      <div class="pictext" v-for="item in areas[area].pipes[pipe].tmns" :key="item.PipName">
+      <div class="pictext" v-for="item in tmndata" :key="item.value">
         <div class="TmnPic"></div>
-        <div class="TmnText">{{ item.TmnName }}</div>
+        <div class="TmnText">{{ item }}</div>
 
       </div>
       <div class="line"></div>
@@ -230,9 +230,14 @@ export default {
   background-color: #ffffff;
   border-radius: 20px;
   border: #899eac solid 1px;
-
+padding-bottom: 160px;
 }
-
+.select{
+  display: flex;
+}
+.selecttext{
+  margin-left: 20px;
+}
 .card {
   /*border: #3D7797 solid 1px;*/
 }
@@ -283,7 +288,7 @@ span {
 }
 
 .TmnText {
-
+position: absolute;
 }
 
 ul {
