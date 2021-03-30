@@ -1,6 +1,6 @@
 <template>
   <body id="poster" style="margin: 0px;overflow: auto">
-  <img class="logo_css" alt="Vue logo" src="../assets/logo.png" />
+
   <router-view></router-view>
   </body>
 
@@ -14,7 +14,7 @@ export default {
 
 <style scoped>
 #poster {
-  background:url("../assets/login_wallpaper.jpg") no-repeat;
+  background:url("../assets/login_wallpaper-l.jpg") no-repeat;
   background-position: center;
   height: 100%;
   width: 100%;

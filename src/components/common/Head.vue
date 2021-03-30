@@ -2,9 +2,10 @@
   <div class="header">
     <!-- 折叠按钮 -->
     <div class="logo-img">
-      <i class="el-icon-menu" v-on:click="login"></i>
+<!--      <i class="el-icon-s-home" v-on:click="login"></i>-->
+      <img src="../../assets/排水1.png" v-on:click="login">
     </div>
-    <div class="logo-text">北京市下水道排水控制展示系统</div>
+    <div class="logo-text">云端市政排水管网自动清洁系统</div>
     <div class="header-right">
       <div class="header-user-con">
         <!--        用户头像-->
@@ -64,7 +65,7 @@ export default {
   height: 80px;
   font-size: 22px;
   color: #ffffff;
-  background-color:#134D6E ;
+  background-color: #134d6e;
 
 
 }
@@ -81,10 +82,12 @@ export default {
   /*padding: 20px;*/
 }
 .logo-img {
+  display: flex;
 
   margin: auto;
+  margin-left: 18px;
   float: left;
-  width: 60px;
+  width: 80px;height: 80px;
   line-height: 80px;
 }
 .header-right {
