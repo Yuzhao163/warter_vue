@@ -1,6 +1,25 @@
 <template>
   <div class="maindiv">
     <button @click="test">test</button>
+    <div class="select">
+    <el-select v-model="sarea" @change="getPipeData" >
+      <el-option
+          v-for="item in areadata"
+          :key="item.areaID"
+          :label="item.areaName"
+          :value="item.areaName"
+      >
+      </el-option>
+    </el-select>
+    <el-select v-model="spipe" @change="getTmnData" >
+      <el-option
+          v-for="item in pipedata"
+          :key="item.pipID"
+          :label="item.pipName"
+          :value="item.pipID">
+      </el-option>
+    </el-select>
+    </div>
     <div class="card">
       <div>
         <el-tabs v-model="area" type="card" @tab-click="handleClick">
@@ -31,8 +50,13 @@
 </template>
 
 <script>
+import qs from "qs";
+
 export default {
   name: "AreaPipe",
+  mounted() {
+    this.getAreaData()
+  },
   data() {
     return {
       area: '0',//存选择的分区index
@@ -129,17 +153,63 @@ export default {
               }]
             }],
 
-        }]
+        }],
+      areadata:[{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"shijingshan","areaID":"1"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"miyun","areaID":"10"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"chaoyang","areaID":"2"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"dongcheng","areaID":"3"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"xicheng","areaID":"4"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"haidian","areaID":"5"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"fengtai","areaID":"6"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"daxing","areaID":"7"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"changping","areaID":"8"},{"areaCreateDate":null,"areaLeader":null,"areaLeadPhone":null,"areaName":"fangshan","areaID":"9"}],
+      pipedata:[{"pipID":"1","areaID":null,"pipName":"shichao","pipLeadPhone":null,"pipDesc":null,"pipCreateDate":null}],
+      tmndata:[],
+sarea:'',//暂存区域选择框数据
+spipe:'',//暂存管线选择框数据
+
     }
 
   },
   methods: {
+    getAreaData(){
+      this.$axios.post("/请求分区").then(res => {
+        console.log("请求成功")
+        console.log(res.data[0])
+        this.areadata = res.data;
+        this.sarea=this.areadata[0].areaName
+        this.getPipeData()
+      })
+          .catch(failResponse => {
+            console.log(failResponse)
+            alert(failResponse)
+          })
+    },
+    getPipeData(){
+      console.log('yeyeye')
+      var params = qs.stringify({AreaName:this.sarea})
+      this.$axios.post("/请求管线",params).then(res => {
+        console.log("请求成功")
+        console.log(res.data[0])
+        this.pipedata = res.data;
+        this.spipe=this.pipedata[0].pipName
+        this.getTmnData()
+      })
+          .catch(failResponse => {
+            console.log(failResponse)
+            alert(failResponse)
+          })
+    },getTmnData(){
+      var params = qs.stringify({
+      PipID:this.spipe})
+      this.$axios.post("/请求控制柜",params).then(res => {
+        console.log("请求成功")
+        console.log(res.data[0])
+        this.tmndata = res.data;
+      })
+          .catch(failResponse => {
+            console.log(failResponse)
+            alert(failResponse)
+          })
+    },
     handleClick() {
 
     },
     test() {
       console.log(this.area);
-      console.log(this.pipe)
+      console.log(this.spipe)
     }
   }
 }

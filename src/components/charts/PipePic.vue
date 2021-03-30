@@ -23,31 +23,31 @@
       <div class="imgbox">
         <img id="pip1"/>
         <div class="message">
-          流量：{{ pips[0].pipflow }}<br/>
+          水位：{{ pips[0].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
       <div class="imgbox"><img id="pip2"/>
         <div class="message">
-          流量：{{ pips[1].pipflow }}<br/>
+          水位：{{ pips[1].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
       <div class="imgbox"><img id="pip3"/>
         <div class="message">
-          流量：{{ pips[2].pipflow }}<br/>
+          水位：{{ pips[2].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
       <div class="imgbox"><img id="pip4"/>
         <div class="message">
-          流量：{{ pips[3].pipflow }}<br/>
+          水位：{{ pips[3].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
       <div class="imgbox"><img id="pip5"/>
         <div class="message">
-          流量：{{ pips[3].pipflow }}<br/>
+          水位：{{ pips[4].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
@@ -73,31 +73,31 @@
       <img src="../../assets/img/pipes/pipe-L.png"/>
       <div class="imgbox"><img id="pip6"/>
         <div class="message">
-          流量：{{ pips[3].pipflow }}<br/>
+          水位：{{ pips[5].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
       <div class="imgbox"><img id="pip7"/>
         <div class="message">
-          流量：{{ pips[3].pipflow }}<br/>
+          水位：{{ pips[6].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
       <div class="imgbox"><img id="pip8"/>
         <div class="message">
-          流量：{{ pips[3].pipflow }}<br/>
+          水位：{{ pips[7].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
       <div class="imgbox"><img id="pip9"/>
         <div class="message">
-          流量：{{ pips[3].pipflow }}<br/>
+          水位：{{ pips[8].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
       <div class="imgbox"><img id="pip10"/>
         <div class="message">
-          流量：{{ pips[3].pipflow }}<br/>
+          水位：{{ pips[9].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div>
-      <el-button @click="details=true">详情测试</el-button>
+      <el-button @click="details=true,test()">详情测试</el-button>
     </div>
     <el-table
         :data="tableData"
@@ -10,7 +10,7 @@
         :default-sort="{prop: 'date', order: 'descending'}"
     >
       <el-table-column
-          prop="TmnName"
+          prop="tmnName"
           label="控制柜名称"
           width="120">
       </el-table-column>
@@ -20,23 +20,23 @@
           width="160">
       </el-table-column>
       <el-table-column
-          prop="Error_Psition"
+          prop="exception"
           label="异常部位"
           width="80">
       </el-table-column>
       <el-table-column
-          prop="error_level"
-          label="异常等级"
+          prop="user"
+          label="维护人员"
           width="80">
       </el-table-column>
       <el-table-column
           label="查看详情"
           width="80">
-        <template>
+        <template slot-scope="scope">
           <el-button
               size="mini"
               type="primary"
-              @click="details=true;details()">详情
+              @click="details=true;detailbutton(scope.$index,scope.row)">详情
           </el-button>
         </template>
       </el-table-column>
@@ -50,8 +50,8 @@
 
     <!--    弹框内容-->
     <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
-      <div>控制柜名称：{{ Tmnname }}</div>
-      <div>控制柜编号：{{ TmnID }}</div>
+            <div>控制柜名称：{{ tableData[this.tableindex].tmnName }}</div>
+            <div>控制柜编号：{{ tableData[this.tableindex].tmnId }}</div>
       <div class="pipearea">
         <span>所属管线：</span>
         <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="--所属管线--" class="handle-select"
@@ -68,11 +68,14 @@
       </div>
       <div class="faultdetail">
         <div>故障详情：</div>
-        <div class="fault-text">1111111111111111111111111111111111111111111111111111111111111111111111111111</div>
+        <div class="fault-text">{{ tableData[this.tableindex].exception }}</div>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="details = false">取 消</el-button>
         <el-button type="primary" @click="details = false">确 定</el-button>
+      </div>
+      <div>
+        <button @click="test()">test</button>
       </div>
     </el-dialog>
   </div>
@@ -83,20 +86,13 @@
 export default {
   name: "PublicFault",
   mounted() {
-
+    this.getdata()
   },
   data() {
     return {
-      tableData: [{
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }, {
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }, {
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }, {
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }],
+      tableData: [],
       details: false,
+      tableindex: '',
       form: {
         name: '',
         region: '',
@@ -118,13 +114,16 @@ export default {
       Tmnname: "北方工业大学",
       TmnID: '10009',
       ERId: '',
+      faultdetil: '222',//故障详情
     }
   },
   methods: {
     getdata() {
-      this.$axios.post('故障列表').then(res => {
+      this.$axios.post("/error").then(res => {
         console.log("请求成功")
-        this.Tmn = res.data;
+        console.log(res.data[0])
+        this.tableData = res.data;
+
       })
           .catch(failResponse => {
             console.log(failResponse)
@@ -142,12 +141,22 @@ export default {
             alert(failResponse)
           })
     },
+    detailbutton(index, row) {
+      this.tableindex = index
+      console.log(row)
+    },
     setArea(pipname) {
       for (var i = 0; i < this.Tmn.length; i++) {
         if (pipname == this.Tmn[i].PipName) {
           this.AreaName = this.Tmn[i].AreaName
         }
       }
+    },
+    test() {
+      console.log('11111')
+      console.log(this.tableindex)
+      console.log(this.tableData[0].tmnName)
+
     },
   },
   watch: {

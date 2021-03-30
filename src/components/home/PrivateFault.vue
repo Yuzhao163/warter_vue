@@ -6,51 +6,52 @@
     <div>
       <el-button @click="details=true">详情测试</el-button>
     </div>
-    <el-table
-            :data="tableData"
-            stripe
-            style="width: 100%"
-            :default-sort="{prop: 'date', order: 'descending'}"
-    >
-      <el-table-column
-              prop="TmnName"
-              label="控制柜名称"
-              width="120">
-      </el-table-column>
-      <el-table-column
-              prop="Time"
-              label="故障时间"
-              width="160">
-      </el-table-column>
-      <el-table-column
-              prop="Error_Psition"
-              label="异常部位"
-              width="80">
-      </el-table-column>
-      <el-table-column
-              prop="error_level"
-              label="异常等级"
-              width="80">
-      </el-table-column>
-      <el-table-column
-              label="查看详情"
-              width="80">
-        <template>
-          <el-button
-                  size="mini"
-                  type="primary"
-                  @click="details=true;details()">详情
-          </el-button>
-        </template>
-      </el-table-column>
-      <!--      <el-table-column-->
-      <!--          prop="ov_period"-->
-      <!--          label="处理方式"-->
-      <!--          width="80">-->
+    <div class="table">
+      <el-table
+          :data="tableData"
+          stripe
+          style="width: 100%"
+          :default-sort="{prop: 'date', order: 'descending'}"
+      >
+        <el-table-column
+            prop="TmnName"
+            label="控制柜名称"
+            width="120">
+        </el-table-column>
+        <el-table-column
+            prop="Time"
+            label="故障时间"
+            width="160">
+        </el-table-column>
+        <el-table-column
+            prop="Error_Psition"
+            label="异常部位"
+            width="80">
+        </el-table-column>
+        <el-table-column
+            prop="error_level"
+            label="异常等级"
+            width="80">
+        </el-table-column>
+        <el-table-column
+            label="查看详情"
+            width="80">
+          <template>
+            <el-button
+                size="mini"
+                type="primary"
+                @click="details=true;details()">详情
+            </el-button>
+          </template>
+        </el-table-column>
+        <!--      <el-table-column-->
+        <!--          prop="ov_period"-->
+        <!--          label="处理方式"-->
+        <!--          width="80">-->
 
-      <!--      </el-table-column>-->
-    </el-table>
-
+        <!--      </el-table-column>-->
+      </el-table>
+    </div>
     <!--    弹框内容-->
     <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
       <div>控制柜名称：{{ Tmnname }}</div>
@@ -69,13 +70,17 @@
           <div>所属分区：{{ this.AreaName }}</div>
         </div>
       </div>
-      <div class="faultdetail">
+<!--      <div class="faultdetail">-->
+<!--        <div>故障详情：</div>-->
+<!--        <div class="fault-text">1111111111111111111111111111111111111111111111111111111111111111111111111111</div>-->
+<!--      </div>-->
+      <div class="faultdetail" style="margin-top: 20px">
         <div>故障详情：</div>
-        <div class="fault-text">1111111111111111111111111111111111111111111111111111111111111111111111111111</div>
+        <textarea class="resolvent" v-model="faultdetil"></textarea>
       </div>
       <div class="faultdetail" style="margin-top: 20px">
         <div>解决方案：</div>
-       <textarea class="resolvent" v-model="resolvent"></textarea>
+        <textarea class="resolvent" v-model="resolvent"></textarea>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="details = false">取 消</el-button>
@@ -121,10 +126,11 @@ export default {
           AreaName: '3',
         }
       ],
-      resolvent:'',
+      resolvent: '',//解决方案
+      faultdetil:'',//故障描述
       Tmnname: "北方工业大学",
       TmnID: '10009',
-      ERId: '',
+      ERId: '',//故障编码
     }
   },
   methods: {
@@ -133,10 +139,10 @@ export default {
         console.log("请求成功")
         this.Tmn = res.data;
       })
-              .catch(failResponse => {
-                console.log(failResponse)
-                alert(failResponse)
-              })
+          .catch(failResponse => {
+            console.log(failResponse)
+            alert(failResponse)
+          })
     },
     detaildata() {
 
@@ -144,10 +150,10 @@ export default {
         console.log("请求成功")
         this.Tmn = res.data;
       })
-              .catch(failResponse => {
-                console.log(failResponse)
-                alert(failResponse)
-              })
+          .catch(failResponse => {
+            console.log(failResponse)
+            alert(failResponse)
+          })
     },
     setArea(pipname) {
       for (var i = 0; i < this.Tmn.length; i++) {
@@ -167,60 +173,87 @@ export default {
 </script>
 
 <style scoped>
-  .title{
-    display: flex;
-  }
-  .container {
-    padding: 30px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
+.title {
+  display: flex;
+}
 
-  .pipearea {
-    margin: 10px 0;
-  }
+.container {
+  display: inline-block;
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+.table{
+  display: inline-block;
+}
+.pipearea {
+  margin: 10px 0;
+}
 
-  .pipearea .PA {
-    display: inline-block;
-  }
+.pipearea .PA {
+  display: inline-block;
+}
 
-  .PA div {
-    display: inline-block;
-    margin: 0px 20px;
-  }
+.PA div {
+  display: inline-block;
+  margin: 0px 20px;
+}
 
-  .faultdetail {
-    display: flex;
-  }
+.faultdetail {
+  display: flex;
+}
 
-  .fault-text {
+.fault-text {
 
-    width: 480px;
-    height: 230px;
-    padding: 20px;
-    background-color: #e5f1f6;
-    border-radius: 20px;
-    text-align: left;
-    font-size: 16px;
-  }
-  .resolvent{
-    width: 480px;
-    height: 230px;
-    padding: 20px;
+  width: 480px;
+  height: 230px;
+  padding: 20px;
+  background-color: #e5f1f6;
+  border-radius: 20px;
+  text-align: left;
+  font-size: 16px;
+}
 
-    border-radius: 20px;
-    text-align: left;
-    font-size: 16px;
-  }
+.resolvent {
+  width: 480px;
+  height: 230px;
+  padding: 20px;
+  border:2px solid #e8e8e8;
+  border-radius: 20px;
+  text-align: left;
+  font-size: 16px;
+  resize: none;/*禁止文本框拉伸*/
+}
+:hover.resolvent {
+  width: 480px;
+  height: 230px;
+  padding: 20px;
+  border:2px solid #d0d0d0;
+  border-radius: 20px;
+  text-align: left;
+  font-size: 16px;
+  resize: none;/*禁止文本框拉伸*/
+}
+:focus.resolvent {
+  width: 480px;
+  height: 230px;
+  padding: 20px;
+  border:2px solid #e8e8e8;
+  border-radius: 20px;
+  box-shadow: 0 0 15px #d0d0d0;
+  text-align: left;
+  font-size: 16px;
+  resize: none;/*禁止文本框拉伸*/
+}
+/deep/ .el-dialog__body {
+  padding: 10px 20px;
+}
 
-  /deep/ .el-dialog__body {
-    padding: 10px 20px;
-  }
-  /*获取焦点元素后的设置*/
-  textarea:focus {
+/*获取焦点元素后的设置*/
+textarea:focus {
 
-    outline: none;
+  outline: none;
 
-  }
+}
 </style>

@@ -12,12 +12,13 @@
       </div>
       <div class="rightbutton">
         <button class="addbutton" @click="addbox=true">添加</button>
-        <button class="addbutton" @click="delconfirm">测试</button>
+        <button class="addbutton" @click="test()">测试</button>
       </div>
     </div>
 
     <el-table
         :data="tableData"
+
         stripe
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}"
@@ -25,44 +26,44 @@
       <el-table-column
           prop="userID"
           label="用户ID"
-          width="80">
+      >
       </el-table-column>
       <el-table-column
           prop="userName"
           label="用户名称"
-          width="80">
+      >
       </el-table-column>
       <el-table-column
           prop="realName"
           label="真实姓名"
-          width="80">
+      >
       </el-table-column>
       <el-table-column
           prop="uclassID"
           label="用户类别"
-          width="80">
+      >
       </el-table-column>
       <el-table-column
           prop="moPhone"
           label="联系电话"
-          width="80">
+      >
       </el-table-column>
       <el-table-column
           prop="dptname"
           label="单位名称"
-          width="80">
+      >
       </el-table-column>
       <el-table-column
           prop="regTime"
           label="注册时间"
-          width="80">
+      >
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
               type="primary"
               size="mini"
-              @click="handleEdit(scope.$index, scope.row)">编辑
+              @click="handleEdit(scope.$index, scope.row),editbox=true">修改
           </el-button>
           <el-button
               size="mini"
@@ -72,7 +73,48 @@
         </template>
       </el-table-column>
     </el-table>
+    <!--    修改员工信息-->
+    <el-dialog class="dialog" style="text-align: left" title="修改用户信息" :visible.sync="editbox">
+      <div class="input">
 
+        <div class="left">
+          <div class="text"><span style="color: red">*</span>用户名：</div>
+          <el-input v-model="staffData.userName" placeholder=staffData.userName></el-input>
+          <div class="text"><span style="color: red">*</span>密码：</div>
+          <el-input v-model="staffData.userPswd" placeholder="请输入密码"></el-input>
+          <span style="color:#2496ee;font-size: 10px">不填写则设置初始密码为123456</span>
+          <div class="text">真实姓名：</div>
+          <el-input v-model="staffData.realName" placeholder="请输入真实名称"></el-input>
+          <div class="text">手机号：</div>
+          <el-input v-model="staffData.moPhone" placeholder="请输入手机号"></el-input>
+          <div class="text">单位名称：</div>
+          <el-input v-model="staffData.dptname" placeholder="请输入单位名称"></el-input>
+        </div>
+        <div class="right">
+          <div class="text"><span style="color: red">*</span>用户类别：</div>
+          <el-select v-model="staffData.uclassID" ref="select1" placeholder="--用户类别--"
+                     style=" margin-right: 10px">
+            <el-option key="1" label="操作人员" value="101"></el-option>
+            <el-option key="2" label="管理人员" value="102"></el-option>
+          </el-select>
+          <div>
+            <div class="text"><span style="color: red">*</span>权限分配：</div>
+            <el-tree
+                :props="props"
+                :load="loadNode"
+                lazy
+                show-checkbox
+                @check-change="handleCheckChange">
+            </el-tree>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="dialog-footer">
+
+        <el-button @click="editbox = false, this.Index_TableData()">取 消</el-button>
+        <el-button type="primary" @click="editbox = false,updatastaff()">修 改</el-button>
+      </div>
+    </el-dialog>
     <!--    添加员工弹框内容-->
     <el-dialog class="dialog" style="text-align: left" title="添加用户" :visible.sync="addbox">
       <div class="input">
@@ -111,7 +153,7 @@
       <div slot="footer" class="dialog-footer">
 
         <el-button @click="addbox = false">取 消</el-button>
-        <el-button type="primary" @click="addbox = false">确 定</el-button>
+        <el-button type="primary" @click="addstaff(),addbox = false">确 定</el-button>
       </div>
     </el-dialog>
     <!--    删除弹框内容-->
@@ -121,6 +163,7 @@
 
 <script>
 import qs from 'qs';
+
 export default {
   name: "Staff",
   mounted() {
@@ -129,8 +172,9 @@ export default {
   data() {
     return {
       addbox: false,
-
+      editbox: false,
       tableData: [],
+      staffData:[],//修改数据时用于存放行数据
       screendata: {
         condition: '',
         selectcontent: ''
@@ -159,20 +203,21 @@ export default {
             alert(failResponse)
           })
     },
-    delconfirm(index,row) {
+    delconfirm(index, row) {
       this.$confirm('将删除该用户, 是否确定?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         var params = qs.stringify({
-          UserID:row.userID,
+          UserID: row.userID,
         });
         console.log(row.userID)
         console.log(index)
         this.$axios
             .post('/delstaff', params).then(res => {
-          console.log(res);this.updateTable()
+          console.log(res);
+          this.Index_TableData()
         })
       }).catch(() => {
         this.$message({
@@ -181,17 +226,63 @@ export default {
         });
       });
     },
-    // 触发更新事件
-    updateTable(){
-      // 卸载
-      this.tableShow= false
-      // 建议加上 nextTick 微任务
-      // 否则在同一事件内同时将tableShow设置false和true有可能导致组件渲染失败
-      this.$nextTick(function(){
-        // 加载
-        this.tableShow= true
+    addstaff() {
+      var params = qs.stringify({
+        UserName: this.addmessage.UserName,
+        UserPswd: this.addmessage.UserPswd,
+        UClassID: this.addmessage.UClassID,
+        MoPhone: this.addmessage.MoPhone,
+        RealName: this.addmessage.RealName,
+        DPTName: this.addmessage.DPTName,
       })
+      this.$axios.post('/addstaff', params).then(res => {
+        if (res.data.code === 200)
+          console.log(res);
+        this.Index_TableData()
+      })
+          .catch(failResponse => {
+            console.log(params)
+            console.log(failResponse)
+            alert(failResponse)
+          })
     },
+    handleEdit(index,row){
+      console.log(index, row);
+      this.staffData=JSON.parse(JSON.stringify(row));
+      console.log(this.staffData)
+    },
+    updatastaff(){
+      this.$confirm('将更新用户信息, 是否确定?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var params = qs.stringify({
+
+          UserID: this.staffData.userID,
+          UserName: this.staffData.userName,
+          UserPswd: this.staffData.userPswd,
+          UClassID: this.staffData.uclassID,
+          MoPhone: this.staffData.moPhone,
+          RealName: this.staffData.realName,
+          DPTName: this.staffData.dptname,
+        });
+        this.$axios
+            .post('/updstaff', params).then(res => {
+          console.log(res);
+          this.Index_TableData()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消修改'
+        });
+      });
+    },
+    test(){
+      console.log(this.tableData[0])
+    }
+
   }
 }
 </script>

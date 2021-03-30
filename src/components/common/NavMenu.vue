@@ -65,73 +65,73 @@ export default {
       a:true,
       mainitems:[
         {
-          icon: 'el-icon-setting',
+          icon: 'el-icon-house',
           index: 'index',
           title: '系统首页',
         },
         {
-          icon: 'el-icon-setting',
+          icon: 'el-icon-warning-outline',
           index: 'publicfault',
           title: '异常展示',
         },
         {
-          icon: 'el-icon-setting',
+          icon: 'el-icon-s-operation',
           index: 'wiring',
           title: '管线分布',
         },
         {
-          icon: 'el-icon-setting',
+          icon: 'el-icon-data-analysis',
           index: 'pipepic',
           title: '管路状态',
         },
+        // {
+        //   icon: 'el-icon-setting',
+        //   index: '1',
+        //   title: '数据展示',
+        //   subs: [
+        //     {
+        //       index: 'colchart',
+        //       title: '列表展示'
+        //     },{
+        //       index: 'echart',
+        //       title: '图表展示'
+        //     },{
+        //       index: 'pipepic',
+        //       title: '管线可视化'
+        //     },{
+        //       index: 'wiring',
+        //       title: '线路分布图'
+        //     },
+        //   ]
+        // },
         {
-          icon: 'el-icon-setting',
-          index: '1',
-          title: '数据展示',
-          subs: [
-            {
-              index: 'colchart',
-              title: '列表展示'
-            },{
-              index: 'echart',
-              title: '图表展示'
-            },{
-              index: 'pipepic',
-              title: '管线可视化'
-            },{
-              index: 'wiring',
-              title: '线路分布图'
-            },
-          ]
-        },
-        {
-          icon: 'el-icon-setting',
+          icon: 'el-icon-document',
           index: 'manage',
           title: '命令下发',
         },
         {
-          icon: 'el-icon-setting',
+          icon: 'el-icon-magic-stick',
           index: 'privatefault',
           title: '故障处理',
         },
         {
-          icon: 'el-icon-setting',
+          icon: 'el-icon-view',
           index: 'usermessage',
           title: '个人信息',
 
         },
         {
-          icon: 'el-icon-setting',
+          icon: 'el-icon-takeaway-box',
           index: 'device',
           title: '设备维护',
         },
         {
-          icon: 'el-icon-setting',
+          icon: 'el-icon-user',
           index: 'staff',
           title: '人员管理',
         },
         {
-          icon: 'el-icon-setting',
+          icon: 'el-icon-view',
           index: '2',
           title: '测试练习',
           subs: [
