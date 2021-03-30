@@ -3,7 +3,7 @@
     <!-- 折叠按钮 -->
     <div class="logo-img">
 <!--      <i class="el-icon-s-home" v-on:click="login"></i>-->
-      <img src="../../assets/排水1.png">
+      <img src="../../assets/排水1.png" v-on:click="login">
     </div>
     <div class="logo-text">云端市政排水管网自动清洁系统</div>
     <div class="header-right">
