@@ -10,7 +10,7 @@
       <div style="width: 150px;line-height:40px;margin-left: 10px">用户名：</div>
       <el-input ref="inputunm" v-model="message.UserName" :disabled="this.disabled.disabledunm"></el-input>
       <div style="width: 100px;line-height:40px;">
-        <el-button ntype="primary" size="small" round @click="modifyunm">修改</el-button>
+        <el-button type="primary" size="small" round @click="modifyunm">修改</el-button>
       </div>
     </div>
     <div class="linetext">
