@@ -92,7 +92,7 @@ export default {
     return {
       tableData: [],
       details: false,
-      tableindex: '',
+      tableindex: '0',
       form: {
         name: '',
         region: '',
@@ -142,7 +142,7 @@ export default {
           })
     },
     detailbutton(index, row) {
-      this.tableindex = index
+      this.tableindex = index;
       console.log(row)
     },
     setArea(pipname) {
