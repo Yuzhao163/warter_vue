@@ -2,14 +2,15 @@
   <div class="container">
     <div class="toptable">
       <div class="select">
-        <el-select id="select1" v-model="screendata.condition" clearable placeholder="--搜索条件--" class="handle-select"
-                   style=" margin-right: 10px">
-          <el-option key="1" label="按员工编号搜索" value="11"></el-option>
-          <el-option key="2" label="按姓名搜索" value="21"></el-option>
-          <el-option key="3" label="按控制柜编码" value="22"></el-option>
-          <el-option key="4" label="自动方式3" value="23"></el-option>
-        </el-select>
+        <el-input placeholder="请输入用户名称" v-model="searchtext" @input="changeSearch">
+          <el-button slot="append" icon="el-icon-search" @click="searchstaff"></el-button>
+        </el-input>
       </div>
+
+      <!--      <div class="leftbutton">-->
+      <!--        <button class="searchbutton">查找</button>-->
+      <!--        <button class="addbutton">清除</button>-->
+      <!--      </div>-->
       <div class="rightbutton">
         <button class="addbutton" @click="addbox=true">添加</button>
         <button class="addbutton" @click="test()">测试</button>
@@ -17,7 +18,7 @@
     </div>
 
     <el-table
-        :data="tableData"
+        :data="tableDataShow.slice((currentPage-1)*pageSize,currentPage*pageSize)"
 
         stripe
         style="width: 100%"
@@ -73,6 +74,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[1,5,10,20]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData.length">
+      >
+    </el-pagination>
     <!--    修改员工信息-->
     <el-dialog class="dialog" style="text-align: left" title="修改用户信息" :visible.sync="editbox">
       <div class="input">
@@ -168,13 +180,16 @@ export default {
   name: "Staff",
   mounted() {
     this.Index_TableData();
+
   },
   data() {
     return {
       addbox: false,
       editbox: false,
+      searchtext: '',//搜索条件
       tableData: [],
-      staffData:[],//修改数据时用于存放行数据
+      tableDataShow: [],
+      staffData: [],//修改数据时用于存放行数据
       screendata: {
         condition: '',
         selectcontent: ''
@@ -186,7 +201,10 @@ export default {
         MoPhone: '',
         RealName: '',
         DPTName: '',
-      }
+      },
+      currentPage: 1, // 当前页码
+      total: 20, // 总条数
+      pageSize: 5, // 每页的数据条数
     }
   },
   methods: {
@@ -197,6 +215,8 @@ export default {
           .then(res => {
             console.log("请求成功")
             this.tableData = res.data;
+            this.tableDataShow= res.data;
+
           })
           .catch(failResponse => {
             console.log(failResponse)
@@ -246,12 +266,33 @@ export default {
             alert(failResponse)
           })
     },
-    handleEdit(index,row){
+    searchstaff() {
+      var j = 0;
+      if (this.searchtext == '') {
+        this.tableDataShow = this.tableData;
+        console.log('10' + this.tableData)
+      } else {
+        for (var i = 0; i < this.tableData.length; i++) {
+
+        if (this.tableData[i].userName.search(this.searchtext) >= 0) {
+          this.tableDataShow[j] = this.tableData[i];
+          j++;
+          console.log(j)
+        }
+        }
+      }
+
+    },
+    changeSearch() {
+      this.tableDataShow=[];
+this.searchstaff();
+    },
+    handleEdit(index, row) {
       console.log(index, row);
-      this.staffData=JSON.parse(JSON.stringify(row));
+      this.staffData = JSON.parse(JSON.stringify(row));
       console.log(this.staffData)
     },
-    updatastaff(){
+    updatastaff() {
       this.$confirm('将更新用户信息, 是否确定?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -279,8 +320,20 @@ export default {
         });
       });
     },
-    test(){
+    //每页条数改变时触发 选择一页显示多少行
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.currentPage = 1;
+      this.pageSize = val;
+    },
+    //当前页改变时触发 跳转其他页
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.currentPage = val;
+    },
+    test() {
       console.log(this.tableData[0])
+      console.log(this.tableDataShow)
     }
 
   }
@@ -288,11 +341,19 @@ export default {
 </script>
 
 <style scoped>
+.toptable {
+
+}
+
 .container {
   padding: 20px 30px 30px 30px;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
+}
+
+.leftbutton {
+  float: left;
 }
 
 .rightbutton {
@@ -310,6 +371,26 @@ export default {
   cursor: pointer;
   background: #ffa900;
   border: 1px solid #fcebc3;
+  color: #fff2d7;
+  -webkit-appearance: none;
+  text-align: center;
+  box-sizing: border-box;
+  outline: 0;
+  margin: 0;
+  transition: .1s;
+  font-weight: 500;
+  padding: 8px 16px;
+  font-size: 12px;
+  border-radius: 20px;
+}
+
+.searchbutton {
+  display: inline-block;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  background: #3f9dfe;
+  border: 1px solid #a5cfff;
   color: #fff2d7;
   -webkit-appearance: none;
   text-align: center;

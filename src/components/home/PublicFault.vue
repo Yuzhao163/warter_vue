@@ -4,7 +4,7 @@
       <el-button @click="details=true,test()">详情测试</el-button>
     </div>
     <el-table
-        :data="tableData"
+        :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         stripe
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}"
@@ -47,7 +47,17 @@
 
       <!--      </el-table-column>-->
     </el-table>
+    <el-pagination
 
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[1,5,10,20]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData.length">
+      >
+    </el-pagination>
     <!--    弹框内容-->
     <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
             <div>控制柜名称：{{ tableData[this.tableindex].tmnName }}</div>
@@ -115,6 +125,9 @@ export default {
       TmnID: '10009',
       ERId: '',
       faultdetil: '222',//故障详情
+      currentPage: 1, // 当前页码
+      total: 20, // 总条数
+      pageSize: 5 // 每页的数据条数
     }
   },
   methods: {
@@ -151,6 +164,17 @@ export default {
           this.AreaName = this.Tmn[i].AreaName
         }
       }
+    },
+    //每页条数改变时触发 选择一页显示多少行
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.currentPage = 1;
+      this.pageSize = val;
+    },
+    //当前页改变时触发 跳转其他页
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.currentPage = val;
     },
     test() {
       console.log('11111')

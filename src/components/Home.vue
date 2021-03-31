@@ -15,8 +15,8 @@
       </el-aside>
 
       <div class="view">
-        <div class="whitebox"></div>
-        <el-main style=" height: 100%; background-color: #e5f1f6;">
+<!--        <div class="whitebox"></div>-->
+        <el-main style="display: block; height: 100%; background-color: #e5f1f6;">
           <router-view/>
         </el-main>
       </div>
@@ -61,8 +61,9 @@ export default {
 <style scoped>
 .view{
   width: 100%;
-  height: 100%;
-  overflow: auto;
+  height: auto;
+  margin-top: 40px;
+  overflow: hidden;
   background-color: #E5F1F6;
   box-sizing: border-box;
 }
