@@ -3,7 +3,6 @@
     <div class="toptable">
       <div class="select">
         <el-input placeholder="请输入用户名称" v-model="searchtext" @input="changeSearch">
-          <el-button slot="append" icon="el-icon-search" @click="searchstaff"></el-button>
         </el-input>
       </div>
 
