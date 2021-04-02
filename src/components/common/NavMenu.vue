@@ -12,16 +12,16 @@
           background-color="#3D7797"
           text-color="#F0ECEC"
           active-text-color="#ffd04b">
-<!--          <template v-if="item.subs&&item.subs.length">-->
-<!--            <el-submenu v-for="(item,i) in mainitems" :index="item.index" :key="i" >-->
-<!--                {{ item.title }}-->
-<!--            </el-submenu>-->
-<!--          </template>-->
-<!--            <template v-else>-->
-<!--              <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">-->
-<!--                {{ subItem.title }}-->
-<!--              </el-menu-item>-->
-<!--              </template>-->
+        <!--          <template v-if="item.subs&&item.subs.length">-->
+        <!--            <el-submenu v-for="(item,i) in mainitems" :index="item.index" :key="i" >-->
+        <!--                {{ item.title }}-->
+        <!--            </el-submenu>-->
+        <!--          </template>-->
+        <!--            <template v-else>-->
+        <!--              <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">-->
+        <!--                {{ subItem.title }}-->
+        <!--              </el-menu-item>-->
+        <!--              </template>-->
         <template v-for="(item,i) in mainitems">
           <template v-if="item.subs&&item.subs.length">
             <el-submenu :index="item.index" :key="i">
@@ -48,9 +48,27 @@
 
 <script>
 import bus from '../common/bus';
+
 export default {
-    name: "NavMenu",
+  name: "NavMenu",
+
   methods: {
+    //检查用户的权限，如果为2则无个人显示
+    check() {
+      if (this.$store.state.users.type == '2') {
+        console.log('权限变更')
+        this.mainitems[7]='';
+        this.mainitems[7]=this.mainitems[9];
+        this.$delete(this.mainitems,8);//去掉人员、设备维护功能
+      }
+      if (this.$store.state.users.type == '3') {
+        console.log('权限变更')
+
+        this.$delete(this.mainitems,3);//去掉管线操作员各个功能
+        this.$delete(this.mainitems,3);
+        this.$delete(this.mainitems,3);
+      }
+    },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -58,12 +76,12 @@ export default {
       console.log(key, keyPath);
     }
   },
-  data(){
-    return{
+  data() {
+    return {
       tagsList: [],
-      collapse:false,
-      a:true,
-      mainitems:[
+      collapse: false,
+      a: true,
+      mainitems: [
         {
           icon: 'el-icon-house',
           index: 'index',
@@ -139,7 +157,7 @@ export default {
               index: 'testv',
               title: '视频练习'
             }
-            ]
+          ]
         }
       ]
     }
@@ -147,6 +165,7 @@ export default {
 
   created() {
     // 只有在标签页列表里的页面才使用keep-alive，即关闭标签之后就不保存到内存中了。
+      this.check();
     bus.$on('tags', msg => {
       let arr = [];
       for (let i = 0, len = msg.length; i < len; i++) {

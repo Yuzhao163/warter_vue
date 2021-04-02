@@ -218,6 +218,7 @@ export default {
 
     },
     test() {
+      console.log(this.$store.state.users)
       console.log(this.sarea);
       console.log(this.spipe)
     }
