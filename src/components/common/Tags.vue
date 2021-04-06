@@ -157,22 +157,25 @@ export default {
   background: #f8f8f8;
 }
 
-.tags-li.active {
+.tags-li .active {
   color: #fff;
 }
 
 .tags-li-title {
   float: left;
   max-width: 80px;
+  font-size: 16px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   margin-right: 5px;
   color: #666;
+  text-decoration: none;
 }
 
 .tags-li.active .tags-li-title {
-  color: #fff;
+  color: #ffffff;
+
 }
 
 .tags-close-box {
