@@ -51,6 +51,8 @@ export default {
           })
           .then(successResponse => {
             if (successResponse.data.code === 200) {
+              this.$store.state.users.username=this.loginForm.username;
+              this.$store.state.users.password=this.loginForm.password;
               localStorage.setItem('ms_username', this.loginForm.username);
               this.setCookie(this.loginForm.username, this.loginForm.password, 7);
               this.$router.replace({path: '/home'})

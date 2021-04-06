@@ -2,7 +2,8 @@
   <div class="container">
     <!--    筛选条-->
     <div class="screenbox">
-      <el-select id="select1" v-model="screendata.W_work" ref="select1" clearable placeholder="--工作方式--" class="handle-select"
+      <el-select id="select1" v-model="screendata.W_work" ref="select1" clearable placeholder="--工作方式--"
+                 class="handle-select"
                  style=" margin-right: 10px">
         <el-option key="1" label="手动" value="11"></el-option>
         <el-option key="2" label="自动方式1" value="21"></el-option>
@@ -18,11 +19,20 @@
       </el-select>
       <el-button type="success" icon="el-icon-delete" @click="clearScreen">清除</el-button>
       <el-button type="primary" icon="el-icon-search" @click="Screen">筛选</el-button>
+      <el-switch
+          style="display: block;margin: auto 20px"
+          v-model="refresh"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+          active-text="动态刷新"
+          inactive-text="静态数据"
+      @change="this.refreshOpen">
+      </el-switch>
     </div>
     <!--    表格区-->
 
     <el-table
-        :data="tableData"
+        :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         stripe
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}"
@@ -93,7 +103,19 @@
           sortable
           width="80">
       </el-table-column>
+
     </el-table>
+    <el-pagination
+        v-show="pageView"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[1,5,10,20]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData.length">
+      >
+    </el-pagination>
   </div>
 </template>
 //首页组件
@@ -104,16 +126,24 @@ export default {
   name: "AppIndex",
   mounted() {
     this.Index_TableData();
+
+
   },
   data() {
     return {
       tableData: [],
+      refresh: false,
+      timer: null,
+      pageView:true,//控制分页显示，false为显示
       W_work: [],
       defult: [],
       screendata: {
         W_work: '',
         defult: '',
-      }
+      },
+      currentPage: 1, // 当前页码
+      total: 20, // 总条数
+      pageSize: 5 // 每页的数据条数
     }
   },
   methods: {
@@ -137,6 +167,7 @@ export default {
       this.screendata.W_work = '';
       this.$refs.select2.value = '';
       this.screendata.defult = '';
+      this.Index_TableData();
     },
     screenEvent() {
 
@@ -162,6 +193,34 @@ export default {
     Screen() {
       this.screenEvent();
     },
+    //每页条数改变时触发 选择一页显示多少行
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.currentPage = 1;
+      this.pageSize = val;
+    },
+    //当前页改变时触发 跳转其他页
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.currentPage = val;
+    },
+    refreshOpen() {
+      if (this.refresh == true) {
+        this.timer = setInterval(() => {
+          setTimeout(this.Index_TableData, 0);
+        }, 1000 * 1);//1s刷新一次
+          this.pageView=false;
+      }
+      if (this.refresh == false) {
+        clearInterval(this.timer);
+        this.pageView=true;
+      }
+
+    },
+  },
+  beforeDestroy() {
+    clearInterval(this.timer);
+    this.timer = null;
   }
 };
 </script>
@@ -175,6 +234,7 @@ export default {
 }
 
 .screenbox {
+  display: flex;
   float: left;
   margin-bottom: 20px;
 

@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div style="position: relative">
+    <div style="position: absolute">
       <div class="opall" v-on:click="openall">一键开阀</div>
     </div>
     <!--    1-5阀门和管道-->
     <div class="famen">
       <ul>
         <li
-            v-for="(item, index) in v_pershow"
+            v-for="(item, index) in v_pershow.slice(0,4)"
             :key="index"
-            @mouseenter="enter(index)"
+            @mouseenter="enter(index,1)"
             @mouseleave="leave"
             @mousemove="updateXY"
         >
@@ -57,10 +57,10 @@
     <!--    6-10阀门和管道-->
     <div class="famen">
       <ul>
-        <li
-            v-for="(item, index) in v_pershow"
+        <li id="famen2"
+            v-for="(item, index) in v_pershow.slice(4,8)"
             :key="index"
-            @mouseenter="enter(index)"
+            @mouseenter="enter(index,2)"
             @mouseleave="leave"
             @mousemove="updateXY"
         >
@@ -178,6 +178,7 @@ export default {
       setVpre: {
         V_pre: " "
       },
+      //用于显示漂浮窗
       t_vper: {
         id: '',
         vper: '',
@@ -198,7 +199,24 @@ export default {
         {
           v_perid: '4',
           v_per: ''
-        }
+        },
+        {
+          v_perid: '5',
+          v_per: ''
+        },
+        {
+          v_perid: '6',
+          v_per: ''
+        },
+        {
+          v_perid: '7',
+          v_per: ''
+        },
+        {
+          v_perid: '8',
+          v_per: ''
+        },
+
       ]
       ,
       pips: [
@@ -352,10 +370,15 @@ export default {
 
       });
     },
-    enter(index) {
+    enter(index,a) {
       this.seen = true;
+      if(a==1){
       this.t_vper.id = this.v_pershow[index].v_perid;
-      this.t_vper.vper = this.v_pershow[index].v_per
+      this.t_vper.vper = this.v_pershow[index].v_per;}
+      if(a==2){
+        this.t_vper.id = this.v_pershow[index+4].v_perid;
+        this.t_vper.vper = this.v_pershow[index+4].v_per;}
+
 
     },
     leave() {
@@ -376,10 +399,13 @@ export default {
 
 <style scoped>
 .famen {
-  margin: 0px;
+
+  display: flex;
+  margin-left: 174px;
   padding: 0px;
   width: auto;
   height: 73px;
+
 
 }
 
@@ -390,12 +416,13 @@ export default {
   padding-left: 0px;
 }
 
-.famen li {
+.famen ul li {
   display: inline;
 }
 
 .pipe {
   position: relative;
+  display: flex;
 
   height: 120px;
 }
@@ -468,30 +495,33 @@ export default {
   position: absolute;
   top: 20px;
   left: 20px;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   background-color: #ff6363;
   border-radius: 50px;
-  font-size: 20px;
+  font-size: 18px;
   color: #E5F1F6;
   text-align: inherit;
-  line-height: 100px;
+  line-height: 80px;
   z-index: 10;
-  cursor:pointer;
+  cursor: pointer;
+  box-shadow:0px 0px 10px 1px #ff4343;
 }
+
 :hover.opall {
-   position: absolute;
-   top: 20px;
-   left: 20px;
-   width: 100px;
-   height: 100px;
-   background-color: #ff9999;
-   border-radius: 50px;
-   font-size: 20px;
-   color: #ffffff;
-   text-align: inherit;
-   line-height: 100px;
-   z-index: 10;
-   cursor:pointer;
- }
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 80px;
+  height: 80px;
+  background-color: #ff9999;
+  border-radius: 50px;
+  font-size: 18px;
+  color: #ffffff;
+  text-align: inherit;
+  line-height: 80px;
+  z-index: 10;
+  cursor: pointer;
+  box-shadow:0px 0px 10px 2px #ff9999;
+}
 </style>
