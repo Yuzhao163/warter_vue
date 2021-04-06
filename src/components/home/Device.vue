@@ -6,8 +6,7 @@
       <!--        搜索与添加区域-->
       <el-row :gutter="20">
         <el-col :span="10">
-          <el-input placeholder="请输入控制柜名称" v-model="tmnName" clearable @clear="clear">
-            <el-button slot="append" icon="el-icon-search" @click="doFilter"></el-button>
+          <el-input prefix-icon="el-icon-search" placeholder="请输入控制柜名称" v-model="tmnName" @input="changeSearch" clearable @clear="clear">
           </el-input>
         </el-col>
         <el-col :span="4">
@@ -311,44 +310,55 @@ export default {
         this.tmnTableDataShow = this.tmnTableData;
       }
     },
+    // 搜索功能（利用双向绑定）
+    changeSearch() {
+      console.log(this.tmnTableData)
+      this.tmnTableDataShow = []
+      // this.filterTableData = []
+      var j = 0
+      if (this.tmnName === '') {
+        this.tmnTableDataShow = this.tmnTableData
+      } else {
+        for(var i=0; i<this.tmnTableData.length; i++) {
+          console.log(this.tmnName)
+          if(this.tmnTableData[i].tmnName.search(this.tmnName) >= 0) {
+            this.tmnTableDataShow[j] = this.tmnTableData[i]
+            j++
+          }
+        }
+      }
+
+
+
+      // console.log(this.filterTableData)
+      //
+      //
+      //   this.currentPage = 1
+      //   this.totalItems = this.filterTableData.length
+      //
+      //   console.log(this.currentPage,this.pageSize,this.totalItems)
+      //   console.log(this.tmnTableDataShow)
+      //   // this.currentChangePage()
+      //   //
+      //   //  计算页面
+      //   var a = (this.currentPage - 1) * this.pageSize
+      //   var b = this.currentPage * this.pageSize
+      //   console.log(((this.currentPage - 1) * this.pageSize),(this.currentPage * this.pageSize))
+      //   console.log(a,b)
+      //   for (var k = a; k < b ; k++) {
+      //       // 如果所有的数据都被遍历完就不继续遍历了
+      //       if (this.filterTableData[k]) {
+      //           this.tmnTableDataShow.push(this.filterTableData[k])
+      //       }
+      //   }
+      // console.log(this.tmnTableDataShow)
+      //   console.log(this.filterTableData)
+
+    },
     // 清空搜索框
     clear() {
       this.tmnTableDataShow = [];
       this.getTmnList()
-    },
-    // 搜索功能
-    doFilter() {
-      // 当查询条件为空时
-      if (this.tmnName == '') {
-        this.$message.warning('查询条件不能为空！')
-        return;
-      } else {
-        // 当查询条件不为空时
-        this.tmnTableDataShow = []
-        this.filterTableData = []
-        this.tmnTableData.forEach((value) =>  {
-          // 找到所有要搜素的控制柜
-          if (value.tmnName) {
-            // 在遍历中满足条件的数据存到搜索结果中去
-            if (value.tmnName.indexOf(this.tmnName) >= 0) {
-                this.filterTableData.push(value)
-            }
-          }
-        })
-        // 经过搜索之后的页面展示数据总数变了 下面对页面的展示进行修改
-        this.currentPage = 1
-        this.totalItems = this.filterTableData.length
-        //  计算页面
-        let start = (this.currentPage - 1) * this.pageSize
-        let end = this.currentPage * this.pageSize
-        this.tmnTableDataShow = [];
-        for (var i = start; i < end ; i++) {
-            // 如果所有的数据都被遍历完就不继续遍历了
-            if (this.filterTableData[i]) {
-                this.tmnTableDataShow.push(this.filterTableData[i])
-            }
-        }
-      }
     },
     // 分页功能
     handleSizeChange(val) {
