@@ -6,144 +6,143 @@
     <div>
       <el-button @click="details=true">详情测试</el-button>
     </div>
+<!--    异常处理表格-->
     <div class="table">
-      <el-table
-          :data="tableData"
-          stripe
-          style="width: 100%"
-          :default-sort="{prop: 'date', order: 'descending'}"
-      >
-        <el-table-column
-            prop="TmnName"
-            label="控制柜名称"
-            width="120">
-        </el-table-column>
-        <el-table-column
-            prop="Time"
-            label="故障时间"
-            width="160">
-        </el-table-column>
-        <el-table-column
-            prop="Error_Psition"
-            label="异常部位"
-            width="80">
-        </el-table-column>
-        <el-table-column
-            prop="error_level"
-            label="异常等级"
-            width="80">
-        </el-table-column>
-        <el-table-column
-            label="查看详情"
-            width="80">
-          <template>
-            <el-button
-                size="mini"
-                type="primary"
-                @click="details=true;details()">详情
-            </el-button>
+      <el-table :data="errorTableData" stripe style="width: 100%; margin-top: 35px; margin-bottom: 25px">
+        <el-table-column prop="erid" label="错误id"></el-table-column>
+        <el-table-column prop="errorTime" label="故障时间"></el-table-column>
+        <el-table-column prop="errorPart" label="异常部位"></el-table-column>
+        <el-table-column prop="errorLevel" label="异常等级"></el-table-column>
+        <el-table-column prop="errorDetail" label="查看详情">
+          <template slot-scope="scope">
+            <el-button type="primary" @click="detailDialog(scope.row)">详情</el-button>
           </template>
         </el-table-column>
-        <!--      <el-table-column-->
-        <!--          prop="ov_period"-->
-        <!--          label="处理方式"-->
-        <!--          width="80">-->
-
-        <!--      </el-table-column>-->
       </el-table>
     </div>
     <!--    弹框内容-->
-    <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
-      <div>控制柜名称：{{ Tmnname }}</div>
-      <div>控制柜编号：{{ TmnID }}</div>
+    <el-dialog style="text-align: left" title="详情信息" :visible.sync="detailDialogVisible">
+      <div>控制柜名称：{{ tmnName }}</div>
+      <div>控制柜编号：{{ tmnID }}</div>
       <div class="pipearea">
         <span>所属管线：</span>
-        <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="--所属管线--" class="handle-select"
+        <el-select id="select1" v-model="pipName" ref="select1" clearable placeholder="--所属管线--" class="handle-select"
                    style=" margin-right: 10px">
-          <el-option v-for="item in Tmn"
+          <el-option v-for="item in pipList"
                      :key="item.PipName"
                      :label="item.PipName"
                      :value="item.PipName"></el-option>
         </el-select>
         <div class="PA">
-          <div>线内编号：{{ this.AreaName }}</div>
-          <div>所属分区：{{ this.AreaName }}</div>
+          <div>线内编号：{{ ptId }}</div>
+          <div>所属分区：{{ areaName }}</div>
         </div>
       </div>
-<!--      <div class="faultdetail">-->
-<!--        <div>故障详情：</div>-->
-<!--        <div class="fault-text">1111111111111111111111111111111111111111111111111111111111111111111111111111</div>-->
-<!--      </div>-->
       <div class="faultdetail" style="margin-top: 20px">
         <div>故障详情：</div>
-        <textarea class="resolvent" v-model="faultdetil"></textarea>
+        <textarea class="resolvent" v-model="exception"></textarea>
       </div>
       <div class="faultdetail" style="margin-top: 20px">
         <div>解决方案：</div>
-        <textarea class="resolvent" v-model="resolvent"></textarea>
+        <textarea class="resolvent" v-model="result"></textarea>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="details = false">取 消</el-button>
-        <el-button type="primary" @click="details = false">确 定</el-button>
+        <el-button @click="detailDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updateError">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+// import Temperature from "../charts/Temperature";
 export default {
   name: "PrivateFault",
+  // components: {Temperature},
   mounted() {
 
   },
   data() {
     return {
-      tableData: [{
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }, {
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }, {
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }, {
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }],
-      details: false,
-      form: {
-        name: '',
-        region: '',
-      },
-      PipName: '',
-      AreaName: '',
-      Tmn: [
-        {
-          PipName: 'A',
-          AreaName: '1',
-        }, {
-          PipName: 'B',
-          AreaName: '2',
-        }, {
-          PipName: 'C',
-          AreaName: '3',
-        }
-      ],
-      resolvent: '',//解决方案
-      faultdetil:'',//故障描述
-      Tmnname: "北方工业大学",
-      TmnID: '10009',
-      ERId: '',//故障编码
+
+      // 故障表格
+      errorTableData: [],
+      // 详情按钮
+      detailDialogVisible: false,
+      // 控制柜编号和名称
+      tmnName: "",
+      tmnID: '',
+      // 所属管线
+      pipName: '',
+      // 所属分区编号和名称
+      areaID:'',
+      areaName: '',
+      // 线内编号
+      ptId: '',
+      // 故障详情
+      exception:'',
+      // 解决方案
+      result:'',
+      // user
+      user:'',
+
+      // 所属管线下拉框
+      pipList:[],
+
+      Tmn:{},
+
+      erid: '',//故障编码
     }
   },
+  created() {
+    this.getErrorList()
+  },
   methods: {
-    getdata() {
-      this.$axios.post('故障列表').then(res => {
+    //列表详情
+    getErrorList() {
+      this.$axios.get('/error1').then(res => {
         console.log("请求成功")
-        this.Tmn = res.data;
-      })
-          .catch(failResponse => {
+        this.errorTableData = res.data
+        console.log(res,this.errorTableData)
+      }).catch(failResponse => {
             console.log(failResponse)
             alert(failResponse)
           })
     },
+    // 详情按钮
+    detailDialog(row) {
+      this.detailDialogVisible = true
+      this.tmnName = row.tmnName
+      this.tmnID = row.tmnId
+      this.pipName = row.pipName
+      this.areaName = row.areaName
+      this.ptId = row.ptid
+      this.exception = row.exception
+      this.result = row.result
+      console.log(row)
+
+    },
+    // 更新表单
+    updateError() {
+      this.$axios.post('/adderror', {
+        pipName: this.PipName,
+        exception: this.exception,
+        result: this.result
+      })
+      .then( res => {
+        console.log(res.data)
+        if (res.data == 200) {
+          console.log("连接成功")
+        } else {
+          console.log("连接失败")
+        }
+      })
+      .catch(failResponse => {
+        alert(failResponse)
+      })
+    },
+
+
     detaildata() {
 
       this.$axios.post('故障详情', this.ERId).then(res => {

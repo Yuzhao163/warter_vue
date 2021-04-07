@@ -3,6 +3,27 @@
     <div>
       <el-button @click="details=true,test()">详情测试</el-button>
     </div>
+    <!--        控制柜列表区域-->
+    <el-table :data="tmnTableDataShow" stripe style="width: 100%; margin-top: 35px; margin-bottom: 25px">
+      <!--        <el-table-column label="" type="index"></el-table-column>-->
+      <el-table-column prop="tmnId" label="控制柜id"></el-table-column>
+      <el-table-column prop="tmnName" label="控制柜名称"></el-table-column>
+      <el-table-column prop="u1TmnName" label="上一控制柜名称" ></el-table-column>
+      <el-table-column prop="u2TmnName" label="上一控制柜名称" ></el-table-column>'
+      <el-table-column prop="d1TmnName" label="上一控制柜名称" ></el-table-column>
+      <el-table-column prop="d2TmnName" label="下一控制柜名称" ></el-table-column>
+      <el-table-column prop="pipName" label="所属管线" ></el-table-column>
+      <el-table-column prop="tmnDesc" label="描述信息"></el-table-column>
+      <el-table-column label="操作信息">
+        <template slot-scope="scope">
+          <el-button type="primary" icon="el-icon-edit" size="mini" @click="editTmnList(scope.row)"></el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeById(scope.row)"></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+
+
     <el-table
         :data="tableData"
         stripe
@@ -40,12 +61,6 @@
           </el-button>
         </template>
       </el-table-column>
-      <!--      <el-table-column-->
-      <!--          prop="ov_period"-->
-      <!--          label="处理方式"-->
-      <!--          width="80">-->
-
-      <!--      </el-table-column>-->
     </el-table>
 
     <!--    弹框内容-->
