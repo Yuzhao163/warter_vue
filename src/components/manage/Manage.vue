@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <div class="form">
     <el-form style="width:600px;" ref="form" :model="form" label-width="200px">
       <el-form-item label="分区选择">
         <el-select v-model="areaselected" placeholder='请选择分区' @change="this.getpipe">
@@ -55,6 +56,7 @@
         <el-button>取消</el-button>
       </el-form-item>
     </el-form>
+    </div>
   </div>
 </template>
 
@@ -190,6 +192,9 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
+}
+.form{
+  background-color: #ffffff;
 }
 
 </style>

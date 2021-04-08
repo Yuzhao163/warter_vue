@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
       users: {
-          username: '',
+          username:'',
           password:'',
           type:"1",//目前3为管线操作人员；2为维护管理人员
 

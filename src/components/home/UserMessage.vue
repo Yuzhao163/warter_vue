@@ -4,18 +4,18 @@
       <div class="title">
         个人信息修改
       </div>
-      <div class="userid">用户ID--{{ this.message.UserID }}</div>
+      <div class="userid">用户ID--{{ this.data.userID }}</div>
     </div>
     <div class="linetext">
       <div style="width: 150px;line-height:40px;margin-left: 10px">用户名：</div>
-      <el-input ref="inputunm" v-model="message.UserName" :disabled="this.disabled.disabledunm"></el-input>
+      <el-input ref="inputunm" v-model="data.userName" :disabled="this.disabled.disabledunm"></el-input>
       <div style="width: 100px;line-height:40px;">
         <el-button type="primary" size="small" round @click="modifyunm">修改</el-button>
       </div>
     </div>
     <div class="linetext">
       <div style="width: 150px;line-height:40px;margin-left: 10px">密码：</div>
-      <el-input ref="inputpsw" v-model="message.UserPswd" :disabled="this.disabled.disabledpsw"
+      <el-input ref="inputpsw" v-model="data.userPswd" :disabled="this.disabled.disabledpsw"
                 show-password></el-input>
       <div style="width: 100px;line-height:40px;">
         <el-button type="primary" size="small" round @click="modifypsw">修改</el-button>
@@ -23,21 +23,21 @@
     </div>
     <div class="linetext">
       <div style="width: 150px;line-height:40px;margin-left: 10px">真实姓名：</div>
-      <el-input ref="inputunm" v-model="message.RealName" :disabled="this.disabled.disabledrn"></el-input>
+      <el-input ref="inputunm" v-model="data.realName" :disabled="this.disabled.disabledrn"></el-input>
       <div style="width: 100px;line-height:40px;">
         <el-button type="primary" size="small" round @click="modifyrn">修改</el-button>
       </div>
     </div>
     <div class="linetext">
       <div style="width: 150px;line-height:40px;margin-left: 10px">联系电话：</div>
-      <el-input ref="inputunm" v-model="message.MoPhone" :disabled="this.disabled.disabledph"></el-input>
+      <el-input ref="inputunm" v-model="data.moPhone" :disabled="this.disabled.disabledph"></el-input>
       <div style="width: 100px;line-height:40px;">
         <el-button type="primary" size="small" round @click="modifyph">修改</el-button>
       </div>
     </div>
     <div class="linetext">
       <div style="width: 150px;line-height:40px;margin-left: 10px">单位名称：</div>
-      <el-input ref="inputunm" v-model="message.DPTName" :disabled="this.disabled.disableddpt"></el-input>
+      <el-input ref="inputunm" v-model="data.dptname" :disabled="this.disabled.disableddpt"></el-input>
       <div style="width: 100px;line-height:40px;">
         <el-button type="primary" size="small" round @click="modifydpt">修改</el-button>
       </div>
@@ -50,11 +50,13 @@
 
 <script>
 import qs from 'qs';
+
 export default {
   name: "UserMessage",
   data() {
     return {
-      data:[],
+      data: [],
+      resnumber:'',//记录是否更新成功
       disabled: {
         disabledunm: true,
         disabledpsw: true,
@@ -62,28 +64,21 @@ export default {
         disabledph: true,
         disableddpt: true,
       },
-      message: {
-        UserID: "10001",
-        UserName: 'zhangsan001',
-        UserPswd: '123456',
-        UClassName: '管线管理',
-        MoPhone: '18832109876',
-        RealName: '张三',
-        DPTName: '排水集团',
-      }
     }
   },
   mounted() {
-
+    this.getmessage();
   },
   methods: {
     getmessage() {
-      var param =qs.stringify({
+      console.log('111111111111' + this.$store.state.users.username)
+      var param = qs.stringify({
         UserName: this.$store.state.users.username,
       })
       this.$axios
-          .post('/getusermessage',param).then(res => {
-        this.data=res;
+          .post('/getUserMessage', param).then(res => {
+        this.data = res.data[0];
+        console.log(this.data)
       }).catch(() => {
       })
     },
@@ -122,16 +117,44 @@ export default {
         this.disabled.disableddpt = true;
       }
     },
+    //用于解决异步问题 判断成功与否
+    checknum(){
+      if(this.resnumber==200){
+        console.log('ss'+this.resnumber)
+        this.$message({
+          type: 'success',
+          message: '修改成功'
+        })
+        console.log(this.$store.state.users.username);
+        this.getmessage();
+      }
+    },
     confirm() {
       this.$confirm('确定要修改您的信息？(请牢记您的密码)', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '修改成功'
+        var params = qs.stringify({
+
+          UserID: this.data.userID,
+          UserName: this.data.userName,
+          UserPswd: this.data.userPswd,
+          UClassID: this.data.uclassID,
+          MoPhone: this.data.moPhone,
+          RealName: this.data.realName,
+          DPTName: this.data.dptname,
         });
+        this.$axios
+            .post('/updstaff', params).then(res => {
+              this.resnumber=res.data.code;
+              this.$store.state.users.username=this.data.userName;
+              this.$store.state.users.password=this.data.userPswd;
+          console.log(this.resnumber)
+          this.checknum();
+              })
+
+
       }).catch(() => {
         this.$message({
           type: 'info',

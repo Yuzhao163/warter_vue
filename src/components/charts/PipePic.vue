@@ -5,6 +5,11 @@
     </div>
     <!--    1-5阀门和管道-->
     <div class="famen">
+<!--      <div class="tmnname_1">-->
+<!--        <ul v-for="(item,key) in this.pips.slice(0,5)" :key="key" style="list-style: none;">-->
+<!--          <li>{{ item.tmnname }}</li>-->
+<!--        </ul>-->
+<!--      </div>-->
       <ul>
         <li
             v-for="(item, index) in v_pershow.slice(0,4)"
@@ -22,30 +27,35 @@
       <img src="../../assets/img/pipes/pipe-L.png"/>
       <div class="imgbox">
         <img id="pip1"/>
+        <div class="tmntext">--{{ this.pips[0].tmnname }}--</div>
         <div class="message">
           水位：{{ pips[0].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
       <div class="imgbox"><img id="pip2"/>
+        <div class="tmntext">--{{ this.pips[1].tmnname }}--</div>
         <div class="message">
           水位：{{ pips[1].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
       <div class="imgbox"><img id="pip3"/>
+        <div class="tmntext">--{{ this.pips[2].tmnname }}--</div>
         <div class="message">
           水位：{{ pips[2].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
       <div class="imgbox"><img id="pip4"/>
+        <div class="tmntext">--{{ this.pips[3].tmnname }}--</div>
         <div class="message">
           水位：{{ pips[3].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
       <div class="imgbox"><img id="pip5"/>
+        <div class="tmntext">--{{ this.pips[4].tmnname }}--</div>
         <div class="message">
           水位：{{ pips[4].pipflow }}<br/>
           流速：{{ speed }}
@@ -72,32 +82,37 @@
     <div class="pipe">
       <img src="../../assets/img/pipes/pipe-L.png"/>
       <div class="imgbox"><img id="pip6"/>
+        <div class="tmntext">--{{ this.pips[4].tmnname }}--</div>
+        <div class="message">
+          水位：{{ pips[4].pipflow }}<br/>
+          流速：{{ speed }}
+        </div>
+      </div>
+      <div class="imgbox"><img id="pip7"/>
+        <div class="tmntext">--{{ this.pips[5].tmnname }}--</div>
         <div class="message">
           水位：{{ pips[5].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
-      <div class="imgbox"><img id="pip7"/>
+      <div class="imgbox"><img id="pip8"/>
+        <div class="tmntext">--{{ this.pips[6].tmnname }}--</div>
         <div class="message">
           水位：{{ pips[6].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
-      <div class="imgbox"><img id="pip8"/>
+      <div class="imgbox"><img id="pip9"/>
+        <div class="tmntext">--{{ this.pips[7].tmnname }}--</div>
         <div class="message">
           水位：{{ pips[7].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
-      <div class="imgbox"><img id="pip9"/>
+      <div class="imgbox"><img id="pip10"/>
+        <div class="tmntext">--{{ this.pips[8].tmnname }}--</div>
         <div class="message">
           水位：{{ pips[8].pipflow }}<br/>
-          流速：{{ speed }}
-        </div>
-      </div>
-      <div class="imgbox"><img id="pip10"/>
-        <div class="message">
-          水位：{{ pips[9].pipflow }}<br/>
           流速：{{ speed }}
         </div>
       </div>
@@ -132,6 +147,11 @@
         </el-form-item>
       </el-form>
     </div>
+<!--    <div class="tmnname_2">-->
+<!--      <ul v-for="(item,key) in this.pips.slice(4,9)" :key="key" style="list-style: none;">-->
+<!--        <li>{{ item.tmnname }}</li>-->
+<!--      </ul>-->
+<!--    </div>-->
 
     <!--    一键开阀-->
     <el-button type="danger" round v-on:click="openall">一键开阀</el-button>
@@ -162,6 +182,7 @@ export default {
   },
   data() {
     return {
+      allData: '',
       seen: false,//控制悬浮窗是否显示
       timer: null, //定时器
       x: 0,
@@ -222,37 +243,47 @@ export default {
       pips: [
         {
           pipid: "1",
-          pipflow: ""
+          pipflow: "",
+          tmnname: ''
         },
         {
           pipid: "2",
-          pipflow: ""
+          pipflow: "",
+          tmnname: ''
         },
         {
           pipid: "3",
-          pipflow: ""
+          pipflow: "",
+          tmnname: ''
         },
         {
           pipid: "4",
-          pipflow: ""
+          pipflow: "",
+          tmnname: ''
         }, {
           pipid: "5",
-          pipflow: ""
+          pipflow: "",
+          tmnname: ''
         }, {
           pipid: "6",
-          pipflow: ""
+          pipflow: "",
+          tmnname: ''
         }, {
           pipid: "7",
-          pipflow: ""
+          pipflow: "",
+          tmnname: ''
         }, {
           pipid: "8",
-          pipflow: ""
+          pipflow: "",
+          tmnname: ''
         }, {
           pipid: "9",
-          pipflow: ""
+          pipflow: "",
+          tmnname: ''
         }, {
           pipid: "10",
-          pipflow: ""
+          pipflow: "",
+          tmnname: ''
         }
       ]
     };
@@ -260,20 +291,37 @@ export default {
   methods: {
     getdata() {
       this.$axios.get("/getPipe").then(successResponse => {
-        for (var i = 0; i < successResponse.data.length; i++) {
+        this.allData = successResponse.data
+        for (var k in this.allData) {
           for (var j = 0; j < this.pips.length; j++) {
-            if (successResponse.data[i].tmnID === this.pips[j].pipid) {
-              this.pips[j].pipflow = successResponse.data[i].w_line;//存水流量
-              // this.v_pershow[j].v_per = successResponse.data[i].v_per;
+            if (this.allData[k].tmnID === this.pips[j].pipid) {
+              this.pips[j].pipflow = this.allData[k].w_line;
+              this.pips[j].tmnname = k;
+              console.log(this.pips[j].tmnname)
             }
           }
-          for (var k = 0; k < this.v_pershow.length; k++) {
-            if (successResponse.data[i].tmnID === this.v_pershow[k].v_perid) {
-              this.v_pershow[k].v_per = successResponse.data[i].v_per;//存阀位
-              // this.v_pershow[j].v_per = successResponse.data[i].v_per;
+          for (var i = 0; i < this.v_pershow.length; i++) {
+            if (this.allData[k].tmnID === this.v_pershow[i].v_perid) {
+              this.v_pershow[i].v_per = this.allData[k].v_per;
             }
           }
+
+
         }
+        // for (var i = 0; i < successResponse.data.length; i++) {
+        //   for (var j = 0; j < this.pips.length; j++) {
+        //     if (successResponse.data[i].tmnID === this.pips[j].pipid) {
+        //       this.pips[j].pipflow = successResponse.data[i].w_line;//存水流量
+        //       // this.v_pershow[j].v_per = successResponse.data[i].v_per;
+        //     }
+        //   }
+        //   for (var k = 0; k < this.v_pershow.length; k++) {
+        //     if (successResponse.data[i].tmnID === this.v_pershow[k].v_perid) {
+        //       this.v_pershow[k].v_per = successResponse.data[i].v_per;//存阀位
+        //       // this.v_pershow[j].v_per = successResponse.data[i].v_per;
+        //     }
+        //   }
+        // }
         this.change_pip();
 
       });
@@ -284,7 +332,7 @@ export default {
     modifyForm() {
       this.disabled = false;
     },
-
+    //判断显示的图片
     changepip(status) {
       if (status > 0 && status <= 25) {
         return pip25;
@@ -301,6 +349,7 @@ export default {
         return pip0;
       }
     },
+    //切换图片
     change_pip() {
       for (var i = 0; i < this.pips.length; i++) {
         if (this.pips[i].pipid === "1") {
@@ -367,17 +416,22 @@ export default {
           message: '开启成功!'
         });
       }).catch(() => {
-
+        this.$message({
+          type: 'info',
+          message: '开阀取消！'
+        });
       });
     },
-    enter(index,a) {
+    enter(index, a) {
       this.seen = true;
-      if(a==1){
-      this.t_vper.id = this.v_pershow[index].v_perid;
-      this.t_vper.vper = this.v_pershow[index].v_per;}
-      if(a==2){
-        this.t_vper.id = this.v_pershow[index+4].v_perid;
-        this.t_vper.vper = this.v_pershow[index+4].v_per;}
+      if (a == 1) {
+        this.t_vper.id = this.v_pershow[index].v_perid;
+        this.t_vper.vper = this.v_pershow[index].v_per;
+      }
+      if (a == 2) {
+        this.t_vper.id = this.v_pershow[index + 4].v_perid;
+        this.t_vper.vper = this.v_pershow[index + 4].v_per;
+      }
 
 
     },
@@ -398,22 +452,32 @@ export default {
 </script>
 
 <style scoped>
-.famen {
+.tmntext{
+  position: absolute;
+  left:-10px; right:0; top:-20px; bottom:0;
+  margin:auto;
+font-size: 22px;
+}
 
+.famen {
+  position: relative;
   display: flex;
   margin-left: 174px;
   padding: 0px;
   width: auto;
   height: 73px;
-
-
 }
+.famen img {
+  margin: 0px 56px 0px 56px;
 
+  height: 73px;
+}
 .famen ul {
   list-style: none;
   margin-top: 0px;
   margin-left: 0px;
   padding-left: 0px;
+  display: flex;
 }
 
 .famen ul li {
@@ -431,11 +495,7 @@ export default {
   display: inline-block;
 }
 
-.famen img {
-  margin: 0px 56px 0px 56px;
-  width: auto;
-  height: 73px;
-}
+
 
 .imgbox {
   position: relative;
@@ -493,7 +553,7 @@ export default {
 
 .opall {
   position: absolute;
-  top: 20px;
+  top:-10px;
   left: 20px;
   width: 80px;
   height: 80px;
@@ -505,12 +565,12 @@ export default {
   line-height: 80px;
   z-index: 10;
   cursor: pointer;
-  box-shadow:0px 0px 10px 1px #ff4343;
+  box-shadow: 0px 0px 10px 1px #ff4343;
 }
 
 :hover.opall {
   position: absolute;
-  top: 20px;
+
   left: 20px;
   width: 80px;
   height: 80px;
@@ -522,6 +582,6 @@ export default {
   line-height: 80px;
   z-index: 10;
   cursor: pointer;
-  box-shadow:0px 0px 10px 2px #ff9999;
+  box-shadow: 0px 0px 10px 2px #ff9999;
 }
 </style>
