@@ -55,13 +55,14 @@ export default {
   methods: {
     //检查用户的权限，如果为2则无个人显示
     check() {
-      if (this.$store.state.users.type == '2') {
+      if (this.$store.state.users.type == '3') {
         console.log('权限变更')
         this.mainitems[7]='';
         this.mainitems[7]=this.mainitems[9];
         this.$delete(this.mainitems,8);//去掉人员、设备维护功能
+        this.$delete(this.mainitems,8);//去掉人员、设备维护功能
       }
-      if (this.$store.state.users.type == '3') {
+      if (this.$store.state.users.type == '2') {
         console.log('权限变更')
 
         this.$delete(this.mainitems,3);//去掉管线操作员各个功能

@@ -50,9 +50,24 @@ export default {
             password: this.loginForm.password
           })
           .then(successResponse => {
+            if (successResponse.data.code === 100) {
+              this.$store.state.users.username=this.loginForm.username;
+              this.$store.state.users.password=this.loginForm.password;
+              localStorage.setItem('ms_username', this.loginForm.username);
+              this.setCookie(this.loginForm.username, this.loginForm.password, 7);
+              this.$router.replace({path: '/home'})
+            }
             if (successResponse.data.code === 200) {
               this.$store.state.users.username=this.loginForm.username;
               this.$store.state.users.password=this.loginForm.password;
+              this.$store.state.users.type='2';
+              localStorage.setItem('ms_username', this.loginForm.username);
+              this.setCookie(this.loginForm.username, this.loginForm.password, 7);
+              this.$router.replace({path: '/home'})
+            }else if (successResponse.data.code === 300) {
+              this.$store.state.users.username=this.loginForm.username;
+              this.$store.state.users.password=this.loginForm.password;
+              this.$store.state.users.type='3';
               localStorage.setItem('ms_username', this.loginForm.username);
               this.setCookie(this.loginForm.username, this.loginForm.password, 7);
               this.$router.replace({path: '/home'})
