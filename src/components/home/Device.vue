@@ -15,7 +15,7 @@
       </el-row>
 
       <!--        控制柜列表区域-->
-      <el-table :data="tmnTableDataShow" stripe style="width: 100%; margin-top: 35px; margin-bottom: 25px">
+      <el-table :data="tmnTableDataShow.slice((currentPage-1)*pageSize,currentPage*pageSize)" stripe style="width: 100%; margin-top: 35px; margin-bottom: 25px">
 <!--        <el-table-column label="" type="index"></el-table-column>-->
         <el-table-column prop="tmnId" label="控制柜id"></el-table-column>
         <el-table-column prop="tmnName" label="控制柜名称"></el-table-column>
@@ -41,7 +41,7 @@
             :page-sizes="[1, 5, 10, 20]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="totalItems">
+            :total="tmnTableDataShow.length">
       </el-pagination>
 
       <!--            添加控制柜对话框-->
@@ -206,7 +206,7 @@ export default {
       // 搜索后需要展示的内容
       filterTableData: [],
       // 用来判断是否检索过
-      flag: '',
+      flag: 0,
       // 控制柜表信息
       tmnTableData:[],
       // 需要展示的控制柜
@@ -293,99 +293,52 @@ export default {
   created() {
     // 获取列表信息
     this.getTmnList()
+
   },
   methods:{
     //获取控制柜列表信息
     async getTmnList() {
       const {data: res} = await this.$axios.get('/getTmnList')
       this.tmnTableData = res
-      // 判断有多少条数据需要被输出
-      this.totalItems = res.length
-      // 判断当前数据是否大于当前页要展示的数据 如果大于 把需要展示的几条展示出来 如果小于 直接展示即可
-      if (this.totalItems > this.pageSize){
-        for (var i = 0; i < this.pageSize; i++) {
-          this.tmnTableDataShow.push(this.tmnTableData[i]);
-        }
-      } else {
-        this.tmnTableDataShow = this.tmnTableData;
-      }
+        console.log(this.tmnTableData)
+        this.handleTmnTableDataShow()
     },
+
+    //  分页功能
+      handleSizeChange(size) {
+          this.pagesize = size;
+          console.log(this.pagesize)  //每页下拉显示数据
+      },
+      handleCurrentChange(currentPage){
+          this.currentPage = currentPage;
+          console.log(this.currentPage)  //点击第几页
+      },
+      handleTmnTableDataShow() {
+        this.tmnTableDataShow = this.tmnTableData
+          console.log("show",this.tmnTableDataShow)
+      },
+
     // 搜索功能（利用双向绑定）
     changeSearch() {
-      console.log(this.tmnTableData)
       this.tmnTableDataShow = []
-      // this.filterTableData = []
       var j = 0
       if (this.tmnName === '') {
         this.tmnTableDataShow = this.tmnTableData
       } else {
         for(var i=0; i<this.tmnTableData.length; i++) {
-          console.log(this.tmnName)
           if(this.tmnTableData[i].tmnName.search(this.tmnName) >= 0) {
             this.tmnTableDataShow[j] = this.tmnTableData[i]
             j++
           }
         }
       }
-
-
-
-      // console.log(this.filterTableData)
-      //
-      //
-      //   this.currentPage = 1
-      //   this.totalItems = this.filterTableData.length
-      //
-      //   console.log(this.currentPage,this.pageSize,this.totalItems)
-      //   console.log(this.tmnTableDataShow)
-      //   // this.currentChangePage()
-      //   //
-      //   //  计算页面
-      //   var a = (this.currentPage - 1) * this.pageSize
-      //   var b = this.currentPage * this.pageSize
-      //   console.log(((this.currentPage - 1) * this.pageSize),(this.currentPage * this.pageSize))
-      //   console.log(a,b)
-      //   for (var k = a; k < b ; k++) {
-      //       // 如果所有的数据都被遍历完就不继续遍历了
-      //       if (this.filterTableData[k]) {
-      //           this.tmnTableDataShow.push(this.filterTableData[k])
-      //       }
-      //   }
-      // console.log(this.tmnTableDataShow)
-      //   console.log(this.filterTableData)
-
     },
     // 清空搜索框
     clear() {
       this.tmnTableDataShow = [];
       this.getTmnList()
-    },
-    // 分页功能
-    handleSizeChange(val) {
-      this.pageSize = val
-      this.handleCurrentChange(this.currentPage)
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      // 需要判断是否检索
-      if (!this.flag) {
-        this.currentChangePage(this.tmnTableDataShow)
-      } else {
-        this.currentChangePage(this.filterTableData)
-      }
-    },
-    // 监控当前页码
-    currentChangePage() {
-      // 计算展示页面的数组从哪个地方开始与结束
-      let start = (this.currentPage - 1) * this.pageSize
-      let end = this.currentPage * this.pageSize
-      this.tmnTableDataShow = [];
-      for (var i = start; i < end ; i++) {
-        // 如果所有的数据都被遍历完就不继续遍历了
-        if (this.tmnTableData[i]) {
-          this.tmnTableDataShow.push(this.tmnTableData[i])
-        }
-      }
+        this.pagesize = 5
+        this.currentPage = 1
     },
     // 管线下拉框部分（二维数组的增加）
     arrayPush() {
