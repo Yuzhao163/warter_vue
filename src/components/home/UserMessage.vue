@@ -30,7 +30,7 @@
     </div>
     <div class="linetext">
       <div style="width: 150px;line-height:40px;margin-left: 10px">联系电话：</div>
-      <el-input ref="inputunm" v-model="message.MoPhone" :disabled="this.disabled.disabledunm"></el-input>
+      <el-input ref="inputunm" v-model="message.MoPhone" :disabled="this.disabled.disabledph"></el-input>
       <div style="width: 100px;line-height:40px;">
         <el-button type="primary" size="small" round @click="modifyph">修改</el-button>
       </div>
@@ -49,10 +49,12 @@
 </template>
 
 <script>
+import qs from 'qs';
 export default {
   name: "UserMessage",
   data() {
     return {
+      data:[],
       disabled: {
         disabledunm: true,
         disabledpsw: true,
@@ -75,6 +77,16 @@ export default {
 
   },
   methods: {
+    getmessage() {
+      var param =qs.stringify({
+        UserName: this.$store.state.users.username,
+      })
+      this.$axios
+          .post('/getusermessage',param).then(res => {
+        this.data=res;
+      }).catch(() => {
+      })
+    },
     modifyunm() {
       if (this.disabled.disabledunm == true) {
         this.disabled.disabledunm = false;
@@ -164,7 +176,8 @@ export default {
   display: flex;
   margin: 20px 0;
 }
-.boxfoot{
+
+.boxfoot {
   margin: 20px;
 }
 

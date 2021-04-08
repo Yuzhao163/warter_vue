@@ -2,23 +2,23 @@
   <div class="main">
     <el-form style="width:600px;" ref="form" :model="form" label-width="200px">
       <el-form-item label="分区选择">
-        <el-select v-model="areaselected" placeholder='请选择分区'>
+        <el-select v-model="areaselected" placeholder='请选择分区' @change="this.getpipe">
           <!--        <option disabled value="">请选择</option>-->
-          <el-option v-for="(area,i) in form.areas" :area="area" :key="i" :label="area.message"
+          <el-option v-for="(area,i) in areas" :area="area" :key="i" :label="area.message"
                      :value="area.message"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="管线选择">
-        <el-select v-model="pipeselected" placeholder='请选择管线'>
+        <el-select v-model="pipeselected" placeholder='请选择管线' @change="this.gettmn">
           <!--        <option disabled value="">请选择</option>-->
-          <el-option v-for="(pipe,i) in form.pipe" :pipe="pipe" :key="i" :label="pipe.message"
+          <el-option v-for="(pipe,i) in pipes" :pipe="pipe" :key="i" :label="pipe.message"
                      :value="pipe.message"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="控制柜选择">
         <el-select v-model="terminalselected" placeholder='请选择控制柜'>
           <!--        <option disabled value="">请选择</option>-->
-          <el-option v-for="(terminal,i) in form.terminal" :terminal="terminal" :key="i" :label="terminal.message"
+          <el-option v-for="(terminal,i) in tmns" :terminal="terminal" :key="i" :label="terminal.message"
                      :value="terminal.message"></el-option>
         </el-select>
       </el-form-item>
@@ -51,7 +51,7 @@
         <el-input v-model="form.vactiontime"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" v-on:click="submit">立即创建</el-button>
+        <el-button type="primary" v-on:click="submit">下发命令</el-button>
         <el-button>取消</el-button>
       </el-form-item>
     </el-form>
@@ -59,15 +59,18 @@
 </template>
 
 <script>
-///import qs from 'qs'
-//var terminalselect = [{message:"选择此项进行刷新"}];
+import qs from 'qs';
+
 var terminalselect = [{}];
 console.log("1", terminalselect)
-var terminal = [];
 export default {
   name: "Manage",
   data() {
     return {
+      areas: [],//存储使用者管辖的分区
+      pipes: [],//存储使用者管辖的管线
+      tmns: [],//存储使用者管辖的控制柜
+
       areaselected: '',
       pipeselected: '',
       terminalselected: '',
@@ -100,68 +103,83 @@ export default {
     onSubmit() {
       console.log('submit!');
     },
+    //进入页面时请求操作者管辖的分区
     getarea() {
-      console.log('!')
-      this.$axios.get('/getarea')
-          .then(function (res) {
-            console.log(res)
-            terminal = res['data'];
-            // terminalselect = res;
-            console.log(terminal)
-            for (var i = 0; i < terminal.length; i++) {
-              var terdata = terminal[i]['tmnId'];
-              terminalselect[i] = {"message": terdata}
-              console.log("terminalselect", terminalselect)
-              console.log("terdata", terdata)
-            }
+      var param = qs.stringify({UserName: this.$store.state.users.username})//将维护人员信息传给后端得到他所控制的区域
+      this.$axios.post('/getarea', param)
+          .then(res => {
+            this.areas = res;
           })
           .catch(function (err) {
             console.log(err)
           })
-
+      this.getpipe();
+    },
+    //根据分区请求管线
+    getpipe() {
+      var param = qs.stringify({
+        UserName: this.$store.state.users.username,
+        areaId:this.areaselected,
+      });
+      this.$axios.post('/getpipe', param)
+          .then(res => {
+            this.pipes = res;
+          })
+          .catch(function (err) {
+            console.log(err)
+          })
+      this.gettmn();
+    },
+    //根据管线请求控制柜
+    gettmn() {
+      var param = qs.stringify({
+        UserName: this.$store.state.users.username,
+        pipeId:this.pipeselected,
+      });
+      this.$axios.post('/gettmn', param)
+          .then(res => {
+            this.tmns = res;
+          })
+          .catch(function (err) {
+            console.log(err)
+          })
     },
     submit() {
       ///var postData = new URLSearchParams();
-      var PackgaeID = "1";
-      var PeerAddress = "1";
-      var D_ID = "1";
-      var W_work = "1";
-      var CmdStatus = "1";
-      var TmnID = this.terminalselected;
-      var V_pre = this.form.vpre;//阀位
-      var OV_period = this.form.ovperiod;//开阀周期
-      var OV_waterline = this.form.ovwaterline;//开阀水位
-      var OV_keeptime = this.form.ovkeeptime;//开阀保持时间
-      var CV_waterline = this.form.cvwaterline;//关阀水位
-      var V_actiontime = this.form.vactiontime;//最长阀动作时间;
+      var params = qs.stringify({
 
-      this.$axios
-          // .post('/ma', qs.stringify({
-          .post('/ma', {
-                TmnID: TmnID,
-                V_pre: V_pre,
-                OV_period: OV_period,
-                OV_waterline: OV_waterline,
-                OV_keeptime: OV_keeptime,
-                CV_waterline: CV_waterline,
-                V_actiontime: V_actiontime,
-                PackgaeID: PackgaeID,
-                PeerAddress: PeerAddress,
-                D_ID: D_ID,
-                W_work: W_work,
-                CmdStatus: CmdStatus,
-              },
-              ///{headers:{'Content-Type': 'application/x-www-form-urlencoded'}}
-          )
-          .then(successResponse => {
-            if (successResponse.data.code === 200) {
-              alert("插入成功成功!");
-              this.$router.replace("/manage");
-            }
-          })
-          .catch(failResponse => {
-            alert(failResponse)
-          })
+        TmnID: this.terminalselected,
+        V_pre: this.form.vpre,//阀位
+        OV_period: this.form.ovperiod,//开阀周期
+        OV_waterline: this.form.ovwaterline,//开阀水位
+        OV_keeptime: this.form.ovkeeptime,//开阀保持时间
+        CV_waterline: this.form.cvwaterline,//关阀水位
+        V_actiontime: this.form.vactiontime,//最长阀动作时间;
+      });
+
+      this.$confirm('将下发命令至终端, 确定下发？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$axios
+            .post('/ma', params)
+            .then(successResponse => {
+              if (successResponse.data.code === 200) {
+                alert("插入成功成功!");
+                this.$router.replace("/manage");
+              }
+            })
+            .catch(failResponse => {
+              alert(failResponse)
+            })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消命令下发'
+        });
+      });
+
     }
   },
 }

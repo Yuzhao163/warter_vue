@@ -8,7 +8,7 @@ export default new Vuex.Store({
       users: {
           username: '',
           password:'',
-          type:"3",//目前2为管线操作人员；3为维护管理人员
+          type:"1",//目前3为管线操作人员；2为维护管理人员
 
       },
     user: {

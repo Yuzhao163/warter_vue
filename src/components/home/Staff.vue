@@ -81,7 +81,7 @@
         :page-sizes="[1,5,10,20]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
+        :total="tableDataShow.length">
       >
     </el-pagination>
     <!--    修改员工信息-->
