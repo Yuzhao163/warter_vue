@@ -104,7 +104,7 @@ export default {
   methods: {
     //列表详情
     getErrorList() {
-      this.$axios.get('/error').then(res => {
+      this.$axios.get('/errors').then(res => {
         console.log("请求成功")
         this.errorTableData = res.data
         console.log("111111111",res,this.errorTableData)
