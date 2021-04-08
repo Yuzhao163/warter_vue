@@ -149,6 +149,7 @@ export default {
             .post('/updstaff', params).then(res => {
               this.resnumber=res.data.code;
               this.$store.state.users.username=this.data.userName;
+              window.localStorage.setItem('ms_username',JSON.stringify(this.data.userName))
               this.$store.state.users.password=this.data.userPswd;
           console.log(this.resnumber)
           this.checknum();

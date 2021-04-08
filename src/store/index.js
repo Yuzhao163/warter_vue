@@ -1,8 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+
+import VuexPersistence from 'vuex-persist'
 //拦截器设置
 Vue.use(Vuex)
-
+const vuexLocal = new VuexPersistence({
+    storage: window.localStorage
+})
 export default new Vuex.Store({
   state: {
       users: {
@@ -20,5 +24,6 @@ export default new Vuex.Store({
             state.user = user
             window.localStorage.setItem('user', JSON.stringify(user))
         }
-    }
+    },
+    plugins: [vuexLocal.plugin]
 })

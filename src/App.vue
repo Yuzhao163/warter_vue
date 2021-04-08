@@ -13,6 +13,9 @@ export default {
   name: "App",
   components: {
     // Login,
+  },
+  created() {
+    this.$store.state.users.username=window.localStorage.getItem('ms_username')
   }
 };
 </script>
