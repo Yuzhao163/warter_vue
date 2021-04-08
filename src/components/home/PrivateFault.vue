@@ -55,16 +55,15 @@
 </template>
 
 <script>
+  import qs from 'qs';
 // import Temperature from "../charts/Temperature";
 export default {
   name: "PrivateFault",
   // components: {Temperature},
   mounted() {
-
   },
   data() {
     return {
-
       // 故障表格
       errorTableData: [],
       // 详情按钮
@@ -86,6 +85,11 @@ export default {
       // user
       user:'',
 
+      update: {
+        exception:'',
+        result:''
+      },
+
       // 所属管线下拉框
       pipList:[],
 
@@ -100,10 +104,11 @@ export default {
   methods: {
     //列表详情
     getErrorList() {
-      this.$axios.get('/error1').then(res => {
+      this.$axios.get('/error').then(res => {
         console.log("请求成功")
         this.errorTableData = res.data
-        console.log(res,this.errorTableData)
+        console.log("111111111",res,this.errorTableData)
+        // console.log('exception',this.exception)
       }).catch(failResponse => {
             console.log(failResponse)
             alert(failResponse)
@@ -111,6 +116,7 @@ export default {
     },
     // 详情按钮
     detailDialog(row) {
+      console.log("exception1",this.exception)
       this.detailDialogVisible = true
       this.tmnName = row.tmnName
       this.tmnID = row.tmnId
@@ -119,55 +125,59 @@ export default {
       this.ptId = row.ptid
       this.exception = row.exception
       this.result = row.result
-      console.log(row)
-
+      console.log("row===",row)
     },
+
     // 更新表单
     updateError() {
-      this.$axios.post('/adderror', {
-        pipName: this.PipName,
-        exception: this.exception,
-        result: this.result
-      })
+      var params = qs.stringify({TmnId: this.tmnID,
+        Exception: this.exception,
+        Result: this.result})
+      // this.update.exception = this.exception
+      // console.log("aaaaaaaaa",this.exception)
+      // console.log("dsadasda",params)
+      this.$axios.post('/adderror', params)
       .then( res => {
-        console.log(res.data)
-        if (res.data == 200) {
-          console.log("连接成功")
+        if (res.status == 200) {
+          this.$message.success('更新成功')
+          this.detailDialogVisible = false
         } else {
-          console.log("连接失败")
+          this.$message.error('更新失败')
         }
       })
       .catch(failResponse => {
         alert(failResponse)
       })
+      this.getErrorList()
+      this.$router.go(0)
     },
 
 
-    detaildata() {
-
-      this.$axios.post('故障详情', this.ERId).then(res => {
-        console.log("请求成功")
-        this.Tmn = res.data;
-      })
-          .catch(failResponse => {
-            console.log(failResponse)
-            alert(failResponse)
-          })
-    },
-    setArea(pipname) {
-      for (var i = 0; i < this.Tmn.length; i++) {
-        if (pipname == this.Tmn[i].PipName) {
-          this.AreaName = this.Tmn[i].AreaName
-        }
-      }
-    },
+    // detaildata() {
+    //
+    //   this.$axios.post('故障详情', this.ERId).then(res => {
+    //     console.log("请求成功")
+    //     this.Tmn = res.data;
+    //   })
+    //       .catch(failResponse => {
+    //         console.log(failResponse)
+    //         alert(failResponse)
+    //       })
+    // },
+    // setArea(pipname) {
+    //   for (var i = 0; i < this.Tmn.length; i++) {
+    //     if (pipname == this.Tmn[i].PipName) {
+    //       this.AreaName = this.Tmn[i].AreaName
+    //     }
+    //   }
+    // },
   },
-  watch: {
-    PipName() {
-      this.setArea(this.PipName)
-    },
-    immediate: true
-  }
+  // watch: {
+  //   PipName() {
+  //     this.setArea(this.PipName)
+  //   },
+  //   immediate: true
+  // }
 }
 </script>
 
