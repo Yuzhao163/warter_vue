@@ -15,7 +15,7 @@
       <!-- 用户名下拉菜单 -->
       <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
-                        {{username}}
+                        {{this.$store.state.users.username}}
                         <i class="el-icon-caret-bottom"></i>
                     </span>
         <el-dropdown-menu slot="dropdown">
@@ -83,7 +83,7 @@ export default {
 }
 .logo-img {
   display: flex;
-
+  cursor: pointer;
   margin: auto;
   margin-left: 18px;
   float: left;

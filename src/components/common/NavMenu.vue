@@ -149,17 +149,17 @@ export default {
           index: 'staff',
           title: '人员管理',
         },
-        {
-          icon: 'el-icon-view',
-          index: '2',
-          title: '测试练习',
-          subs: [
-            {
-              index: 'testv',
-              title: '视频练习'
-            }
-          ]
-        }
+        // {
+        //   icon: 'el-icon-view',
+        //   index: '2',
+        //   title: '测试练习',
+        //   subs: [
+        //     {
+        //       index: 'testv',
+        //       title: '视频练习'
+        //     }
+        //   ]
+        // }
       ]
     }
   },
