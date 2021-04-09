@@ -60,8 +60,8 @@
     </el-pagination>
     <!--    弹框内容-->
     <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
-            <div>控制柜名称：{{ this.tableData[(currentPage-1)*pageSize+this.tableindex].tmnName }}</div>
-            <div>控制柜编号：{{ this.tableData[(currentPage-1)*pageSize+this.tableindex].tmnId }}</div>
+            <div>控制柜名称：{{ this.tableData[this.daindex].tmnName }}</div>
+            <div>控制柜编号：{{ this.tableData[this.daindex].tmnId }}</div>
       <div class="pipearea">
         <span>所属管线：</span>
         <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="--所属管线--" class="handle-select"
@@ -78,7 +78,7 @@
       </div>
       <div class="faultdetail">
         <div>故障详情：</div>
-        <div class="fault-text">{{ tableData[(currentPage-1)*pageSize+this.tableindex].exception }}</div>
+        <div class="fault-text">{{ tableData[this.daindex].exception }}</div>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="details = false">取 消</el-button>
@@ -101,8 +101,9 @@ export default {
   data() {
     return {
       tableData: [],
+      daindex:0,//记录每页的第几个数
       details: false,
-      tableindex: '0',
+      tableindex: '',
       form: {
         name: '',
         region: '',
@@ -156,6 +157,7 @@ export default {
     },
     detailbutton(index, row) {
       this.tableindex = index;
+      this.dataindex();
       console.log(row)
     },
     setArea(pipname) {
@@ -182,6 +184,10 @@ export default {
       console.log(this.tableData[0].tmnName)
 
     },
+    dataindex(){
+      this.daindex=(this.currentPage-1)*this.pageSize+this.tableindex
+
+    }
   },
   watch: {
     PipName() {
