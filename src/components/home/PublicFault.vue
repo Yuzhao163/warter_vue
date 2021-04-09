@@ -60,8 +60,8 @@
     </el-pagination>
     <!--    弹框内容-->
     <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
-            <div>控制柜名称：{{ tableData[this.tableindex].tmnName }}</div>
-            <div>控制柜编号：{{ tableData[this.tableindex].tmnId }}</div>
+            <div>控制柜名称：{{ this.tableData[(currentPage-1)*pageSize+this.tableindex].tmnName }}</div>
+            <div>控制柜编号：{{ this.tableData[(currentPage-1)*pageSize+this.tableindex].tmnId }}</div>
       <div class="pipearea">
         <span>所属管线：</span>
         <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="--所属管线--" class="handle-select"
@@ -78,7 +78,7 @@
       </div>
       <div class="faultdetail">
         <div>故障详情：</div>
-        <div class="fault-text">{{ tableData[this.tableindex].exception }}</div>
+        <div class="fault-text">{{ tableData[(currentPage-1)*pageSize+this.tableindex].exception }}</div>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="details = false">取 消</el-button>
