@@ -71,6 +71,11 @@ export default {
               localStorage.setItem('ms_username', this.loginForm.username);
               this.setCookie(this.loginForm.username, this.loginForm.password, 7);
               this.$router.replace({path: '/home'})
+            }else  if (successResponse.data.code === 400){
+              this.$message({
+                type: 'error',
+                message: '用户名或密码错误！'
+              });
             }
           })
           .catch(failResponse => {
