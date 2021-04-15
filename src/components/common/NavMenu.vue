@@ -149,6 +149,21 @@ export default {
           index: 'staff',
           title: '人员管理',
         },
+        {
+          icon: 'el-icon-user',
+          index: 'traffic_forecast',
+          title: '流量预测',
+        },
+        {
+          icon: 'el-icon-user',
+          index: 'fault_diagnosis',
+          title: '故障诊断',
+        },
+        {
+          icon: 'el-icon-user',
+          index: 'pipeline_optimization',
+          title: '路径优化',
+        },
         // {
         //   icon: 'el-icon-view',
         //   index: '2',

@@ -19,6 +19,9 @@ import UserSetting from '@/components/user/UserSetting'
 import Main from "@/components/Main";
 import Register from "@/components/Register";
 import Testv from "@/components/test/Testv";
+import Fault_diagnosis from "@/components/research_topic/Fault_diagnosis";
+import Pipeline_optimization from "@/components/research_topic/Pipeline_optimization";
+import Traffic_forecast from "@/components/research_topic/Traffic_forecast";
 
 
 Vue.use(Router);
@@ -144,7 +147,31 @@ export default new Router({
                 meta: {
                     requireAuth: true
                 }
-            }
+            },
+            {
+                path: '/traffic_forecast',
+                name:'流量预测',
+                component: Traffic_forecast,
+                meta: {
+                    requireAuth: true
+                }
+            },
+            {
+                path: '/fault_diagnosis',
+                name:'故障诊断',
+                component: Fault_diagnosis,
+                meta: {
+                    requireAuth: true
+                }
+            },
+            {
+                path: '/pipeline_optimization',
+                name:'管路优化',
+                component: Pipeline_optimization,
+                meta: {
+                    requireAuth: true
+                }
+            },
         ]
     },
       {

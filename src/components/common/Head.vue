@@ -7,7 +7,12 @@
     </div>
     <div class="logo-text">云端市政排水管网自动清洁系统</div>
     <div class="header-right">
+      <div>
+
+      </div>
       <div class="header-user-con">
+        <el-button type="success" round v-on:click="openall">一键开阀</el-button>
+        <el-button type="danger" round v-on:click="openall">一键关阀</el-button>
         <!--        用户头像-->
         <div class="user-avator">
           <img src="../../assets/img/头像.jpg" />
@@ -52,7 +57,48 @@ export default {
         this.$router.push('/main');
       }
     },
-
+    //一件开阀
+    openall() {
+      this.$confirm('此操作将完全开启辖区内全部阀门, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {this.$axios.post('/一件开阀').then(res=>{
+        if(res.data===200){
+          this.$message({
+            type: 'success',
+            message: '开启成功!'
+          });
+        }
+      })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '开阀取消！'
+        });
+      });
+    },
+    //一件关阀
+    closeall() {
+      this.$confirm('此操作将完全关闭辖区内全部阀门, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {this.$axios.post('/一键关阀').then(res=>{
+        if(res.data===200){
+          this.$message({
+            type: 'success',
+            message: '关闭成功!'
+          });
+        }
+      })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '关阀取消！'
+        });
+      });
+    },
   }
 }
 </script>

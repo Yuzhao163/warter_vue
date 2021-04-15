@@ -1,7 +1,24 @@
 <template>
+
   <div class="main">
-    <div class="form">
+    <div class="tips">请选择要下发命令的控制柜：</div>
+    <div class="tmnview">
+      <ul style="list-style: none">
+        <li v-for="item in this.tmndata" :key="item">
+          <div class="imgbox" v-on:click="openform(item)">
+            <img  src="../../assets/img/控制柜.png"/>
+          </div>
+          <div class="tmnname">{{item.tmnName}}</div></li>
+      </ul>
+    </div>
+
+
+    <div class="form" v-show="details">
+      <span style="font:24px arial,sans-serif;color: #134d6e;font-weight: bolder" >设置控制指令</span>
     <el-form style="width:600px;" ref="form" :model="form" label-width="200px">
+      <el-form-item label="控制柜名称">
+      <span>{{this.tabletmnname}}</span>
+      </el-form-item>
       <el-form-item label="分区选择">
         <el-select v-model="areaselected" placeholder='请选择分区' @change="this.getpipe">
           <!--        <option disabled value="">请选择</option>-->
@@ -69,6 +86,10 @@ export default {
   name: "Manage",
   data() {
     return {
+      tmndata:[{tmnName:'一号柜'},{tmnName:'二号柜'},{tmnName:'三号柜'},{tmnName:'三号柜'},
+        {tmnName:'三号柜'},{tmnName:'三号柜'},{tmnName:'三号柜'},{tmnName:'三号柜'},{tmnName:'三号柜'},{tmnName:'三号柜'}],
+      tabletmnname:'',
+      details:false,
       areas: [],//存储使用者管辖的分区
       pipes: [],//存储使用者管辖的管线
       tmns: [],//存储使用者管辖的控制柜
@@ -102,6 +123,26 @@ export default {
     this.getarea()
   },
   methods: {
+    //获取控制柜数据
+    getdata(){
+      var param=qs.stringify(this.$store.state.users.username)
+      this.$axios.post('/请求tmn数据',param).then(res=>{
+        this.tmndata=res;
+      }) .catch(failResponse => {
+        alert(failResponse)
+      })
+
+    },
+    //点击后打开表单
+    openform(item){
+      this.tabletmnname=item.tmnName
+      if (this.details==false)
+      {
+        this.details=true
+      }else if(this.details==true){
+        this.details=false
+      }
+    },
     onSubmit() {
       console.log('submit!');
     },
@@ -188,6 +229,32 @@ export default {
 </script>
 
 <style>
+.tips{
+  display: flex;
+  font-size: 28px
+}
+.tmnview{
+
+}
+.tmnview ul{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.imgbox{
+  display: flex;
+  width: 120px;
+  height: 120px;
+  padding: 10px;
+  margin: 50px 50px 20px 50px;
+}
+:hover.imgbox{
+ background-color: #d8dadb;
+  cursor: pointer;
+}
+.tmnname{
+
+}
 .main {
   position: relative;
   width: 100%;
@@ -195,6 +262,8 @@ export default {
 }
 .form{
   background-color: #ffffff;
+  padding: 32px;
+  margin-bottom: 32px;
 }
 
 </style>

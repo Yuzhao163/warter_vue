@@ -1,5 +1,8 @@
 <template>
   <div class="maindiv">
+    <div class="gif1"></div>
+    <div class="gif2"></div>
+    <div class="gif3"></div>
     <button @click="test">test</button>
     <div class="select">
       <el-select class="selecttext" v-model="sarea" @change="getPipeData">
@@ -205,5 +208,44 @@ ul {
 
 ul li {
   margin-left: 20px;
+}
+@keyframes example {
+  from {background-color: #794040;}
+  to {background-color: red;}
+}
+.gif1 {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  background-color: #794040;
+  animation-name: example;
+  animation-duration: 0.4s;
+  animation-iteration-count: infinite;
+}
+@keyframes example2 {
+  from {background-color: #954100;}
+  to {background-color: #ff9900;}
+}
+.gif2 {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  background-color: #954100;
+  animation-name: example2;
+  animation-duration: 0.6s;
+  animation-iteration-count: infinite;
+}
+@keyframes example3 {
+  from {background-color: #003290;}
+  to {background-color: #005aff;}
+}
+.gif3 {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  background-color: #003290;
+  animation-name: example3;
+  animation-duration: 0.8s;
+  animation-iteration-count: infinite;
 }
 </style>

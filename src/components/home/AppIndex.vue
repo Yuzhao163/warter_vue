@@ -26,7 +26,7 @@
           inactive-color="#ff4949"
           active-text="动态刷新"
           inactive-text="静态数据"
-      @change="this.refreshOpen">
+          @change="this.refreshOpen">
       </el-switch>
     </div>
     <!--    表格区-->
@@ -45,51 +45,51 @@
       </el-table-column>
       <el-table-column
           prop="tmnID"
-          label="控制柜ID"
+          label="控制柜名称"
           sortable
-          width="80">
+          width="180">
       </el-table-column>
       <el-table-column
           prop="v_actiontime"
           label="最长阀动作时间"
           sortable
-          width="80">
+          width="150">
       </el-table-column>
       <el-table-column
           prop="ov_waterline"
           label="开阀水位"
           sortable
-          width="80">
+          width="100">
       </el-table-column>
       <el-table-column
           prop="cv_waterline"
           label="关阀水位"
           sortable
-          width="80">
+          width="100">
       </el-table-column>
       <el-table-column
           prop="ov_period"
           label="开阀周期"
           sortable
-          width="80">
+          width="100">
       </el-table-column>
       <el-table-column
           prop="w_work"
           label="工作方式"
           sortable
-          width="80">
+          width="100">
       </el-table-column>
       <el-table-column
           prop="ov_keeptime"
           label="开阀保持时间"
           sortable
-          width="80">
+          width="140">
       </el-table-column>
       <el-table-column
           prop="b_status"
           label="蓄电池状态"
           sortable
-          width="80">
+          width="120">
       </el-table-column>
       <el-table-column
           prop="f_Volume"
@@ -101,9 +101,20 @@
           prop="create_time"
           label="创建时间"
           sortable
-          width="80">
+          width="100">
       </el-table-column>
+      <el-table-column
+          label="异常状态"
 
+          sortable
+          width="100">
+                <template slot-scope="scope">
+                  <div v-if="scope.row.send_error==1"><div class="gif1"></div></div>
+                  <div v-if="scope.row.send_error==2"><div class="gif2"></div></div>
+                  <div v-if="scope.row.send_error==3"><div class="gif3"></div></div>
+                  <div v-if="scope.row.send_error==4"><div class="gif4"></div></div>
+                </template>
+      </el-table-column>
     </el-table>
     <el-pagination
         v-show="pageView"
@@ -124,17 +135,21 @@ import qs from 'qs';
 
 export default {
   name: "AppIndex",
-  mounted() {
+  created() {
     this.Index_TableData();
+  },
+  mounted() {
+
 
 
   },
   data() {
     return {
       tableData: [],
+      errorData:'',
       refresh: false,
       timer: null,
-      pageView:true,//控制分页显示，false为显示
+      pageView: true,//控制分页显示，false为显示
       W_work: [],
       defult: [],
       screendata: {
@@ -143,7 +158,7 @@ export default {
       },
       currentPage: 1, // 当前页码
       total: 20, // 总条数
-      pageSize: 5 // 每页的数据条数
+      pageSize: 10 // 每页的数据条数
     }
   },
   methods: {
@@ -209,14 +224,24 @@ export default {
         this.timer = setInterval(() => {
           setTimeout(this.Index_TableData, 0);
         }, 1000 * 1);//1s刷新一次
-          this.pageView=false;
+        this.pageView = false;
       }
       if (this.refresh == false) {
         clearInterval(this.timer);
-        this.pageView=true;
+        this.pageView = true;
       }
+    },
+    //判断故障紧急程度控制css
+    errtips(errtip) {
+      if(errtip=='1')
+      {
+        this.errorData= 'one';
+      }
+    },
+    test(){
 
     },
+
   },
   beforeDestroy() {
     clearInterval(this.timer);
@@ -240,4 +265,78 @@ export default {
 
 }
 
+/*动画部分*/
+@keyframes example {
+  from {
+    background-color: #794040;
+  }
+  to {
+    background-color: red;
+  }
+}
+
+.gif1 {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  background-color: #794040;
+  animation-name: example;
+  animation-duration: 0.4s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes example2 {
+  from {
+    background-color: #954100;
+  }
+  to {
+    background-color: #ff9900;
+  }
+}
+
+.gif2 {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  background-color: #954100;
+  animation-name: example2;
+  animation-duration: 0.6s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes example3 {
+  from {
+    background-color: #003290;
+  }
+  to {
+    background-color: #005aff;
+  }
+}
+.gif3 {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  background-color: #003290;
+  animation-name: example3;
+  animation-duration: 0.8s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes example4 {
+  from {
+    background-color: #1cad00;
+  }
+  to {
+    background-color: #2aff00;
+  }
+}
+.gif4 {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  background-color: #1cad00;
+  animation-name: example4;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
 </style>

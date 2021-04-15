@@ -95,8 +95,11 @@
 <script>
 export default {
   name: "PublicFault",
+  created() {
+    this.getdata();
+  },
   mounted() {
-    this.getdata()
+
   },
   data() {
     return {

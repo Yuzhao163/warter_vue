@@ -405,6 +405,7 @@ export default {
 
       }
     },
+    //一键开阀
     openall() {
       this.$confirm('此操作将完全开启辖区内全部阀门, 是否继续?', '提示', {
         confirmButtonText: '确定',
