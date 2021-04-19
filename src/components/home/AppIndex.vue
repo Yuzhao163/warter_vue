@@ -88,6 +88,7 @@
       </el-table-column>
       <el-table-column
           prop="w_work"
+          :formatter="workmod"
           label="工作方式"
           sortable
           width="100">
@@ -209,6 +210,20 @@ export default {
             alert(failResponse)
           })
     },
+    //工作方式格式化
+    workmod(row){
+     console.log(row.w_work)
+    switch(row.w_work){
+      case 11:
+        return "手动";
+      case 21:
+        return "自动方式1";
+      case 22:
+        return "自动方式2";
+       case 23:
+          return "自动方式3";
+    }
+    },
     clearScreen() {
       // var elselect1=document.getElementById("select1");
       // this.$refs.select1.getAttribute('placeholder');
@@ -216,7 +231,7 @@ export default {
       this.screendata.W_work = '';
       this.$refs.select2.value = '';
       this.screendata.defult = '';
-      this.Index_TableData();
+      this.getTotalData();
     },
     screenEvent() {
 
