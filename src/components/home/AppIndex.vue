@@ -32,22 +32,35 @@
     <!--    表格区-->
 
     <el-table
-        :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-        stripe
+        :data="tableData"
+
         style="width: 100%"
+        :row-class-name="tableRowClassName"
         :default-sort="{prop: 'date', order: 'descending'}"
     >
       <el-table-column
-          prop="id"
-          label="日期"
+          prop="update_time"
+          label="更新时间"
+          :formatter="dateFormat"
           sortable
-          width="80">
+          width="200">
       </el-table-column>
       <el-table-column
           prop="tmnID"
           label="控制柜名称"
           sortable
           width="180">
+      </el-table-column>
+      <el-table-column
+          label="异常状态"
+          sortable
+          width="100">
+        <template slot-scope="scope">
+          <div v-if="scope.row.send_error==1"><div class="gif1"></div></div>
+          <div v-if="scope.row.send_error==2"><div class="gif2"></div></div>
+          <div v-if="scope.row.send_error==3"><div class="gif3"></div></div>
+          <div v-if="scope.row.send_error==4"><div class="gif4"></div></div>
+        </template>
       </el-table-column>
       <el-table-column
           prop="v_actiontime"
@@ -97,24 +110,7 @@
           sortable
           width="80">
       </el-table-column>
-      <el-table-column
-          prop="create_time"
-          label="创建时间"
-          sortable
-          width="100">
-      </el-table-column>
-      <el-table-column
-          label="异常状态"
 
-          sortable
-          width="100">
-                <template slot-scope="scope">
-                  <div v-if="scope.row.send_error==1"><div class="gif1"></div></div>
-                  <div v-if="scope.row.send_error==2"><div class="gif2"></div></div>
-                  <div v-if="scope.row.send_error==3"><div class="gif3"></div></div>
-                  <div v-if="scope.row.send_error==4"><div class="gif4"></div></div>
-                </template>
-      </el-table-column>
     </el-table>
     <el-pagination
         v-show="pageView"
@@ -124,7 +120,7 @@
         :page-sizes="[1,5,10,20]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
+        :total="total">
       >
     </el-pagination>
   </div>
@@ -132,11 +128,12 @@
 //首页组件
 <script>
 import qs from 'qs';
-
+import moment from 'moment'
 export default {
   name: "AppIndex",
   created() {
-    this.Index_TableData();
+    this.getTotalData()
+    // this.Index_TableData();
   },
   mounted() {
 
@@ -162,10 +159,47 @@ export default {
     }
   },
   methods: {
+    //请求总条数
+    getTotalData(){
+    this.$axios.post('/count').then(res=>{
+    console.log(res)
+      this.total=res.data;
+      var params=qs.stringify({page:1,
+        size:this.pageSize})
+      this.$axios.post('/SelectMessageByPage',params).then(res=>{
+        this.tableData=res.data
+
+      })
+})
+    },
+    //后端分页请求
+    getPageData(){
+      var params=qs.stringify({page:this.currentPage,
+      size:this.pageSize})
+      this.$axios.post('/SelectMessageByPage',params).then(res=>{
+        this.tableData=res.data
+
+      })
+    },
+    //静态时请求的数据
     Index_TableData() {
       console.log("调用了")
       this.$axios
           .get('/allmessage')
+          .then(res => {
+            console.log("请求成功")
+            this.tableData = res.data;
+          })
+          .catch(failResponse => {
+            console.log(failResponse)
+            alert(failResponse)
+          })
+    },
+    //动态时请求的数据，每几秒请求10条数据
+    Index_refreshData() {
+      console.log("调用了")
+      this.$axios
+          .get('/MessageDesc')
           .then(res => {
             console.log("请求成功")
             this.tableData = res.data;
@@ -213,22 +247,26 @@ export default {
       console.log(`每页 ${val} 条`);
       this.currentPage = 1;
       this.pageSize = val;
+      this.getTotalData()
     },
     //当前页改变时触发 跳转其他页
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.currentPage = val;
+      this.getPageData()
     },
+    //动态静态切换时触发
     refreshOpen() {
       if (this.refresh == true) {
         this.timer = setInterval(() => {
-          setTimeout(this.Index_TableData, 0);
+          setTimeout(this.Index_refreshData, 0);
         }, 1000 * 1);//1s刷新一次
         this.pageView = false;
       }
       if (this.refresh == false) {
         clearInterval(this.timer);
         this.pageView = true;
+        this.Index_TableData;
       }
     },
     //判断故障紧急程度控制css
@@ -241,7 +279,23 @@ export default {
     test(){
 
     },
+    dateFormat:function(row,column){
+      var date = row[column.property];
+      if(date === undefined){
+        return ''
+      } ;
+      return moment(date).format("YYYY-MM-DD HH:mm:ss")
+    },
+    tableRowClassName({row}) {
 
+      if (row.send_error == 3) {
+
+        return 'warning-row';
+      } else if (row.send_error == 1) {
+        return 'success-row';
+      }
+      return '';
+    }
   },
   beforeDestroy() {
     clearInterval(this.timer);
@@ -263,6 +317,14 @@ export default {
   float: left;
   margin-bottom: 20px;
 
+}
+/*高亮部分*/
+/deep/.el-table .warning-row {
+  background: #a6d2ff;
+}
+
+/deep/.el-table .success-row {
+  background: #59ff00;
 }
 
 /*动画部分*/

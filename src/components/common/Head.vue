@@ -12,7 +12,7 @@
       </div>
       <div class="header-user-con">
         <el-button type="success" round v-on:click="openall">一键开阀</el-button>
-        <el-button type="danger" round v-on:click="openall">一键关阀</el-button>
+        <el-button type="danger" round v-on:click="closeall">一键关阀</el-button>
         <!--        用户头像-->
         <div class="user-avator">
           <img src="../../assets/img/头像.jpg" />

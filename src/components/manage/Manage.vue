@@ -4,9 +4,10 @@
     <div class="tips">请选择要下发命令的控制柜：</div>
     <div class="tmnview">
       <ul style="list-style: none">
-        <li v-for="item in this.tmndata" :key="item">
-          <div class="imgbox" v-on:click="openform(item)">
-            <img  src="../../assets/img/控制柜.png"/>
+        <li v-for="(item,index) in this.tmndata" :key="item">
+          <div class="tmnimgbox" v-on:click="openform(item,index)">
+<!--            <div>{{item.index}}</div>-->
+            <img :id="forId(index)"  src="../../assets/img/控制柜.png"/>
           </div>
           <div class="tmnname">{{item.tmnName}}</div></li>
       </ul>
@@ -79,16 +80,18 @@
 
 <script>
 import qs from 'qs';
-
+ import tmngif from '../../assets/img/tmn_gif.gif'
+ import tmnimg from '../../assets/img/控制柜.png'
 var terminalselect = [{}];
 console.log("1", terminalselect)
 export default {
   name: "Manage",
   data() {
     return {
-      tmndata:[{tmnName:'一号柜'},{tmnName:'二号柜'},{tmnName:'三号柜'},{tmnName:'三号柜'},
-        {tmnName:'三号柜'},{tmnName:'三号柜'},{tmnName:'三号柜'},{tmnName:'三号柜'},{tmnName:'三号柜'},{tmnName:'三号柜'}],
+      tmndata:[],
       tabletmnname:'',
+      tmnindexon:'',//进入时开启动画
+      tmnindexoff:'',//关闭时终止动画，也就是之前开启过的tmn的index
       details:false,
       areas: [],//存储使用者管辖的分区
       pipes: [],//存储使用者管辖的管线
@@ -120,73 +123,101 @@ export default {
     }
   },
   mounted() {
-    this.getarea()
+    this.getdata()
   },
   methods: {
     //获取控制柜数据
     getdata(){
-      var param=qs.stringify(this.$store.state.users.username)
-      this.$axios.post('/请求tmn数据',param).then(res=>{
-        this.tmndata=res;
+      var param=qs.stringify({UserName: this.$store.state.users.username})
+      this.$axios.post('/getTerminalsByUserName',param).then(res=>{
+        console.log(res)
+        this.tmndata=res.data;
       }) .catch(failResponse => {
         alert(failResponse)
       })
 
     },
     //点击后打开表单
-    openform(item){
-      this.tabletmnname=item.tmnName
-      if (this.details==false)
-      {
-        this.details=true
-      }else if(this.details==true){
-        this.details=false
+    openform(item,index){
+      this.tabletmnname=item.tmnName;
+      this.tmnindexon='tmn_'+index
+      if(this.tmnindexoff!=this.tmnindexon){
+        if(this.tmnindexoff==''){
+          this.tmnindexoff=this.tmnindexon;
+          this.details=true;
+          document.getElementById(this.tmnindexon).src=tmngif;
+        }else{
+          if (this.details==false)
+          {
+            this.details=true;
+            document.getElementById(this.tmnindexon).src=tmngif;
+            this.tmnindexoff=this.tmnindexon;
+          }else if(this.details==true){
+
+            document.getElementById(this.tmnindexon).src=tmngif;
+            document.getElementById(this.tmnindexoff).src=tmnimg;
+            this.tmnindexoff=this.tmnindexon;
+          }
+        }
+      }else{
+        if (this.details==false)
+        {
+          this.details=true;
+          document.getElementById(this.tmnindexon).src=tmngif;
+        }else if(this.details==true){
+          this.details=false;
+          document.getElementById(this.tmnindexoff).src=tmnimg;
+        }
       }
+
+    },
+    forId(index){
+      return "tmn_" +index
     },
     onSubmit() {
       console.log('submit!');
     },
-    //进入页面时请求操作者管辖的分区
-    getarea() {
-      var param = qs.stringify({UserName: this.$store.state.users.username})//将维护人员信息传给后端得到他所控制的区域
-      this.$axios.post('/getarea', param)
-          .then(res => {
-            this.areas = res;
-          })
-          .catch(function (err) {
-            console.log(err)
-          })
-      this.getpipe();
-    },
-    //根据分区请求管线
-    getpipe() {
-      var param = qs.stringify({
-        UserName: this.$store.state.users.username,
-        areaId:this.areaselected,
-      });
-      this.$axios.post('/getpipe', param)
-          .then(res => {
-            this.pipes = res;
-          })
-          .catch(function (err) {
-            console.log(err)
-          })
-      this.gettmn();
-    },
-    //根据管线请求控制柜
-    gettmn() {
-      var param = qs.stringify({
-        UserName: this.$store.state.users.username,
-        pipeId:this.pipeselected,
-      });
-      this.$axios.post('/gettmn', param)
-          .then(res => {
-            this.tmns = res;
-          })
-          .catch(function (err) {
-            console.log(err)
-          })
-    },
+    // //进入页面时请求操作者管辖的分区
+    // getarea() {
+    //   var param = qs.stringify({UserName: this.$store.state.users.username})//将维护人员信息传给后端得到他所控制的区域
+    //   this.$axios.post('/getarea', param)
+    //       .then(res => {
+    //         this.areas = res;
+    //       })
+    //       .catch(function (err) {
+    //         console.log(err)
+    //       })
+    //   this.getpipe();
+    // },
+    // //根据分区请求管线
+    // getpipe() {
+    //   var param = qs.stringify({
+    //     UserName: this.$store.state.users.username,
+    //     areaId:this.areaselected,
+    //   });
+    //   this.$axios.post('/getpipe', param)
+    //       .then(res => {
+    //         this.pipes = res;
+    //       })
+    //       .catch(function (err) {
+    //         console.log(err)
+    //       })
+    //   this.gettmn();
+    // },
+    // //根据管线请求控制柜
+    // gettmn() {
+    //   var param = qs.stringify({
+    //     UserName: this.$store.state.users.username,
+    //     pipeId:this.pipeselected,
+    //   });
+    //   this.$axios.post('/gettmn', param)
+    //       .then(res => {
+    //         this.tmns = res;
+    //       })
+    //       .catch(function (err) {
+    //         console.log(err)
+    //       })
+    // },
     submit() {
       ///var postData = new URLSearchParams();
       var params = qs.stringify({
@@ -241,14 +272,14 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
 }
-.imgbox{
+.tmnimgbox{
   display: flex;
   width: 120px;
   height: 120px;
   padding: 10px;
   margin: 50px 50px 20px 50px;
 }
-:hover.imgbox{
+:hover.tmnimgbox{
  background-color: #d8dadb;
   cursor: pointer;
 }

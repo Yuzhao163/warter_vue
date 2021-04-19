@@ -1,8 +1,12 @@
 <template>
   <div class="maindiv">
-    <div class="gif1"></div>
-    <div class="gif2"></div>
-    <div class="gif3"></div>
+    <div class="block">
+      <span class="demonstration">默认 click 触发子菜单</span>
+      <el-cascader
+          v-model="value"
+          :options="tree"
+          @change="handleChange"></el-cascader>
+    </div>
     <button @click="test">test</button>
     <div class="select">
       <el-select class="selecttext" v-model="sarea" @change="getPipeData">
@@ -59,10 +63,16 @@ import qs from "qs";
 export default {
   name: "AreaPipe",
   mounted() {
-    this.getAreaData()
+    // this.getTreeData();
+    this.getAreaData();
   },
   data() {
     return {
+      tree:[],//测试用
+      treearea:[],
+      value:[],
+
+
       area: '0',//存选择的分区index
       pipe: '0',//存选择的管线index
       areadata: [],
@@ -78,10 +88,63 @@ export default {
 
   },
   methods: {
+    //构造树
+    // async getTreeData(){
+    //   await this.$axios.post("/getAreas").then(res => {
+    //     this.treearea = res.data;
+    //   })
+    //       .catch(failResponse => {
+    //         console.log(failResponse)
+    //         alert(failResponse)
+    //       });
+    //   for( var i=0;i<this.treearea.length;i++)
+    //   {
+    //     var a=this.treearea[i].areaName;
+    //     var param = qs.stringify({AreaName: this.treearea[i].areaName})
+    //     await this.$axios.post("/getPipes", param).then(res => {
+    //       var list= {};
+    //
+    //       // list.push({value: param,
+    //       //   label: param,
+    //       //   children:res.data[0]},
+    //       // )
+    //           list.value= a,
+    //           list.label= a,
+    //           list.children=res.data
+    //
+    //       this.tree.push(list)
+    //
+    //     });
+    //     for(var j=0;j<this.tree[i].children.length;j++)
+    //     {
+    //       var b =this.tree[i].children[j].pipID
+    //       var para = qs.stringify({
+    //         PipID: this.tree[i].children[j].pipID
+    //       })
+    //       await this.$axios.post("/getTerminals", para).then(res => {
+    //         console.log(res.data)
+    //         var list= {};
+    //         list.value=b;
+    //         list.label=b;
+    //         list.children=res.data;
+    //          this.tree[i].children[j]=list
+    //
+    //       })
+    //       for(var k=0;k<this.tree[i].children[j].children.length;k++)
+    //       {
+    //         // console.log(this.tree[i].children[j].children[k])
+    //         var list={};
+    //         list.value=this.tree[i].children[j].children[k];
+    //         list.label=this.tree[i].children[j].children[k];
+    //         console.log(list)
+    //         this.tree[i].children[j].children[k]=list;
+    //       }
+    //     };
+    //
+    //   }
+    // },
     getAreaData() {
       this.$axios.post("/getAreas").then(res => {
-        console.log("请求成功")
-        console.log(res.data[0])
         this.areadata = res.data;
         this.sarea = this.areadata[0].areaName
         this.getPipeData()
@@ -90,12 +153,11 @@ export default {
             console.log(failResponse)
             alert(failResponse)
           })
+      this.tree=this.$store.state.tree
     },
     getPipeData() {
       var params = qs.stringify({AreaName: this.sarea})
       this.$axios.post("/getPipes", params).then(res => {
-        console.log("请求成功")
-        console.log(res.data[0])
         this.pipedata = res.data;
         this.spipe.pipName = this.pipedata[0].pipName
         this.spipe.pipID = this.pipedata[0].pipID
@@ -105,7 +167,8 @@ export default {
             console.log(failResponse)
             alert(failResponse)
           })
-    }, getTmnData() {
+    },
+    getTmnData() {
       for(var i=0;i<this.pipedata.length;i++)
       {
         if(this.spipe.pipName==this.pipedata.pipName)
@@ -115,8 +178,6 @@ export default {
         PipID: this.spipe.pipID
       })
       this.$axios.post("/getTerminals", params).then(res => {
-        console.log("请求成功")
-        console.log(res.data)
         this.tmndata = res.data;
       })
           .catch(failResponse => {
@@ -128,9 +189,8 @@ export default {
 
     },
     test() {
-      console.log(this.$store.state.users)
-      console.log(this.sarea);
-      console.log(this.spipe)
+      console.log(this.tree)
+
     }
   }
 }
