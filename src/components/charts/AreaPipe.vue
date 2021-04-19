@@ -189,7 +189,8 @@ export default {
 
     },
     test() {
-      console.log(this.tree)
+      // console.log(this.tree)
+      console.log(this.$store.state.users.type)
 
     }
   }
