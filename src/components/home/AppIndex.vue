@@ -33,8 +33,11 @@
 
     <el-table
         :data="tableData"
-
-        style="width: 100%"
+        v-loading="loading"
+        element-loading-text="数据加载中..."
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        style="width: 100%;color: black"
         :row-class-name="tableRowClassName"
         :default-sort="{prop: 'date', order: 'descending'}"
     >
@@ -154,6 +157,7 @@ export default {
         W_work: '',
         defult: '',
       },
+      loading:true,
       currentPage: 1, // 当前页码
       total: 20, // 总条数
       pageSize: 10 // 每页的数据条数
@@ -169,7 +173,8 @@ export default {
         size:this.pageSize})
       this.$axios.post('/SelectMessageByPage',params).then(res=>{
         this.tableData=res.data
-
+        this.loading=false;
+        console.log(this.tableData)
       })
 })
     },
@@ -305,9 +310,14 @@ export default {
 
       if (row.send_error == 3) {
 
-        return 'warning-row';
+        return 'three_row';
       } else if (row.send_error == 1) {
-        return 'success-row';
+        return 'one_row';
+      }else if (row.send_error == 2) {
+        return 'two_row';
+      }
+      else if (row.send_error == 4) {
+        return 'four_row';
       }
       return '';
     }
@@ -334,12 +344,18 @@ export default {
 
 }
 /*高亮部分*/
-/deep/.el-table .warning-row {
+/deep/.el-table .three_row {
   background: #a6d2ff;
 }
 
-/deep/.el-table .success-row {
-  background: #59ff00;
+/deep/.el-table .one_row {
+  background: #ff9d9d;
+}
+/deep/.el-table .two_row {
+  background: #ffd09d;
+}
+/deep/.el-table .four_row {
+  background: #c6ff9d;
 }
 
 /*动画部分*/
@@ -364,7 +380,7 @@ export default {
 
 @keyframes example2 {
   from {
-    background-color: #954100;
+    background-color: #d58105;
   }
   to {
     background-color: #ff9900;

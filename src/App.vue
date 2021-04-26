@@ -76,11 +76,14 @@ export default {
 
       }
       this.$store.state.tree= this.tree;
+
+      window.localStorage.setItem('local_tree',JSON.stringify(this.tree))
     },
   },
   created() {
     this.$store.state.users.username=window.localStorage.getItem('ms_username');
     this.getTreeData();
+    this.$store.state.tree= JSON.parse(window.localStorage.getItem('local_tree'));
   }
 };
 </script>

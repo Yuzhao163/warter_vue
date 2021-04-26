@@ -42,17 +42,21 @@
 <!--      </div>-->
 <!--    </div>-->
     <div class="linetitle">
-      <span id="1">{{ this.sarea }}</span><span style="color:#4290d0 ">---</span><span
+      <span id="1">{{ this.sarea }}</span><span style="color:#4290d0 ">分区</span><span
         id="2">{{ this.spipe.pipName }}</span>
-      控制柜分布情况:
+      <span style="color:#4290d0 ">管线</span>的控制柜分布情况:
     </div>
-    <div class="TmnLine">
+    <div class="TmnLine"
+         v-loading="loading"
+         element-loading-text="拼命加载中"
+         element-loading-spinner="el-icon-loading"
+         element-loading-background="rgba(0, 0, 0, 0.8)">
       <div class="pictext" v-for="item in tmndata" :key="item.value">
         <div class="TmnPic"></div>
         <div class="TmnText">{{ item }}</div>
 
       </div>
-      <div class="line"></div>
+      <div class="line" v-show="lineshow"></div>
     </div>
   </div>
 </template>
@@ -72,7 +76,8 @@ export default {
       treearea:[],
       value:[],
 
-
+      lineshow:false,
+      loading:true,
       area: '0',//存选择的分区index
       pipe: '0',//存选择的管线index
       areadata: [],
@@ -153,7 +158,7 @@ export default {
             console.log(failResponse)
             alert(failResponse)
           })
-      this.tree=this.$store.state.tree
+      this.tree=JSON.parse(window.localStorage.getItem('local_tree'))
     },
     getPipeData() {
       var params = qs.stringify({AreaName: this.sarea})
@@ -179,6 +184,8 @@ export default {
       })
       this.$axios.post("/getTerminals", params).then(res => {
         this.tmndata = res.data;
+        this.lineshow=true;
+        this.loading=false;
       })
           .catch(failResponse => {
             console.log(failResponse)
@@ -190,7 +197,7 @@ export default {
     },
     test() {
       // console.log(this.tree)
-      console.log(this.$store.state.users.type)
+      console.log(this.tree)
 
     }
   }
