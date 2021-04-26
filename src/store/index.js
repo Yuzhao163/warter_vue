@@ -15,6 +15,7 @@ export default new Vuex.Store({
           type:"1",//目前3为管线操作人员；2为维护管理人员
 
       },
+      tree:[],
     user: {
             username: window.localStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user' || '[]')).username
         }

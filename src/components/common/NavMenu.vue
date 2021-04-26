@@ -4,7 +4,6 @@
       <el-menu
           default-active="2"
           router
-          :collapse="collapse"
           class="el-menu-vertical-demo"
           @open="handleOpen"
           :unique-opened="true"
@@ -12,16 +11,6 @@
           background-color="#3D7797"
           text-color="#F0ECEC"
           active-text-color="#ffd04b">
-        <!--          <template v-if="item.subs&&item.subs.length">-->
-        <!--            <el-submenu v-for="(item,i) in mainitems" :index="item.index" :key="i" >-->
-        <!--                {{ item.title }}-->
-        <!--            </el-submenu>-->
-        <!--          </template>-->
-        <!--            <template v-else>-->
-        <!--              <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">-->
-        <!--                {{ subItem.title }}-->
-        <!--              </el-menu-item>-->
-        <!--              </template>-->
         <template v-for="(item,i) in mainitems">
           <template v-if="item.subs&&item.subs.length">
             <el-submenu :index="item.index" :key="i">
@@ -148,6 +137,21 @@ export default {
           icon: 'el-icon-user',
           index: 'staff',
           title: '人员管理',
+        },
+        {
+          icon: 'el-icon-user',
+          index: 'traffic_forecast',
+          title: '流量预测',
+        },
+        {
+          icon: 'el-icon-user',
+          index: 'fault_diagnosis',
+          title: '故障诊断',
+        },
+        {
+          icon: 'el-icon-user',
+          index: 'pipeline_optimization',
+          title: '路径优化',
         },
         // {
         //   icon: 'el-icon-view',

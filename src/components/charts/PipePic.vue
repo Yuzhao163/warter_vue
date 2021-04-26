@@ -376,35 +376,35 @@ export default {
           document.getElementById("pip5").src = this.changepip(
               this.pips[i].pipflow
           );
-        }
-        if (this.pips[i].pipid === "6") {
           document.getElementById("pip6").src = this.changepip(
               this.pips[i].pipflow
           );
         }
-        if (this.pips[i].pipid === "7") {
+        if (this.pips[i].pipid === "6") {
           document.getElementById("pip7").src = this.changepip(
               this.pips[i].pipflow
           );
         }
-        if (this.pips[i].pipid === "8") {
+        if (this.pips[i].pipid === "7") {
           document.getElementById("pip8").src = this.changepip(
               this.pips[i].pipflow
           );
         }
-        if (this.pips[i].pipid === "9") {
+        if (this.pips[i].pipid === "8") {
           document.getElementById("pip9").src = this.changepip(
               this.pips[i].pipflow
           );
         }
-        if (this.pips[i].pipid === "10") {
+        if (this.pips[i].pipid === "9") {
           document.getElementById("pip10").src = this.changepip(
               this.pips[i].pipflow
           );
         }
 
+
       }
     },
+    //一键开阀
     openall() {
       this.$confirm('此操作将完全开启辖区内全部阀门, 是否继续?', '提示', {
         confirmButtonText: '确定',
