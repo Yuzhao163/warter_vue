@@ -50,7 +50,7 @@
          v-loading="loading"
          element-loading-text="拼命加载中"
          element-loading-spinner="el-icon-loading"
-         element-loading-background="rgba(0, 0, 0, 0.8)">
+         element-loading-background="rgba(0, 0, 0, 0)">
       <div class="pictext" v-for="item in tmndata" :key="item.value">
         <div class="TmnPic"></div>
         <div class="TmnText">{{ item }}</div>
@@ -149,6 +149,7 @@ export default {
     //   }
     // },
     getAreaData() {
+      this.loading=true;
       this.$axios.post("/getAreas").then(res => {
         this.areadata = res.data;
         this.sarea = this.areadata[0].areaName
@@ -161,6 +162,7 @@ export default {
       this.tree=JSON.parse(window.localStorage.getItem('local_tree'))
     },
     getPipeData() {
+      this.loading=true;
       var params = qs.stringify({AreaName: this.sarea})
       this.$axios.post("/getPipes", params).then(res => {
         this.pipedata = res.data;

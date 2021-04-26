@@ -147,7 +147,7 @@ export default {
         this.allData = list;
         this.loading=false;
         this.setchartdate();
-        console.log(this.allData[0].data);
+
         this.linechart();
         // console.log(JSON.parse(JSON.stringify(this.allData))['昌平控制柜'])
       });
@@ -230,7 +230,7 @@ export default {
     },
 
 test(){
-  this.setchartdata();
+ console.log(this.allData)
 }
   },
   watch(){
