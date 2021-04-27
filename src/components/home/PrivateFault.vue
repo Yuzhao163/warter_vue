@@ -6,7 +6,7 @@
     <div>
       <el-button @click="details=true">详情测试</el-button>
     </div>
-<!--    异常处理表格-->
+    <!--    异常处理表格-->
     <div class="table">
       <el-table
           :data="tableData"
@@ -64,28 +64,28 @@
       <div>控制柜名称：{{ this.row_msg.tmnName }}</div>
       <div>控制柜编号：{{ this.row_msg.tmnId }}</div>
       <div>故障部位：{{ this.row_msg.error_Position }}</div>
-<!--      <div class="pipearea">-->
-<!--        <span>所属管线：</span>-->
-<!--        <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="&#45;&#45;所属管线&#45;&#45;" class="handle-select"-->
-<!--                   style=" margin-right: 10px">-->
-<!--          <el-option v-for="item in Tmn"-->
-<!--                     :key="item.PipName"-->
-<!--                     :label="item.PipName"-->
-<!--                     :value="item.PipName"></el-option>-->
-<!--        </el-select>-->
-<!--        <div class="PA">-->
-<!--          <div>线内编号：{{ this.AreaName }}</div>-->
-<!--          <div>所属分区：{{ this.AreaName }}</div>-->
-<!--        </div>-->
-<!--      </div>-->
+      <!--      <div class="pipearea">-->
+      <!--        <span>所属管线：</span>-->
+      <!--        <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="&#45;&#45;所属管线&#45;&#45;" class="handle-select"-->
+      <!--                   style=" margin-right: 10px">-->
+      <!--          <el-option v-for="item in Tmn"-->
+      <!--                     :key="item.PipName"-->
+      <!--                     :label="item.PipName"-->
+      <!--                     :value="item.PipName"></el-option>-->
+      <!--        </el-select>-->
+      <!--        <div class="PA">-->
+      <!--          <div>线内编号：{{ this.AreaName }}</div>-->
+      <!--          <div>所属分区：{{ this.AreaName }}</div>-->
+      <!--        </div>-->
+      <!--      </div>-->
 
       <div class="faultdetail" style="margin-top: 20px">
         <div>故障详情：</div>
-        <textarea class="resolvent" v-model="exception"></textarea>
+        <textarea class="resolvent" v-model="this.faultdetil"></textarea>
       </div>
       <div class="faultdetail" style="margin-top: 20px">
         <div>解决方案：</div>
-        <textarea class="resolvent" v-model="result"></textarea>
+        <textarea class="resolvent" v-model="this.resolvent"></textarea>
       </div>
       <div slot="footer" class="dialog-footer">
 
@@ -135,13 +135,11 @@ export default {
       row_msg: {
         tmnName: '',
         tmnId: '',
-        exception: '',
-        result: '',
         erid:'',
         error_Position:'',
       },
-      resolvent: '',//解决方案
-      faultdetil: '',//故障描述
+      resolvent: '0',//解决方案
+      faultdetil: '0',//故障描述
       Tmnname: "北方工业大学",
       TmnID: '10009',
       ERId: '',//故障编码
@@ -149,7 +147,7 @@ export default {
     }
   },
   created() {
-    this.getErrorList()
+    this.getdata()
   },
   methods: {
 
@@ -211,56 +209,8 @@ export default {
 
     },
 
-    // 更新表单
-    updateError() {
-      var params = qs.stringify({TmnId: this.tmnID,
-        Exception: this.exception,
-        Result: this.result})
-      // this.update.exception = this.exception
-      // console.log("aaaaaaaaa",this.exception)
-      // console.log("dsadasda",params)
-      this.$axios.post('/adderror', params)
-      .then( res => {
-        if (res.status == 200) {
-          this.$message.success('更新成功')
-          this.detailDialogVisible = false
-        } else {
-          this.$message.error('更新失败')
-        }
-      })
-      .catch(failResponse => {
-        alert(failResponse)
-      })
-      this.getErrorList()
-      this.$router.go(0)
-    },
-
-
-    // detaildata() {
-    //
-    //   this.$axios.post('故障详情', this.ERId).then(res => {
-    //     console.log("请求成功")
-    //     this.Tmn = res.data;
-    //   })
-    //       .catch(failResponse => {
-    //         console.log(failResponse)
-    //         alert(failResponse)
-    //       })
-    // },
-    // setArea(pipname) {
-    //   for (var i = 0; i < this.Tmn.length; i++) {
-    //     if (pipname == this.Tmn[i].PipName) {
-    //       this.AreaName = this.Tmn[i].AreaName
-    //     }
-    //   }
-    // },
   },
-  // watch: {
-  //   PipName() {
-  //     this.setArea(this.PipName)
-  //   },
-  //   immediate: true
-  // }
+
 }
 </script>
 
