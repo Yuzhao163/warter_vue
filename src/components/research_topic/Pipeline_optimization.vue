@@ -93,6 +93,7 @@ export default {
           trigger: 'axis'
         },
         legend: {
+          top:20,
           data: []
         },
         grid: {
@@ -271,6 +272,6 @@ top:-5px;
 }
 .charts{
   width: 800px;
-  height: 600px;
+  height: 800px;
 }
 </style>

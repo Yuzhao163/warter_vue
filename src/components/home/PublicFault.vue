@@ -4,12 +4,20 @@
        element-loading-text="数据加载中..."
        element-loading-spinner="el-icon-loading"
        element-loading-background="rgba(0, 0, 0, 0.8)">
-    <div>
-
+    <div class="tool-bar">
+      <el-switch
+          style="display: block;margin: auto 20px"
+          v-model="refresh"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+          active-text="动态刷新"
+          inactive-text="静态数据"
+          @change="this.refreshOpen">
+      </el-switch>
       <el-button @click="details=true,test()">详情测试</el-button>
     </div>
     <el-table
-        :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+        :data="tableData"
         stripe
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}"
@@ -20,12 +28,12 @@
           width="120">
       </el-table-column>
       <el-table-column
-          prop="c_t"
+          prop="time"
           label="故障时间"
           width="160">
       </el-table-column>
       <el-table-column
-          prop="exception"
+          prop="error_Position"
           label="异常部位"
           width="80">
       </el-table-column>
@@ -33,6 +41,13 @@
           prop="user"
           label="维护人员"
           width="80">
+      </el-table-column>
+      <el-table-column
+          prop="if_deal"
+          sortable
+          label="处理状态"
+          width="100"
+      :formatter="if_deal">
       </el-table-column>
       <el-table-column
           label="查看详情"
@@ -53,41 +68,41 @@
       <!--      </el-table-column>-->
     </el-table>
     <el-pagination
-
+        v-show="pageView"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[1,5,10,20]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
+        :total=total>
       >
     </el-pagination>
     <!--    弹框内容-->
     <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
-            <div v-if="this.tableData.tmnName">控制柜名称：{{ this.tableData[this.daindex].tmnName }}</div>
-            <div v-if="this.tableData.tmnId">控制柜编号：{{ this.tableData[this.daindex].tmnId }}</div>
-      <div class="pipearea">
-        <span>所属管线：</span>
-        <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="--所属管线--" class="handle-select"
-                   style=" margin-right: 10px">
-          <el-option v-for="item in Tmn"
-                     :key="item.PipName"
-                     :label="item.PipName"
-                     :value="item.PipName"></el-option>
-        </el-select>
-        <div class="PA">
-          <div>线内编号：{{ this.AreaName }}</div>
-          <div>所属分区：{{ this.AreaName }}</div>
-        </div>
-      </div>
+            <div >控制柜名称：{{ this.row_msg.tmnName }}</div>
+            <div style="margin: 20px 0px">控制柜编号：{{ this.row_msg.tmnId }}</div>
+<!--      <div class="pipearea">-->
+<!--        <span>所属管线：</span>-->
+<!--        <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="&#45;&#45;所属管线&#45;&#45;" class="handle-select"-->
+<!--                   style=" margin-right: 10px">-->
+<!--          <el-option v-for="item in Tmn"-->
+<!--                     :key="item.PipName"-->
+<!--                     :label="item.PipName"-->
+<!--                     :value="item.PipName"></el-option>-->
+<!--        </el-select>-->
+<!--        <div class="PA">-->
+<!--          <div>线内编号：{{ this.AreaName }}</div>-->
+<!--          <div>所属分区：{{ this.AreaName }}</div>-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="faultdetail">
         <div>故障详情：</div>
-        <div v-if="this.tableData.exception" class="fault-text">{{ tableData[this.daindex].exception }}</div>
+        <div  class="fault-text">{{ this.row_msg.exception }}</div>
       </div>
       <div class="faultdetail" style="margin-top: 20px">
         <div>解决方案：</div>
-        <div v-if="this.tableData.result" class="fault-text"> {{ tableData[this.daindex].result }}</div>
+        <div  class="fault-text"> {{ this.row_msg.result }}</div>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="details = false">取 消</el-button>
@@ -110,33 +125,32 @@ export default {
     this.getTotalData();
   },
   mounted() {
-
+    this.timer = setInterval(() => {
+      setTimeout(this.getTotalData, 0);
+    }, 1000 * 1);//1s刷新一次
   },
   data() {
     return {
+      pageView:false,//控制分页显示，false为显示
       tableData: [],
       loading:true,
-      daindex:0,//记录每页的第几个数
+      daindex:0,//记录每页的第几个数(没用了)
+      refresh: true,//动态刷新
       details: false,
-      tableindex: '',
+      tableindex: 0,
       form: {
         name: '',
         region: '',
       },
+      timer: null,
       PipName: '',
       AreaName: '',
-      Tmn: [
-        {
-          PipName: 'A',
-          AreaName: '1',
-        }, {
-          PipName: 'B',
-          AreaName: '2',
-        }, {
-          PipName: 'C',
-          AreaName: '3',
-        }
-      ],
+      row_msg:{
+        tmnName:'',
+        tmnId:'',
+        exception:'',
+        result:'',
+      },
       Tmnname: "北方工业大学",
       TmnID: '10009',
       ERId: '',
@@ -167,7 +181,7 @@ export default {
         size:this.pageSize})
       this.$axios.post('/SelectErrorMessageByPage',params).then(res=>{
         this.tableData=res.data
-
+console.log(res.data)
       })
     },
     // getdata() {
@@ -182,21 +196,48 @@ export default {
     //         alert(failResponse)
     //       })
     // },
-    detaildata() {
 
-      this.$axios.post('故障详情', this.ERId).then(res => {
-        console.log("请求成功")
-        this.Tmn = res.data;
-      })
-          .catch(failResponse => {
-            console.log(failResponse)
-            alert(failResponse)
-          })
+    //刷新按钮切换时触发
+    refreshOpen() {
+      if (this.refresh == true) {
+        this.timer = setInterval(() => {
+          setTimeout(this.getTotalData, 0);
+        }, 1000 * 1);//1s刷新一次
+        this.pageView = false;
+      }
+      if (this.refresh == false) {
+        clearInterval(this.timer);
+        this.pageView = true;
+        this.Index_TableData;
+      }
     },
+    // detaildata() {
+    //
+    //   this.$axios.post('故障详情', this.ERId).then(res => {
+    //     console.log("请求成功")
+    //     this.Tmn = res.data;
+    //   })
+    //       .catch(failResponse => {
+    //         console.log(failResponse)
+    //         alert(failResponse)
+    //       })
+    // },
     detailbutton(index, row) {
       this.tableindex = index;
-      this.dataindex();
+      this.row_msg.tmnName=row.tmnName;
+      this.row_msg.tmnId=row.tmnId
+      this.row_msg.exception=row.exception
+      this.row_msg.result=row.result
       console.log(row)
+    },
+    if_deal(row){
+      switch (row.if_deal){
+        case '1':
+            return '未处理';
+        case '2':
+          return '已处理';
+      }
+
     },
     setArea(pipname) {
       for (var i = 0; i < this.Tmn.length; i++) {
@@ -210,11 +251,13 @@ export default {
       console.log(`每页 ${val} 条`);
       this.currentPage = 1;
       this.pageSize = val;
+      this.getTotalData();
     },
     //当前页改变时触发 跳转其他页
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.currentPage = val;
+      this.getPageData()
     },
     test() {
       console.log('11111')
@@ -222,16 +265,16 @@ export default {
       console.log(this.tableData[0].tmnName)
 
     },
-    dataindex(){
-      this.daindex=(this.currentPage-1)*this.pageSize+this.tableindex
-
-    }
   },
   watch: {
     PipName() {
       this.setArea(this.PipName)
     },
     immediate: true
+  },
+  beforeDestroy() {
+    clearInterval(this.timer);
+    this.timer = null;
   }
 }
 </script>
@@ -243,7 +286,10 @@ export default {
   border: 1px solid #ddd;
   border-radius: 5px;
 }
-
+.tool-bar{
+  display: flex;
+  margin-bottom: 20px;
+}
 .pipearea {
   margin: 10px 0;
 }
