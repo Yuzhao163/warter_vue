@@ -6,6 +6,7 @@
     <div>
       <el-button @click="details=true">详情测试</el-button>
     </div>
+<!--    异常处理表格-->
     <div class="table">
       <el-table
           :data="tableData"
@@ -55,15 +56,10 @@
             </el-button>
           </template>
         </el-table-column>
-        <!--      <el-table-column-->
-        <!--          prop="ov_period"-->
-        <!--          label="处理方式"-->
-        <!--          width="80">-->
-
-        <!--      </el-table-column>-->
       </el-table>
     </div>
     <!--    弹框内容-->
+
     <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
       <div>控制柜名称：{{ this.row_msg.tmnName }}</div>
       <div>控制柜编号：{{ this.row_msg.tmnId }}</div>
@@ -82,28 +78,35 @@
 <!--          <div>所属分区：{{ this.AreaName }}</div>-->
 <!--        </div>-->
 <!--      </div>-->
+
       <div class="faultdetail" style="margin-top: 20px">
         <div>故障详情：</div>
-        <textarea class="resolvent" v-model="faultdetil"></textarea>
+        <textarea class="resolvent" v-model="exception"></textarea>
       </div>
       <div class="faultdetail" style="margin-top: 20px">
         <div>解决方案：</div>
-        <textarea class="resolvent" v-model="resolvent"></textarea>
+        <textarea class="resolvent" v-model="result"></textarea>
       </div>
       <div slot="footer" class="dialog-footer">
+
         <el-button @click="details = false">取 消</el-button>
         <el-button type="primary" @click="details = false;check_fault()">确 定</el-button>
+
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+
 import qs from 'qs'
+
 
 export default {
   name: "PrivateFault",
+  // components: {Temperature},
   mounted() {
+
     this.getdata()
   },
   data() {
@@ -142,9 +145,14 @@ export default {
       Tmnname: "北方工业大学",
       TmnID: '10009',
       ERId: '',//故障编码
+
     }
   },
+  created() {
+    this.getErrorList()
+  },
   methods: {
+
     getdata() {
       var param = qs.stringify({
         TmnLeader: this.$store.state.users.username
@@ -154,10 +162,12 @@ export default {
         this.tableData = res.data;
       })
           .catch(failResponse => {
+
             console.log(failResponse)
             alert(failResponse)
           })
     },
+
     f_details(index,row) {
       this.row_msg.tmnName = row.tmnName;
       this.row_msg.tmnId = row.tmnId;
@@ -198,21 +208,59 @@ export default {
           message: '取消提交！'
         });
       });
+
     },
-    setArea(pipname) {
-      for (var i = 0; i < this.Tmn.length; i++) {
-        if (pipname == this.Tmn[i].PipName) {
-          this.AreaName = this.Tmn[i].AreaName
+
+    // 更新表单
+    updateError() {
+      var params = qs.stringify({TmnId: this.tmnID,
+        Exception: this.exception,
+        Result: this.result})
+      // this.update.exception = this.exception
+      // console.log("aaaaaaaaa",this.exception)
+      // console.log("dsadasda",params)
+      this.$axios.post('/adderror', params)
+      .then( res => {
+        if (res.status == 200) {
+          this.$message.success('更新成功')
+          this.detailDialogVisible = false
+        } else {
+          this.$message.error('更新失败')
         }
-      }
+      })
+      .catch(failResponse => {
+        alert(failResponse)
+      })
+      this.getErrorList()
+      this.$router.go(0)
     },
+
+
+    // detaildata() {
+    //
+    //   this.$axios.post('故障详情', this.ERId).then(res => {
+    //     console.log("请求成功")
+    //     this.Tmn = res.data;
+    //   })
+    //       .catch(failResponse => {
+    //         console.log(failResponse)
+    //         alert(failResponse)
+    //       })
+    // },
+    // setArea(pipname) {
+    //   for (var i = 0; i < this.Tmn.length; i++) {
+    //     if (pipname == this.Tmn[i].PipName) {
+    //       this.AreaName = this.Tmn[i].AreaName
+    //     }
+    //   }
+    // },
   },
-  watch: {
-    PipName() {
-      this.setArea(this.PipName)
-    },
-    immediate: true
-  }
+  // watch: {
+  //   PipName() {
+  //     this.setArea(this.PipName)
+  //   },
+  //   immediate: true
+  // }
 }
 </script>
 
