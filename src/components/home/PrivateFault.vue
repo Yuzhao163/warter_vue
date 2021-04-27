@@ -64,20 +64,20 @@
       <div>控制柜名称：{{ this.row_msg.tmnName }}</div>
       <div>控制柜编号：{{ this.row_msg.tmnId }}</div>
       <div>故障部位：{{ this.row_msg.error_Position }}</div>
-<!--      <div class="pipearea">-->
-<!--        <span>所属管线：</span>-->
-<!--        <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="&#45;&#45;所属管线&#45;&#45;" class="handle-select"-->
-<!--                   style=" margin-right: 10px">-->
-<!--          <el-option v-for="item in Tmn"-->
-<!--                     :key="item.PipName"-->
-<!--                     :label="item.PipName"-->
-<!--                     :value="item.PipName"></el-option>-->
-<!--        </el-select>-->
-<!--        <div class="PA">-->
-<!--          <div>线内编号：{{ this.AreaName }}</div>-->
-<!--          <div>所属分区：{{ this.AreaName }}</div>-->
-<!--        </div>-->
-<!--      </div>-->
+      <!--      <div class="pipearea">-->
+      <!--        <span>所属管线：</span>-->
+      <!--        <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="&#45;&#45;所属管线&#45;&#45;" class="handle-select"-->
+      <!--                   style=" margin-right: 10px">-->
+      <!--          <el-option v-for="item in Tmn"-->
+      <!--                     :key="item.PipName"-->
+      <!--                     :label="item.PipName"-->
+      <!--                     :value="item.PipName"></el-option>-->
+      <!--        </el-select>-->
+      <!--        <div class="PA">-->
+      <!--          <div>线内编号：{{ this.AreaName }}</div>-->
+      <!--          <div>所属分区：{{ this.AreaName }}</div>-->
+      <!--        </div>-->
+      <!--      </div>-->
 
       <div class="faultdetail" style="margin-top: 20px">
         <div>故障详情：</div>
