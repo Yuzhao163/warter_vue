@@ -81,11 +81,13 @@
 
       <div class="faultdetail" style="margin-top: 20px">
         <div>故障详情：</div>
-        <textarea class="resolvent" v-model="this.fault_detil"></textarea>
+        <textarea class="resolvent" v-model="fault_detil"></textarea>
+        <span>{{this.aa}}</span>
+        <textarea v-model="aa"></textarea>
       </div>
       <div class="faultdetail" style="margin-top: 20px">
         <div>解决方案：{{this.res_olvent}}</div>
-        <textarea class="resolvent" v-model="this.res_olvent"></textarea>
+        <textarea class="resolvent" v-model="res_olvent"></textarea>
       </div>
       <div slot="footer" class="dialog-footer">
 
@@ -139,6 +141,7 @@ export default {
         erid: '',
         error_Position: '',
       },
+      aa:'',
       res_olvent: '',//解决方案
       fault_detil: '',//故障描述
       Tmnname: "北方工业大学",
@@ -173,7 +176,7 @@ export default {
       this.row_msg.tmnId = row.tmnId;
       this.row_msg.error_Position = row.error_Position;
       this.fault_detil = row.exception;
-      this.res_olvent = row.result;
+     this.res_olvent = row.result;
     },
     if_deal(row) {
       switch (row.if_deal) {
