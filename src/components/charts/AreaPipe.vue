@@ -1,12 +1,5 @@
 <template>
   <div class="maindiv">
-    <div class="block">
-      <span class="demonstration">默认 click 触发子菜单</span>
-      <el-cascader
-          v-model="value"
-          :options="tree"
-          @change="handleChange"></el-cascader>
-    </div>
     <button @click="test">test</button>
     <div class="select">
       <el-select class="selecttext" v-model="sarea" @change="getPipeData">

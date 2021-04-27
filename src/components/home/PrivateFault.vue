@@ -14,17 +14,17 @@
           :default-sort="{prop: 'date', order: 'descending'}"
       >
         <el-table-column
-            prop="TmnName"
+            prop="tmnName"
             label="控制柜名称"
             width="120">
         </el-table-column>
         <el-table-column
-            prop="Time"
+            prop="time"
             label="故障时间"
             width="160">
         </el-table-column>
         <el-table-column
-            prop="Error_Psition"
+            prop="error_Position"
             label="异常部位"
             width="80">
         </el-table-column>
@@ -34,13 +34,24 @@
             width="80">
         </el-table-column>
         <el-table-column
+            prop="if_deal"
+            label="处理状态"
+            width="80"
+            :formatter="if_deal">
+        </el-table-column>
+        <el-table-column
+            prop="c_t"
+            label="处理时间"
+            width="160">
+        </el-table-column>
+        <el-table-column
             label="查看详情"
             width="80">
-          <template>
+          <template slot-scope="scope">
             <el-button
                 size="mini"
                 type="primary"
-                @click="details=true;details()">详情
+                @click="details=true;f_details(scope.$index,scope.row)">详情
             </el-button>
           </template>
         </el-table-column>
@@ -54,25 +65,22 @@
     </div>
     <!--    弹框内容-->
     <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
-      <div>控制柜名称：{{ Tmnname }}</div>
-      <div>控制柜编号：{{ TmnID }}</div>
-      <div class="pipearea">
-        <span>所属管线：</span>
-        <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="--所属管线--" class="handle-select"
-                   style=" margin-right: 10px">
-          <el-option v-for="item in Tmn"
-                     :key="item.PipName"
-                     :label="item.PipName"
-                     :value="item.PipName"></el-option>
-        </el-select>
-        <div class="PA">
-          <div>线内编号：{{ this.AreaName }}</div>
-          <div>所属分区：{{ this.AreaName }}</div>
-        </div>
-      </div>
-<!--      <div class="faultdetail">-->
-<!--        <div>故障详情：</div>-->
-<!--        <div class="fault-text">1111111111111111111111111111111111111111111111111111111111111111111111111111</div>-->
+      <div>控制柜名称：{{ this.row_msg.tmnName }}</div>
+      <div>控制柜编号：{{ this.row_msg.tmnId }}</div>
+      <div>故障部位：{{ this.row_msg.error_Position }}</div>
+<!--      <div class="pipearea">-->
+<!--        <span>所属管线：</span>-->
+<!--        <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="&#45;&#45;所属管线&#45;&#45;" class="handle-select"-->
+<!--                   style=" margin-right: 10px">-->
+<!--          <el-option v-for="item in Tmn"-->
+<!--                     :key="item.PipName"-->
+<!--                     :label="item.PipName"-->
+<!--                     :value="item.PipName"></el-option>-->
+<!--        </el-select>-->
+<!--        <div class="PA">-->
+<!--          <div>线内编号：{{ this.AreaName }}</div>-->
+<!--          <div>所属分区：{{ this.AreaName }}</div>-->
+<!--        </div>-->
 <!--      </div>-->
       <div class="faultdetail" style="margin-top: 20px">
         <div>故障详情：</div>
@@ -84,30 +92,25 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="details = false">取 消</el-button>
-        <el-button type="primary" @click="details = false">确 定</el-button>
+        <el-button type="primary" @click="details = false;check_fault()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import qs from 'qs'
+
 export default {
   name: "PrivateFault",
   mounted() {
-
+    this.getdata()
   },
   data() {
     return {
-      tableData: [{
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }, {
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }, {
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }, {
-        TmnName: "石景山控制柜", Time: "2020/11/24 16:51:33", Error_Psition: "水位", error_level: "",
-      }],
+      tableData: [],
       details: false,
+      tableindex: 0,//每页的第几个数据
       form: {
         name: '',
         region: '',
@@ -126,8 +129,16 @@ export default {
           AreaName: '3',
         }
       ],
+      row_msg: {
+        tmnName: '',
+        tmnId: '',
+        exception: '',
+        result: '',
+        erid:'',
+        error_Position:'',
+      },
       resolvent: '',//解决方案
-      faultdetil:'',//故障描述
+      faultdetil: '',//故障描述
       Tmnname: "北方工业大学",
       TmnID: '10009',
       ERId: '',//故障编码
@@ -135,25 +146,58 @@ export default {
   },
   methods: {
     getdata() {
-      this.$axios.post('故障列表').then(res => {
-        console.log("请求成功")
-        this.Tmn = res.data;
+      var param = qs.stringify({
+        TmnLeader: this.$store.state.users.username
+      })
+      this.$axios.post('/geterrorbyusername', param).then(res => {
+        console.log(res)
+        this.tableData = res.data;
       })
           .catch(failResponse => {
             console.log(failResponse)
             alert(failResponse)
           })
     },
-    detaildata() {
+    f_details(index,row) {
+      this.row_msg.tmnName = row.tmnName;
+      this.row_msg.tmnId = row.tmnId;
+      this.row_msg.error_Position = row.error_Position;
+      this.faultdetil = row.exception;
+      this.resolvent = row.result;
+    },
+    if_deal(row){
+      switch (row.if_deal){
+        case '1':
+          return '未处理';
+        case '2':
+          return '已处理';
+      }
 
-      this.$axios.post('故障详情', this.ERId).then(res => {
-        console.log("请求成功")
-        this.Tmn = res.data;
+    },
+    check_fault(){
+      var parames=qs.stringify({
+        Erid:this.row_msg.erid,
+        UserName:this.$store.state.users.username,
+        Exception:this.faultdetil,
+        Result:this.resolvent,
+      });
+      this.$confirm('是否提交异常处理记录', '提示', {
+        confirmButtonText: '是',
+        cancelButtonText: '我再想想',
+        type: 'warning'
+      }).then(() => {this.$axios.post('/提交',parames).then(()=>{
+
       })
-          .catch(failResponse => {
-            console.log(failResponse)
-            alert(failResponse)
-          })
+        this.$message({
+          type: 'success',
+          message: '提交成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消提交！'
+        });
+      });
     },
     setArea(pipname) {
       for (var i = 0; i < this.Tmn.length; i++) {
@@ -184,9 +228,15 @@ export default {
   border: 1px solid #ddd;
   border-radius: 5px;
 }
-.table{
+
+.table {
   display: inline-block;
 }
+
+.dialog-footer {
+  text-align: center;
+}
+
 .pipearea {
   margin: 10px 0;
 }
@@ -219,33 +269,36 @@ export default {
   width: 480px;
   height: 230px;
   padding: 20px;
-  border:2px solid #e8e8e8;
+  border: 2px solid #e8e8e8;
   border-radius: 20px;
   text-align: left;
   font-size: 16px;
-  resize: none;/*禁止文本框拉伸*/
+  resize: none; /*禁止文本框拉伸*/
 }
+
 :hover.resolvent {
   width: 480px;
   height: 230px;
   padding: 20px;
-  border:2px solid #d0d0d0;
+  border: 2px solid #d0d0d0;
   border-radius: 20px;
   text-align: left;
   font-size: 16px;
-  resize: none;/*禁止文本框拉伸*/
+  resize: none; /*禁止文本框拉伸*/
 }
+
 :focus.resolvent {
   width: 480px;
   height: 230px;
   padding: 20px;
-  border:2px solid #e8e8e8;
+  border: 2px solid #e8e8e8;
   border-radius: 20px;
   box-shadow: 0 0 15px #d0d0d0;
   text-align: left;
   font-size: 16px;
-  resize: none;/*禁止文本框拉伸*/
+  resize: none; /*禁止文本框拉伸*/
 }
+
 /deep/ .el-dialog__body {
   padding: 10px 20px;
 }

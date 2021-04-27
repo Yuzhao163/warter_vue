@@ -4,6 +4,7 @@
       <el-menu
           default-active="2"
           router
+          :collapse="collapse"
           class="el-menu-vertical-demo"
           @open="handleOpen"
           :unique-opened="true"
@@ -11,6 +12,7 @@
           background-color="#3D7797"
           text-color="#F0ECEC"
           active-text-color="#ffd04b">
+
         <template v-for="(item,i) in mainitems">
           <template v-if="item.subs&&item.subs.length">
             <el-submenu :index="item.index" :key="i">

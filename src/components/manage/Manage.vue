@@ -4,95 +4,98 @@
     <div class="tips">请选择要下发命令的控制柜：</div>
     <div class="tmnview">
       <ul style="list-style: none">
-        <li v-for="(item,index) in this.tmndata" :key="item">
+        <li v-for="(item,index) in this.tmndata" :key="index">
           <div class="tmnimgbox" v-on:click="openform(item,index)">
-<!--            <div>{{item.index}}</div>-->
-            <img :id="forId(index)"  src="../../assets/img/控制柜.png"/>
+            <!--            <div>{{item.index}}</div>-->
+            <img :id="forId(index)" src="../../assets/img/控制柜.png"/>
           </div>
-          <div class="tmnname">{{item.tmnName}}</div></li>
+          <div class="tmnname">{{ item.tmnName }}</div>
+        </li>
       </ul>
     </div>
 
 
     <div class="form" v-show="details">
-      <span style="font:24px arial,sans-serif;color: #134d6e;font-weight: bolder" >设置控制指令</span>
-    <el-form style="width:600px;" ref="form" :model="form" label-width="200px">
-      <el-form-item label="控制柜名称">
-      <span>{{this.tabletmnname}}</span>
-      </el-form-item>
-      <el-form-item label="分区选择">
-        <el-select v-model="areaselected" placeholder='请选择分区' @change="this.getpipe">
-          <!--        <option disabled value="">请选择</option>-->
-          <el-option v-for="(area,i) in areas" :area="area" :key="i" :label="area.message"
-                     :value="area.message"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="管线选择">
-        <el-select v-model="pipeselected" placeholder='请选择管线' @change="this.gettmn">
-          <!--        <option disabled value="">请选择</option>-->
-          <el-option v-for="(pipe,i) in pipes" :pipe="pipe" :key="i" :label="pipe.message"
-                     :value="pipe.message"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="控制柜选择">
-        <el-select v-model="terminalselected" placeholder='请选择控制柜'>
-          <!--        <option disabled value="">请选择</option>-->
-          <el-option v-for="(terminal,i) in tmns" :terminal="terminal" :key="i" :label="terminal.message"
-                     :value="terminal.message"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="工作方式选择">
-        <el-select v-model="modeselected" placeholder='请选择工作方式'>
-          <!--        <option disabled value="">请选择</option>-->
-          <el-option v-for="(mode,i) in form.mode" :mode="mode" :key="i" :label="mode.message"
-                     :value="mode.index"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="上传周期设置">
-        <el-input v-model="form.uploadcycle"></el-input>
-      </el-form-item>
-      <el-form-item label="阀位设置">
-        <el-input v-model="form.vpre"></el-input>
-      </el-form-item>
-      <el-form-item label="开阀周期">
-        <el-input v-model="form.ovperiod"></el-input>
-      </el-form-item>
-      <el-form-item label="开阀水位">
-        <el-input v-model="form.ovwaterline"></el-input>
-      </el-form-item>
-      <el-form-item label="开阀保持时间">
-        <el-input v-model="form.ovkeeptime"></el-input>
-      </el-form-item>
-      <el-form-item label="关阀水位">
-        <el-input v-model="form.cvwaterline"></el-input>
-      </el-form-item>
-      <el-form-item label="最长阀动作时间">
-        <el-input v-model="form.vactiontime"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" v-on:click="submit">下发命令</el-button>
-        <el-button>取消</el-button>
-      </el-form-item>
-    </el-form>
+      <a name="formmao"></a>
+      <span style="font:24px arial,sans-serif;color: #134d6e;font-weight: bolder">设置控制指令</span>
+      <el-form style="width:600px;" ref="form" :model="form" label-width="200px">
+        <el-form-item label="控制柜名称">
+          <span style="font-size: 22px;color: #134d6e;">{{ this.tabletmnname }}</span>
+        </el-form-item>
+        <!--      <el-form-item label="分区选择">-->
+        <!--        <el-select v-model="areaselected" placeholder='请选择分区' @change="this.getpipe()">-->
+        <!--          &lt;!&ndash;        <option disabled value="">请选择</option>&ndash;&gt;-->
+        <!--          <el-option v-for="(area,i) in areas" :area="area" :key="i" :label="area.message"-->
+        <!--                     :value="area.message"></el-option>-->
+        <!--        </el-select>-->
+        <!--      </el-form-item>-->
+        <!--      <el-form-item label="管线选择">-->
+        <!--        <el-select v-model="pipeselected" placeholder='请选择管线' @change="this.gettmn">-->
+        <!--          &lt;!&ndash;        <option disabled value="">请选择</option>&ndash;&gt;-->
+        <!--          <el-option v-for="(pipe,i) in pipes" :pipe="pipe" :key="i" :label="pipe.message"-->
+        <!--                     :value="pipe.message"></el-option>-->
+        <!--        </el-select>-->
+        <!--      </el-form-item>-->
+        <!--      <el-form-item label="控制柜选择">-->
+        <!--        <el-select v-model="terminalselected" placeholder='请选择控制柜'>-->
+        <!--          &lt;!&ndash;        <option disabled value="">请选择</option>&ndash;&gt;-->
+        <!--          <el-option v-for="(terminal,i) in tmns" :terminal="terminal" :key="i" :label="terminal.message"-->
+        <!--                     :value="terminal.message"></el-option>-->
+        <!--        </el-select>-->
+        <!--      </el-form-item>-->
+        <el-form-item label="工作方式选择">
+          <el-select v-model="modeselected" placeholder='请选择工作方式'>
+            <!--        <option disabled value="">请选择</option>-->
+            <el-option v-for="(mode,i) in form.mode" :mode="mode" :key="i" :label="mode.message"
+                       :value="mode.index"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="上传周期设置">
+          <el-input v-model="form.uploadcycle"></el-input>
+        </el-form-item>
+        <el-form-item label="阀位设置">
+          <el-input v-model="form.vpre"></el-input>
+        </el-form-item>
+        <el-form-item label="开阀周期">
+          <el-input v-model="form.ovperiod"></el-input>
+        </el-form-item>
+        <el-form-item label="开阀水位">
+          <el-input v-model="form.ovwaterline"></el-input>
+        </el-form-item>
+        <el-form-item label="开阀保持时间">
+          <el-input v-model="form.ovkeeptime"></el-input>
+        </el-form-item>
+        <el-form-item label="关阀水位">
+          <el-input v-model="form.cvwaterline"></el-input>
+        </el-form-item>
+        <el-form-item label="最长阀动作时间">
+          <el-input v-model="form.vactiontime"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" v-on:click="submit">下发命令</el-button>
+          <el-button>取消</el-button>
+        </el-form-item>
+      </el-form>
     </div>
   </div>
 </template>
 
 <script>
 import qs from 'qs';
- import tmngif from '../../assets/img/tmn_gif.gif'
- import tmnimg from '../../assets/img/控制柜.png'
+import tmngif from '../../assets/img/tmn_gif.gif'
+import tmnimg from '../../assets/img/控制柜.png'
+
 var terminalselect = [{}];
 console.log("1", terminalselect)
 export default {
   name: "Manage",
   data() {
     return {
-      tmndata:[],
-      tabletmnname:'',
-      tmnindexon:'',//进入时开启动画
-      tmnindexoff:'',//关闭时终止动画，也就是之前开启过的tmn的index
-      details:false,
+      tmndata: [],
+      tabletmnname: '',
+      tmnindexon: '',//进入时开启动画
+      tmnindexoff: '',//关闭时终止动画，也就是之前开启过的tmn的index
+      details: false,
       areas: [],//存储使用者管辖的分区
       pipes: [],//存储使用者管辖的管线
       tmns: [],//存储使用者管辖的控制柜
@@ -127,52 +130,51 @@ export default {
   },
   methods: {
     //获取控制柜数据
-    getdata(){
-      var param=qs.stringify({UserName: this.$store.state.users.username})
-      this.$axios.post('/getTerminalsByUserName',param).then(res=>{
+    getdata() {
+      var param = qs.stringify({UserName: this.$store.state.users.username})
+      this.$axios.post('/getTerminalsByUserName', param).then(res => {
         console.log(res)
-        this.tmndata=res.data;
-      }) .catch(failResponse => {
+        this.tmndata = res.data;
+      }).catch(failResponse => {
         alert(failResponse)
       })
 
     },
     //点击后打开表单
-    openform(item,index){
-      this.tabletmnname=item.tmnName;
-      this.tmnindexon='tmn_'+index
-      if(this.tmnindexoff!=this.tmnindexon){
-        if(this.tmnindexoff==''){
-          this.tmnindexoff=this.tmnindexon;
-          this.details=true;
-          document.getElementById(this.tmnindexon).src=tmngif;
-        }else{
-          if (this.details==false)
-          {
-            this.details=true;
-            document.getElementById(this.tmnindexon).src=tmngif;
-            this.tmnindexoff=this.tmnindexon;
-          }else if(this.details==true){
+    openform(item, index) {
+      location.href = "#formmao";
+      this.tabletmnname = item.tmnName;
+      this.tmnindexon = 'tmn_' + index
+      if (this.tmnindexoff != this.tmnindexon) {
+        if (this.tmnindexoff == '') {
+          this.tmnindexoff = this.tmnindexon;
+          this.details = true;
+          document.getElementById(this.tmnindexon).src = tmngif;
+        } else {
+          if (this.details == false) {
+            this.details = true;
+            document.getElementById(this.tmnindexon).src = tmngif;
+            this.tmnindexoff = this.tmnindexon;
+          } else if (this.details == true) {
 
-            document.getElementById(this.tmnindexon).src=tmngif;
-            document.getElementById(this.tmnindexoff).src=tmnimg;
-            this.tmnindexoff=this.tmnindexon;
+            document.getElementById(this.tmnindexon).src = tmngif;
+            document.getElementById(this.tmnindexoff).src = tmnimg;
+            this.tmnindexoff = this.tmnindexon;
           }
         }
-      }else{
-        if (this.details==false)
-        {
-          this.details=true;
-          document.getElementById(this.tmnindexon).src=tmngif;
-        }else if(this.details==true){
-          this.details=false;
-          document.getElementById(this.tmnindexoff).src=tmnimg;
+      } else {
+        if (this.details == false) {
+          this.details = true;
+          document.getElementById(this.tmnindexon).src = tmngif;
+        } else if (this.details == true) {
+          this.details = false;
+          document.getElementById(this.tmnindexoff).src = tmnimg;
         }
       }
 
     },
-    forId(index){
-      return "tmn_" +index
+    forId(index) {
+      return "tmn_" + index
     },
     onSubmit() {
       console.log('submit!');
@@ -260,38 +262,45 @@ export default {
 </script>
 
 <style>
-.tips{
+.tips {
   display: flex;
   font-size: 28px
 }
-.tmnview{
+
+.tmnview {
 
 }
-.tmnview ul{
+
+.tmnview ul {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
-.tmnimgbox{
+
+.tmnimgbox {
   display: flex;
   width: 120px;
   height: 120px;
   padding: 10px;
   margin: 50px 50px 20px 50px;
 }
-:hover.tmnimgbox{
- background-color: #d8dadb;
+
+:hover.tmnimgbox {
+  background-color: #d8dadb;
   cursor: pointer;
 }
-.tmnname{
+
+.tmnname {
 
 }
+
 .main {
   position: relative;
   width: 100%;
   height: 100%;
 }
-.form{
+
+.form {
   background-color: #ffffff;
   padding: 32px;
   margin-bottom: 32px;
