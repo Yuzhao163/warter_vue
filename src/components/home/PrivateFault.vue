@@ -81,11 +81,11 @@
 
       <div class="faultdetail" style="margin-top: 20px">
         <div>故障详情：</div>
-        <textarea class="resolvent" v-model="this.faultdetil"></textarea>
+        <textarea class="resolvent" v-model="this.fault_detil"></textarea>
       </div>
       <div class="faultdetail" style="margin-top: 20px">
-        <div>解决方案：</div>
-        <textarea class="resolvent" v-model="this.resolvent"></textarea>
+        <div>解决方案：{{this.res_olvent}}</div>
+        <textarea class="resolvent" v-model="this.res_olvent"></textarea>
       </div>
       <div slot="footer" class="dialog-footer">
 
@@ -93,6 +93,7 @@
         <el-button type="primary" @click="details = false;check_fault()">确 定</el-button>
 
       </div>
+      <button @click="test">test</button>
     </el-dialog>
   </div>
 </template>
@@ -135,11 +136,11 @@ export default {
       row_msg: {
         tmnName: '',
         tmnId: '',
-        erid:'',
-        error_Position:'',
+        erid: '',
+        error_Position: '',
       },
-      resolvent: '0',//解决方案
-      faultdetil: '0',//故障描述
+      res_olvent: '',//解决方案
+      fault_detil: '',//故障描述
       Tmnname: "北方工业大学",
       TmnID: '10009',
       ERId: '',//故障编码
@@ -166,15 +167,16 @@ export default {
           })
     },
 
-    f_details(index,row) {
+    f_details(index, row) {
+      this.row_msg.erid = row.erid;
       this.row_msg.tmnName = row.tmnName;
       this.row_msg.tmnId = row.tmnId;
       this.row_msg.error_Position = row.error_Position;
-      this.faultdetil = row.exception;
-      this.resolvent = row.result;
+      this.fault_detil = row.exception;
+      this.res_olvent = row.result;
     },
-    if_deal(row){
-      switch (row.if_deal){
+    if_deal(row) {
+      switch (row.if_deal) {
         case '1':
           return '未处理';
         case '2':
@@ -182,20 +184,24 @@ export default {
       }
 
     },
-    check_fault(){
-      var parames=qs.stringify({
-        Erid:this.row_msg.erid,
-        UserName:this.$store.state.users.username,
-        Exception:this.faultdetil,
-        Result:this.resolvent,
-      });
+    check_fault() {
+
       this.$confirm('是否提交异常处理记录', '提示', {
         confirmButtonText: '是',
         cancelButtonText: '我再想想',
         type: 'warning'
-      }).then(() => {this.$axios.post('/提交',parames).then(()=>{
+      }).then(() => {
+        var parames = qs.stringify({
+          ERId: this.row_msg.erid,
+          TmnId: this.row_msg.tmnId,
+          User: this.$store.state.users.username,
+          Exception: this.fault_detil,
+          Result: this.res_olvent,
+        });
+        console.log(parames)
+        this.$axios.post('/dealerror', parames).then(() => {
 
-      })
+        })
         this.$message({
           type: 'success',
           message: '提交成功!'
@@ -208,7 +214,10 @@ export default {
       });
 
     },
-
+    test() {
+      console.log(this.resolvent)
+      console.log(this.resolvent)
+    },
   },
 
 }
