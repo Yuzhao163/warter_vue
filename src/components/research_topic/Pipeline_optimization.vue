@@ -261,7 +261,7 @@ test(){
   width: 200px;
 position: absolute;
 top:-5px;
-  font-size: 24px;
+  font-size: 20px;
 }
 .showmsg{
   width: auto;

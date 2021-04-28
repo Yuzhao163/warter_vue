@@ -17,6 +17,7 @@
 
     <div class="form" v-show="details">
       <a name="formmao"></a>
+      <button @click="test"></button>
       <span style="font:24px arial,sans-serif;color: #134d6e;font-weight: bolder">设置控制指令</span>
       <el-form style="width:600px;" ref="form" :model="form" label-width="200px">
         <el-form-item label="控制柜名称">
@@ -44,33 +45,35 @@
         <!--        </el-select>-->
         <!--      </el-form-item>-->
         <el-form-item label="工作方式选择">
-          <el-select v-model="modeselected" placeholder='请选择工作方式'>
+          <el-select v-model="modeselected" placeholder='请选择工作方式' @change="ifinput()">
             <!--        <option disabled value="">请选择</option>-->
             <el-option v-for="(mode,i) in form.mode" :mode="mode" :key="i" :label="mode.message"
-                       :value="mode.index"></el-option>
+                       :value="mode.index" ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="上传周期设置">
-          <el-input v-model="form.uploadcycle"></el-input>
+          <el-input :disabled="updatetime" v-model="form.uploadcycle"></el-input>
         </el-form-item>
         <el-form-item label="阀位设置">
-          <el-input v-model="form.vpre"></el-input>
+          <el-input :disabled="manual" v-model="form.vpre"></el-input>
         </el-form-item>
+
         <el-form-item label="开阀周期">
-          <el-input v-model="form.ovperiod"></el-input>
+          <el-input :disabled="auto" v-model="form.ovperiod"></el-input>
         </el-form-item>
         <el-form-item label="开阀水位">
-          <el-input v-model="form.ovwaterline"></el-input>
+          <el-input :disabled="auto" v-model="form.ovwaterline"></el-input>
         </el-form-item>
         <el-form-item label="开阀保持时间">
-          <el-input v-model="form.ovkeeptime"></el-input>
+          <el-input :disabled="auto" v-model="form.ovkeeptime"></el-input>
         </el-form-item>
         <el-form-item label="关阀水位">
-          <el-input v-model="form.cvwaterline"></el-input>
+          <el-input :disabled="auto" v-model="form.cvwaterline"></el-input>
         </el-form-item>
         <el-form-item label="最长阀动作时间">
-          <el-input v-model="form.vactiontime"></el-input>
+          <el-input :disabled="auto" v-model="form.vactiontime"></el-input>
         </el-form-item>
+
         <el-form-item>
           <el-button type="primary" v-on:click="submit">下发命令</el-button>
           <el-button>取消</el-button>
@@ -93,6 +96,10 @@ export default {
     return {
       tmndata: [],
       tabletmnname: '',
+      tabletmnid: '',
+      auto:true,//工作模式开关
+      manual:true,//手动模式开关
+      updatetime:true,//指定上传周期开关
       tmnindexon: '',//进入时开启动画
       tmnindexoff: '',//关闭时终止动画，也就是之前开启过的tmn的index
       details: false,
@@ -111,10 +118,12 @@ export default {
         ],//分区
         pipe: '',//管线
         terminal: terminalselect,//控制柜
-        mode: [{message: '手动', index: '11'}, {message: '自动方式1', index: '21'}, {
-          message: '自动方式2',
-          index: '22'
-        }, {message: '自动方式3', index: '23'}, {message: '指定上传周期', index: '51'}],//工作方式
+        mode: [
+            {message: '手动', index: '11'},
+          {message: '自动方式1', index: '21'},
+          {message: '自动方式2', index: '22'},
+          {message: '自动方式3', index: '23'},
+          {message: '指定上传周期', index: '51'}],//工作方式
         uploadcycle: '',
         vpre: '',//阀位
         ovperiod: '',//开阀周期
@@ -144,6 +153,8 @@ export default {
     openform(item, index) {
       location.href = "#formmao";
       this.tabletmnname = item.tmnName;
+      this.tabletmnid = item.tmnId;
+
       this.tmnindexon = 'tmn_' + index
       if (this.tmnindexoff != this.tmnindexon) {
         if (this.tmnindexoff == '') {
@@ -179,52 +190,14 @@ export default {
     onSubmit() {
       console.log('submit!');
     },
-    // //进入页面时请求操作者管辖的分区
-    // getarea() {
-    //   var param = qs.stringify({UserName: this.$store.state.users.username})//将维护人员信息传给后端得到他所控制的区域
-    //   this.$axios.post('/getarea', param)
-    //       .then(res => {
-    //         this.areas = res;
-    //       })
-    //       .catch(function (err) {
-    //         console.log(err)
-    //       })
-    //   this.getpipe();
-    // },
-    // //根据分区请求管线
-    // getpipe() {
-    //   var param = qs.stringify({
-    //     UserName: this.$store.state.users.username,
-    //     areaId:this.areaselected,
-    //   });
-    //   this.$axios.post('/getpipe', param)
-    //       .then(res => {
-    //         this.pipes = res;
-    //       })
-    //       .catch(function (err) {
-    //         console.log(err)
-    //       })
-    //   this.gettmn();
-    // },
-    // //根据管线请求控制柜
-    // gettmn() {
-    //   var param = qs.stringify({
-    //     UserName: this.$store.state.users.username,
-    //     pipeId:this.pipeselected,
-    //   });
-    //   this.$axios.post('/gettmn', param)
-    //       .then(res => {
-    //         this.tmns = res;
-    //       })
-    //       .catch(function (err) {
-    //         console.log(err)
-    //       })
-    // },
+
     submit() {
       ///var postData = new URLSearchParams();
       var params = qs.stringify({
 
-        TmnID: this.terminalselected,
+        TmnID: this.tabletmnid,//控制柜名称
+        W_work: this.modeselected,//工作方式选择
+
         V_pre: this.form.vpre,//阀位
         OV_period: this.form.ovperiod,//开阀周期
         OV_waterline: this.form.ovwaterline,//开阀水位
@@ -239,11 +212,11 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$axios
-            .post('/ma', params)
+            .post('/order', params)
             .then(successResponse => {
+
               if (successResponse.data.code === 200) {
                 alert("插入成功成功!");
-                this.$router.replace("/manage");
               }
             })
             .catch(failResponse => {
@@ -255,8 +228,30 @@ export default {
           message: '已取消命令下发'
         });
       });
-
-    }
+    },
+    ifinput(){
+      if(this.modeselected==21||this.modeselected==22||this.modeselected==23){
+        console.log('')
+        this.auto=false;
+        this.updatetime=true;
+        this.manual=true;
+      }if(this.modeselected==11){
+        console.log('')
+        this.auto=true;
+        this.updatetime=true;
+        this.manual=false;
+      }
+      if(this.modeselected==51){
+        console.log('')
+        this.auto=true;
+        this.updatetime=false;
+        this.manual=true;
+      }
+    },
+    test(){
+      console.log(this.modeselected)
+      console.log(this.auto)
+    },
   },
 }
 </script>
