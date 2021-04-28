@@ -25,7 +25,7 @@
             </el-submenu>
           </template>
           <template v-else>
-            <el-menu-item :index="item.index" :key="i">
+            <el-menu-item :id="forid(i)" :index="item.index" :key="i">
               <template slot="title">
                 <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
               </template>
@@ -60,6 +60,9 @@ export default {
         this.$delete(this.mainitems,3);
         this.$delete(this.mainitems,3);
       }
+    },
+    forid(i){
+      return i;
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
@@ -180,6 +183,9 @@ export default {
       }
       this.tagsList = arr;
     });
+    bus.$on('jump',()=>{
+      document.getElementById('3').click();//此处执行对应的函数操作
+    })
   }
 
 

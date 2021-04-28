@@ -82,11 +82,9 @@
       <div class="faultdetail" style="margin-top: 20px">
         <div>故障详情：</div>
         <textarea class="resolvent" v-model="fault_detil"></textarea>
-        <span>{{this.aa}}</span>
-        <textarea v-model="aa"></textarea>
       </div>
       <div class="faultdetail" style="margin-top: 20px">
-        <div>解决方案：{{this.res_olvent}}</div>
+        <div>解决方案：</div>
         <textarea class="resolvent" v-model="res_olvent"></textarea>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -280,6 +278,7 @@ export default {
   height: 230px;
   padding: 20px;
   border: 2px solid #e8e8e8;
+  color: #595c5f;
   border-radius: 20px;
   text-align: left;
   font-size: 16px;

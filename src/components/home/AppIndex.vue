@@ -19,6 +19,7 @@
       </el-select>
       <el-button type="success" icon="el-icon-delete" @click="clearScreen">清除</el-button>
       <el-button type="primary" icon="el-icon-search" @click="Screen">筛选</el-button>
+      <el-button v-if="this.$store.state.users.type!=2" type="danger" icon="el-icon-place" @click="test">我的控制柜</el-button>
       <el-switch
           style="display: block;margin: auto 20px"
           v-model="refresh"
@@ -133,6 +134,7 @@
 <script>
 import qs from 'qs';
 import moment from 'moment'
+import bus from '../common/bus';
 export default {
   name: "AppIndex",
   created() {
@@ -297,7 +299,7 @@ export default {
       }
     },
     test(){
-
+      bus.$emit('jump')
     },
     dateFormat:function(row,column){
       var date = row[column.property];
