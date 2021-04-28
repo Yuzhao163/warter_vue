@@ -186,6 +186,10 @@ export default {
     bus.$on('jump',()=>{
       document.getElementById('3').click();//此处执行对应的函数操作
     })
+    bus.$on('goindex',()=>{
+      document.getElementById('0').click();//此处执行对应的函数操作
+    })
+
   }
 
 
