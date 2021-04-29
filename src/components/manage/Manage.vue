@@ -1,6 +1,7 @@
 <template>
 
   <div class="main">
+
     <div class="tips">请选择要下发命令的控制柜：</div>
     <div class="tmnview">
       <ul style="list-style: none">
@@ -23,27 +24,6 @@
         <el-form-item label="控制柜名称">
           <span style="font-size: 22px;color: #134d6e;">{{ this.tabletmnname }}</span>
         </el-form-item>
-        <!--      <el-form-item label="分区选择">-->
-        <!--        <el-select v-model="areaselected" placeholder='请选择分区' @change="this.getpipe()">-->
-        <!--          &lt;!&ndash;        <option disabled value="">请选择</option>&ndash;&gt;-->
-        <!--          <el-option v-for="(area,i) in areas" :area="area" :key="i" :label="area.message"-->
-        <!--                     :value="area.message"></el-option>-->
-        <!--        </el-select>-->
-        <!--      </el-form-item>-->
-        <!--      <el-form-item label="管线选择">-->
-        <!--        <el-select v-model="pipeselected" placeholder='请选择管线' @change="this.gettmn">-->
-        <!--          &lt;!&ndash;        <option disabled value="">请选择</option>&ndash;&gt;-->
-        <!--          <el-option v-for="(pipe,i) in pipes" :pipe="pipe" :key="i" :label="pipe.message"-->
-        <!--                     :value="pipe.message"></el-option>-->
-        <!--        </el-select>-->
-        <!--      </el-form-item>-->
-        <!--      <el-form-item label="控制柜选择">-->
-        <!--        <el-select v-model="terminalselected" placeholder='请选择控制柜'>-->
-        <!--          &lt;!&ndash;        <option disabled value="">请选择</option>&ndash;&gt;-->
-        <!--          <el-option v-for="(terminal,i) in tmns" :terminal="terminal" :key="i" :label="terminal.message"-->
-        <!--                     :value="terminal.message"></el-option>-->
-        <!--        </el-select>-->
-        <!--      </el-form-item>-->
         <el-form-item label="工作方式选择">
           <el-select v-model="modeselected" placeholder='请选择工作方式' @change="ifinput()">
             <!--        <option disabled value="">请选择</option>-->
@@ -51,34 +31,34 @@
                        :value="mode.index" ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="上传周期设置">
+        <el-form-item v-if="modeselected==51" label="上传周期设置">
           <el-input :disabled="updatetime" v-model="form.uploadcycle"></el-input>
         </el-form-item>
-        <el-form-item label="阀位设置">
+        <el-form-item v-if="modeselected==11" label="阀位设置">
           <el-input :disabled="manual" v-model="form.vpre"></el-input>
         </el-form-item>
 
-        <el-form-item label="开阀周期">
+        <el-form-item v-if="ifauto()" label="开阀周期">
           <el-input :disabled="auto" v-model="form.ovperiod"></el-input>
         </el-form-item>
-        <el-form-item label="开阀水位">
+        <el-form-item v-if="ifauto()" label="开阀水位">
           <el-input :disabled="auto" v-model="form.ovwaterline"></el-input>
         </el-form-item>
-        <el-form-item label="开阀保持时间">
+        <el-form-item v-if="ifauto()" label="开阀保持时间">
           <el-input :disabled="auto" v-model="form.ovkeeptime"></el-input>
         </el-form-item>
-        <el-form-item label="关阀水位">
+        <el-form-item v-if="ifauto()" label="关阀水位">
           <el-input :disabled="auto" v-model="form.cvwaterline"></el-input>
         </el-form-item>
-        <el-form-item label="最长阀动作时间">
+        <el-form-item v-if="ifauto()" label="最长阀动作时间">
           <el-input :disabled="auto" v-model="form.vactiontime"></el-input>
         </el-form-item>
-
         <el-form-item>
-          <el-button type="primary" v-on:click="submit">下发命令</el-button>
           <el-button>取消</el-button>
+          <el-button type="primary" v-on:click="submit">下发命令</el-button>
         </el-form-item>
       </el-form>
+      <a name="formbotton"></a>
     </div>
   </div>
 </template>
@@ -102,6 +82,8 @@ export default {
       updatetime:true,//指定上传周期开关
       tmnindexon: '',//进入时开启动画
       tmnindexoff: '',//关闭时终止动画，也就是之前开启过的tmn的index
+      mao:0,//watch数据变化来在渲染后跳转锚点
+
       details: false,
       areas: [],//存储使用者管辖的分区
       pipes: [],//存储使用者管辖的管线
@@ -192,7 +174,6 @@ export default {
     },
 
     submit() {
-      ///var postData = new URLSearchParams();
       var params = qs.stringify({
 
         TmnID: this.tabletmnid,//控制柜名称
@@ -235,23 +216,42 @@ export default {
         this.auto=false;
         this.updatetime=true;
         this.manual=true;
+
+        location.href = "#formbotton";
+
       }if(this.modeselected==11){
         console.log('')
         this.auto=true;
         this.updatetime=true;
         this.manual=false;
+        this.mao=0
       }
       if(this.modeselected==51){
         console.log('')
         this.auto=true;
         this.updatetime=false;
         this.manual=true;
+        this.mao=0
       }
     },
-    test(){
-      console.log(this.modeselected)
-      console.log(this.auto)
+    ifauto(){
+      if(this.modeselected==21||this.modeselected==22||this.modeselected==23)
+      {this.mao=1;
+      return true
+      }
+
     },
+    test(){
+      console.log(this.mao)
+
+    },
+  },
+  watch:{mao(){
+    this.$nextTick(function (){
+      location.href = "#formmao"
+    })
+    }
+
   },
 }
 </script>
