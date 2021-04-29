@@ -7,6 +7,8 @@ import PrivateFault from "@/components/home/PrivateFault";
 import UserMessage from "@/components/home/UserMessage";
 import Staff from "@/components/home/Staff";
 import Device from "@/components/home/Device";
+import AreaDevice from "@/components/home/AreaDevice";
+import PipDevice from "@/components/home/PipDevice";
 import Login from "@/components/Login";
 import Home from "@/components/Home";
 import HelloWorld from '@/components/HelloWorld'
@@ -126,8 +128,22 @@ export default new Router({
                 }
             },{
                 path: '/device',
-                name: '设备维护',
+                name: '控制柜维护',
                 component: Device,
+                meta: {
+                    requireAuth: true
+                }
+            },{
+                path: '/pipdevice',
+                name: '管线维护',
+                component: PipDevice,
+                meta: {
+                    requireAuth: true
+                }
+            },{
+                path: '/areadevice',
+                name: '分区维护',
+                component: AreaDevice,
                 meta: {
                     requireAuth: true
                 }

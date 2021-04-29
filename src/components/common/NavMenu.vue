@@ -48,20 +48,20 @@ export default {
     check() {
       if (this.$store.state.users.type == '3') {
         console.log('权限变更')
-        this.mainitems[7]='';
-        this.mainitems[7]=this.mainitems[9];
-        this.$delete(this.mainitems,8);//去掉人员、设备维护功能
-        this.$delete(this.mainitems,8);//去掉人员、设备维护功能
+        this.mainitems[7] = '';
+        this.mainitems[7] = this.mainitems[9];
+        this.$delete(this.mainitems, 8);//去掉人员、设备维护功能
+        this.$delete(this.mainitems, 8);//去掉人员、设备维护功能
       }
       if (this.$store.state.users.type == '2') {
         console.log('权限变更')
 
-        this.$delete(this.mainitems,3);//去掉管线操作员各个功能
-        this.$delete(this.mainitems,3);
-        this.$delete(this.mainitems,3);
+        this.$delete(this.mainitems, 3);//去掉管线操作员各个功能
+        this.$delete(this.mainitems, 3);
+        this.$delete(this.mainitems, 3);
       }
     },
-    forid(i){
+    forid(i) {
       return i;
     },
     handleOpen(key, keyPath) {
@@ -135,8 +135,21 @@ export default {
         },
         {
           icon: 'el-icon-takeaway-box',
-          index: 'device',
+          // index: 'device',
           title: '设备维护',
+          subs: [{
+            icon: 'el-icon-magic-stick',
+            index: 'device',
+            title: '控制柜维护',
+          }, {
+            icon: 'el-icon-magic-stick',
+            index: 'pipdevice',
+            title: '管线维护',
+          }, {
+            icon: 'el-icon-magic-stick',
+            index: 'areadevice',
+            title: '分区维护',
+          }],
         },
         {
           icon: 'el-icon-user',
@@ -175,7 +188,7 @@ export default {
 
   created() {
     // 只有在标签页列表里的页面才使用keep-alive，即关闭标签之后就不保存到内存中了。
-      this.check();
+    this.check();
     bus.$on('tags', msg => {
       let arr = [];
       for (let i = 0, len = msg.length; i < len; i++) {
@@ -183,10 +196,10 @@ export default {
       }
       this.tagsList = arr;
     });
-    bus.$on('jump',()=>{
+    bus.$on('jump', () => {
       document.getElementById('3').click();//此处执行对应的函数操作
     })
-    bus.$on('goindex',()=>{
+    bus.$on('goindex', () => {
       document.getElementById('0').click();//此处执行对应的函数操作
     })
 
