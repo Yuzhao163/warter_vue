@@ -6,44 +6,53 @@
       </div>
       <div class="userid">用户ID--{{ this.data.userID }}</div>
     </div>
-    <div class="linetext">
-      <div style="width: 150px;line-height:40px;margin-left: 10px">用户名：</div>
-      <el-input ref="inputunm" v-model="data.userName" :disabled="this.disabled.disabledunm"></el-input>
-      <div style="width: 100px;line-height:40px;">
-        <el-button type="primary" size="small" round @click="modifyunm">修改</el-button>
-      </div>
-    </div>
-    <div class="linetext">
-      <div style="width: 150px;line-height:40px;margin-left: 10px">密码：</div>
-      <el-input ref="inputpsw" v-model="data.userPswd" :disabled="this.disabled.disabledpsw"
-                show-password></el-input>
-      <div style="width: 100px;line-height:40px;">
-        <el-button type="primary" size="small" round @click="modifypsw">修改</el-button>
-      </div>
-    </div>
-    <div class="linetext">
-      <div style="width: 150px;line-height:40px;margin-left: 10px">真实姓名：</div>
-      <el-input ref="inputunm" v-model="data.realName" :disabled="this.disabled.disabledrn"></el-input>
-      <div style="width: 100px;line-height:40px;">
-        <el-button type="primary" size="small" round @click="modifyrn">修改</el-button>
-      </div>
-    </div>
-    <div class="linetext">
-      <div style="width: 150px;line-height:40px;margin-left: 10px">联系电话：</div>
-      <el-input ref="inputunm" v-model="data.moPhone" :disabled="this.disabled.disabledph"></el-input>
-      <div style="width: 100px;line-height:40px;">
-        <el-button type="primary" size="small" round @click="modifyph">修改</el-button>
-      </div>
-    </div>
-    <div class="linetext">
-      <div style="width: 150px;line-height:40px;margin-left: 10px">单位名称：</div>
-      <el-input ref="inputunm" v-model="data.dptname" :disabled="this.disabled.disableddpt"></el-input>
-      <div style="width: 100px;line-height:40px;">
-        <el-button type="primary" size="small" round @click="modifydpt">修改</el-button>
-      </div>
-    </div>
+
+
+    <el-form :model="data" :rules="rules" ref="data" label-width="120px" >
+      <el-form-item label="用户名：" prop="userName">
+        <el-input style="width: 450px" v-model="data.userName" @blur="checkName()"></el-input>
+      </el-form-item>
+      <el-form-item label="密码：" prop="userPswd">
+        <el-input style="width: 450px" v-model="data.userPswd"></el-input>
+      </el-form-item>
+      <el-form-item label="真实姓名：" prop="realName">
+        <el-input style="width: 450px" v-model="data.realName"></el-input>
+      </el-form-item>
+      <el-form-item label="联系电话：" prop="moPhone">
+        <el-input style="width: 450px" v-model="data.moPhone"></el-input>
+      </el-form-item>
+      <el-form-item label="单位名称：" prop="dptname">
+        <el-input style="width: 450px" v-model="data.dptname"></el-input>
+      </el-form-item>
+
+    </el-form>
+
+
+
+<!--    <div class="linetext">-->
+<!--      <div style="width: 150px;line-height:40px;margin-left: 10px">用户名：</div>-->
+<!--      <el-input style="width: 450px" ref="inputunm" v-model="data.userName" @blur="checkName()"></el-input>-->
+<!--    </div>-->
+<!--    <div class="linetext">-->
+<!--      <div style="width: 150px;line-height:40px;margin-left: 10px">密码：</div>-->
+<!--      <el-input style="width: 450px" ref="inputpsw" v-model="data.userPswd" show-password></el-input>-->
+<!--    </div>-->
+<!--    <div class="linetext">-->
+<!--      <div style="width: 150px;line-height:40px;margin-left: 10px">真实姓名：</div>-->
+<!--      <el-input style="width: 450px" ref="inputunm" v-model="data.realName"></el-input>-->
+<!--    </div>-->
+<!--    <div class="linetext">-->
+<!--      <div style="width: 150px;line-height:40px;margin-left: 10px">联系电话：</div>-->
+<!--      <el-input style="width: 450px" ref="inputunm" v-model="data.moPhone"></el-input>-->
+<!--    </div>-->
+<!--    <div class="linetext">-->
+<!--      <div style="width: 150px;line-height:40px;margin-left: 10px">单位名称：</div>-->
+<!--      <el-input style="width: 450px" ref="inputunm" v-model="data.dptname"></el-input>-->
+<!--    </div>-->
     <div class="boxfoot">
-      <el-button type="primary" plain round @click="confirm">提交</el-button>
+      <el-button type="primary" plain round @click="cancel">重 置</el-button>
+<!--      <el-button type="primary" plain round @click="confirm">修  改</el-button>-->
+      <el-button type="primary" plain round @click="modify">修改</el-button>
     </div>
   </div>
 </template>
@@ -56,14 +65,25 @@ export default {
   data() {
     return {
       data: [],
-      resnumber:'',//记录是否更新成功
-      disabled: {
-        disabledunm: true,
-        disabledpsw: true,
-        disabledrn: true,
-        disabledph: true,
-        disableddpt: true,
+      rules: {
+        userName:[
+          { required: true, message: '请输入用户名称', trigger: 'blur' },
+        ],
+        userPswd:[
+          { required: true, message: '请输入用户密码', trigger: 'blur' },
+          { min:6, max:15, message: '长度在6到15位之间', trigger: 'blur'}
+        ],
+        realName:[
+          { required: true, message: '请输入用户名称', trigger: 'blur' },
+        ],
+        moPhone:[],
+        dptname:[]
       },
+      resnumber:'',//记录是否更新成功
+      ModTime: '',
+
+      // 记录用户名修改是否合法
+      flag:1,
     }
   },
   mounted() {
@@ -71,8 +91,8 @@ export default {
   },
   methods: {
     getmessage() {
-      console.log('111111111111' + this.$store.state.users.username)
       var param = qs.stringify({
+        // 把当前用户存入并传到后端去
         UserName: this.$store.state.users.username,
       })
       this.$axios
@@ -82,40 +102,8 @@ export default {
       }).catch(() => {
       })
     },
-    modifyunm() {
-      if (this.disabled.disabledunm == true) {
-        this.disabled.disabledunm = false;
-      } else {
-        this.disabled.disabledunm = true;
-      }
-    },
-    modifypsw() {
-      if (this.disabled.disabledpsw == true) {
-        this.disabled.disabledpsw = false;
-      } else {
-        this.disabled.disabledpsw = true;
-      }
-    },
-    modifyrn() {
-      if (this.disabled.disabledrn == true) {
-        this.disabled.disabledrn = false;
-      } else {
-        this.disabled.disabledrn = true;
-      }
-    },
-    modifyph() {
-      if (this.disabled.disabledph == true) {
-        this.disabled.disabledph = false;
-      } else {
-        this.disabled.disabledph = true;
-      }
-    },
-    modifydpt() {
-      if (this.disabled.disableddpt == true) {
-        this.disabled.disableddpt = false;
-      } else {
-        this.disabled.disableddpt = true;
-      }
+    cancel(){
+      this.getmessage();
     },
     //用于解决异步问题 判断成功与否
     checknum(){
@@ -125,51 +113,90 @@ export default {
           type: 'success',
           message: '修改成功'
         })
-        console.log(this.$store.state.users.username);
+        // console.log(this.$store.state.users.username);
         this.getmessage();
       }
     },
-    confirm() {
-      this.$confirm('确定要修改您的信息？(请牢记您的密码)', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        var params = qs.stringify({
 
+
+    // 失去焦点判断用户修改的名称是否有效
+    checkName() {
+      console.log("登录人：",this.$store.state.users.username)
+      if (this.data.userName === this.$store.state.users.username) {
+        // 用户名称没有变化 可以直接进行修改操作
+        this.flag=1
+      } else {
+        // 用户名称发生变化 判断修改后的用户名称是否有重复
+        var params = qs.stringify({
+          userID: this.data.userID,
+          userName: this.data.userName
+        })
+        console.log(params)
+        // this.$message.error("不 可以直接操作")
+        this.$axios.post(`/checkUserName`,params)
+          .then(res => {
+            console.log(res)
+            console.log(res.data)
+            if (res.data === 201) {
+              this.$message.error('该用户名已存在')
+              this.flag=0
+            } else {
+              this.$message.success('该用户名可以使用')
+              this.flag=1
+            }
+          })
+      }
+
+    },
+
+    // 修改用户信息
+    modify() {
+      console.log(this.data)
+      // 判断用户是否进行用户名称的修改
+      // 如果没有修改 就直接进行更新
+      // 如果修改了 判断用户名称是否存在
+
+      // 判断flag=1? 等于直接更新 不等于进行报错
+      if (this.flag === 0) {
+        this.$message.error('请重新设置用户名')
+      } else {
+        var params = qs.stringify({
           UserID: this.data.userID,
           UserName: this.data.userName,
           UserPswd: this.data.userPswd,
-          UClassID: this.data.uclassID,
           MoPhone: this.data.moPhone,
           RealName: this.data.realName,
           DPTName: this.data.dptname,
+          ModTime: this.data.ModTime
         });
-        this.$axios
-            .post('/updstaff', params).then(res => {
-              this.resnumber=res.data.code;
-              this.$store.state.users.username=this.data.userName;
-              window.localStorage.setItem('ms_username',JSON.stringify(this.data.userName))
-              this.$store.state.users.password=this.data.userPswd;
-          console.log(this.resnumber)
-          this.checknum();
-              })
-
-
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消修改'
-        });
-      });
-    }
+        this.$confirm('确定要修改您的信息？(请牢记您的密码)', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+        const {data: res} = await this.$axios.post(`/updateUserInfo`,params);
+        if (res == 201) {
+          this.$message.error("该用户名已存在")
+        } else if (res == 200) {
+          this.$message.success("更新成功")
+          this.$store.state.users.username=this.data.userName;
+          window.localStorage.setItem('ms_username',JSON.stringify(this.data.userName))
+          this.$store.state.users.password=this.data.userPswd;
+          this.flag = 1
+        } else {
+          this.$message.error("更新失败")
+        }
+        this.getmessage();
+      }
+      )}
+    },
   }
 }
 </script>
 
 <style scoped>
 .mainbox {
-  width: 600px;
+  width: 650px;
   border-radius: 20px;
   background-color: #ffffff;
   margin: 0 auto;
@@ -199,14 +226,18 @@ export default {
 .linetext {
   display: flex;
   margin: 20px 0;
-}
 
+}
 .boxfoot {
   margin: 20px;
 }
 
 /deep/ .el-input.is-disabled .el-input__inner {
   color: black;
+}
+
+/deep/ .el-form-item__error {
+  padding-left:50px
 }
 
 </style>
