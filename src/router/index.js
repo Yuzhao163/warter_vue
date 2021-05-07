@@ -29,6 +29,7 @@ import Traffic_forecast from "@/components/research_topic/Traffic_forecast";
 Vue.use(Router);
 export default new Router({
     mode: 'history',
+    // mode: 'history',
   routes: [
     // 下面都是固定的写法
     {

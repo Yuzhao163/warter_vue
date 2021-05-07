@@ -9,9 +9,9 @@
           @open="handleOpen"
           :unique-opened="true"
           @close="handleClose"
-          background-color="#3D7797"
+          background-color="#2E6486"
           text-color="#F0ECEC"
-          active-text-color="#ffd04b">
+          active-text-color="#FFC931">
 
         <template v-for="(item,i) in mainitems">
           <template v-if="item.subs&&item.subs.length">
