@@ -11,7 +11,6 @@
         <button class="addbutton" @click="test()">测试</button>
       </div>
     </div>
-
     <el-table
         :data="tableDataShow.slice((currentPage-1)*pageSize,currentPage*pageSize)"
 
@@ -82,7 +81,7 @@
     </el-pagination>
 
     <!--    修改员工信息-->
-    <el-dialog class="dialog" style="text-align: left" title="修改用户信息" :visible.sync="editbox">
+    <el-dialog  class="dialog" style="text-align: left" title="修改用户信息" :visible.sync="editbox">
 <!--      <button @click="test"></button>-->
       <div class="input">
         <div class="left">
@@ -111,7 +110,7 @@
 <!--            这是一个多选框-->
             <!--权限选择框-->
             <div class="maindiv" >
-              <el-select v-model="UserRight.Right_PP"   @change="addUserRights">
+              <el-select v-model="UserRight.Right_PP" @change="clears()">
                 <el-option  v-for="item in UserRightList"
                            :key="item.id"
                            :label="item.label"
@@ -124,7 +123,7 @@
             <div v-if="this.UserRight.Right_PP == 1">
             <div class="text">请选择需要控制的分区：</div>
             <div class="areadiv">
-              <el-select v-model="Area.areaID"  multiple placeholder="请选择需要控制的分区" @change="getAreas()" :disabled="areaisuseful">
+              <el-select v-model="Area.areaID"  multiple placeholder="请选择需要控制的分区" @change="getAreas()">
                 <el-option v-for="item in AreaList"
                            :key="item.id"
                            :label="item.areaName"
@@ -138,7 +137,7 @@
             <div v-if="this.UserRight.Right_PP == 2">
             <div class="text">请选择需要控制的管线：</div>
             <div class="pipediv">
-              <el-select v-model="Pipe.pipID"  multiple :placeholder=this.areaname_view @change="getPipes()" :disabled="pipeisuseful">
+              <el-select v-model="Pipe.pipID"  multiple placeholder="请选择需要控制的管线" @change="getPipes()">
                 <el-option v-for="item in PipeList"
                            :key="item.id"
                            :label="item.pipName"
@@ -152,7 +151,7 @@
             <div v-if="this.UserRight.Right_PP == 3">
             <div class="text">请选择需要控制的控制柜：</div>
             <div class="tmndiv">
-              <el-select v-model="Terminal.tmnId" multiple placeholder="请选择需要控制的控制柜" @change="getTerminals()" :disabled="tmnisuseful">
+              <el-select v-model="Terminal.tmnId" multiple placeholder="请选择需要控制的控制柜" @change="getTerminals()">
                 <el-option  v-for="item in TerminalList"
                             :key="item.id"
                             :label="item.tmnName"
@@ -175,6 +174,7 @@
 
     <!--    添加员工弹框内容-->
     <el-dialog @close="clearbox()" class="dialog" style="text-align: left" title="添加用户" :visible.sync="addbox">
+<!--      <button @click="test"></button>-->
       <div class="input">
         <div class="left">
           <div class="text"><span style="color: red">*</span>用户名：</div>
@@ -201,8 +201,8 @@
             <!--这是一个多选框-->
             <!--权限选择框-->
             <div class="maindiv" >
-              <el-select v-model="UserRight.Right_PP"   @change="addUserRights">
-                <el-option @click="addUserRights"  v-for="item in addUserRightList"
+              <el-select v-model="addUserRight.Right_PP" @change="clears()">
+                <el-option v-for="item in addUserRightList"
                            :key="item.id"
                            :label="item.label"
                            :value="item.value">
@@ -211,11 +211,11 @@
             </div>
 
 
-            <div v-if="this.UserRight.Right_PP == 1">
+            <div v-if="this.addUserRight.Right_PP == '1'">
               <!--分区选择框-->
               <div class="text">请选择需要控制的分区：</div>
               <div class="areadiv">
-                <el-select v-model="Area.areaID"  multiple placeholder="请选择需要控制的分区" @change="getAreas()" :disabled="areaisuseful">
+                <el-select v-model="Area.areaID"  multiple placeholder="请选择需要控制的分区" @change="getAreas()">
                   <el-option v-for="item in AreaList"
                              :key="item.id"
                              :label="item.areaName"
@@ -225,11 +225,11 @@
               </div>
             </div>
 
-            <div v-if="this.UserRight.Right_PP == 2">
+            <div v-if="this.addUserRight.Right_PP == '2'">
               <!--管线选择框-->
               <div class="text">请选择需要控制的管线：</div>
               <div class="pipediv">
-                <el-select v-model="Pipe.pipID"  multiple placeholder="请选择需要控制的管线" @change="getPipes()" :disabled="pipeisuseful">
+                <el-select v-model="Pipe.pipID"  multiple placeholder="请选择需要控制的管线" @change="getPipes()">
                   <el-option v-for="item in PipeList"
                              :key="item.id"
                              :label="item.pipName"
@@ -239,11 +239,11 @@
               </div>
             </div>
 
-            <div v-if="this.UserRight.Right_PP == 3">
+            <div v-if="this.addUserRight.Right_PP == '3'">
               <!--控制柜选择框-->
               <div class="text">请选择需要控制的控制柜：</div>
               <div class="tmndiv">
-                <el-select v-model="Terminal.tmnId" multiple placeholder="请选择需要控制的控制柜" @change="getTerminals()" :disabled="tmnisuseful">
+                <el-select v-model="Terminal.tmnId" multiple placeholder="请选择需要控制的控制柜" @change="getTerminals()">
                   <el-option  v-for="item in TerminalList"
                              :key="item.id"
                              :label="item.tmnName"
@@ -300,6 +300,7 @@ export default {
       tableDataShow: [],
       staffData: [],//修改数据时用于存放行数据
       staffData1:[],//修改权限分配时存放数据
+      staffDatas:[],//接受修改时，username传回后端后返回的所有用户的值5.3
       flag1: false,
       flag2: false,
       screendata: {
@@ -346,9 +347,6 @@ export default {
 
       //權限分配
       clear:true,
-      areaisuseful:true,
-      pipeisuseful:true,
-      tmnisuseful:true,
       UserRight:{
         Right_PP:'',
         UserID:'',
@@ -390,6 +388,10 @@ export default {
       label: '控制柜管理员'
     },
     ],
+      addUserRight:{
+        Right_PP:'',
+        UserID:'',
+      },
       addUserRightList: [{
         value: '1',
         label: '分区管理员'
@@ -419,35 +421,22 @@ export default {
     //清理填框内容
     clearbox(){
       this.addmessage = {}
-      this.UserRight = {}
+      this.addUserRight = {}
+      this.Area = {}
+      this.Pipe = {}
+      this.Terminal = {}
+    },
+
+    //清理下拉框内容
+    clears(){
+      this.Area = {}
+      this.Pipe = {}
+      this.Terminal = {}
     },
     //-----------------------------------------------------------------------------------------------------------------
-    addUserRights(){
-      // this.$axios.get('/addUserRight',{params:{Right_PP:this.UserRight.Right_PP}}).then(res =>{
-      //   console.log(this.UserRight.Right_PP)
-      //   console.log(res.data)
-        if(this.UserRight.Right_PP == '0'){
-          this.areaisuseful = true
-          this.pipeisuseful = true
-          this.tmnisuseful  = true
-        } else if(this.UserRight.Right_PP == '1'){
-          this.areaisuseful = false
-          this.pipeisuseful = true
-          this.tmnisuseful  = true
-        } else if(this.UserRight.Right_PP == '2'){
-          this.areaisuseful = true
-          this.pipeisuseful = false
-          this.tmnisuseful  = true
-        } else if(this.UserRight.Right_PP == '3'){
-          this.areaisuseful = true
-          this.pipeisuseful = true
-          this.tmnisuseful  = false
-        }
-
-    },
     getAreas(){
       this.$axios
-              .get('/getAreas')
+              .get('/getArea')
               .then(res =>{
                 this.AreaList = res.data
                 this.areaname_view=this.AreaList.areaName
@@ -463,7 +452,7 @@ export default {
 
     getPipes(){
       console.log(this.Area.areaID)
-      this.$axios.get('/getPipes').then(res => {
+      this.$axios.get('/getPip').then(res => {
         console.log('222222'+res.data)
         this.PipeList = res.data
         console.log('bbbbbbbbbbbbbbbbbbbb',this.Pipe.pipID)
@@ -475,7 +464,7 @@ export default {
     },
 
     getTerminals(){
-      this.$axios.get('/getTerminals').then(res =>{
+      this.$axios.get('/getTerminal').then(res =>{
         console.log('33333333'+res.data)
         this.TerminalList = res.data
         console.log('ccccccccccccccccccccccc',this.Terminal.tmnId)
@@ -568,16 +557,37 @@ export default {
     },
     compname2() {
       var i = 0
-      console.log(this.staffData.userName);
+      console.log("这个人的名称是"+this.staffData.userName);
       console.log(this.tableData[i].userName);
-      for (i; i < this.tableData.length; i++) {
-        if (this.staffData.userName == this.tableData[i].userName) {
-          this.$message({
-            type: 'info',
-            message: '账号已经注册'
-          });
+      console.log("这个人之前的名字是",this.preUserName)
+      //-----------------------------------------------------------------------------------
+        var param = qs.stringify({UserName: this.staffData.userName})
+        this.$axios.post('/getstaff', param).then(res => {
+          console.log("这是我获取到的后端除了该名称之外的人的信息"+res.data)
+          this.staffDatas = res.data
+          console.log(this.staffDatas)
+        })
+
+      if(this.staffData.userName != this.preUserName){
+        for(i; i < this.tableData.length; i++){
+          if(this.staffData.userName == this.tableData[i].userName){
+            this.$message({
+              type: 'info',
+              message: '账号已经注册'
+            });
+          }
         }
       }
+
+            //-------------------------------------------------------------------------------
+    //   for (i; i < this.tableData.length; i++) {
+    //     if (this.staffData.userName == this.tableData[i].userName) {
+    //       this.$message({
+    //         type: 'info',
+    //         message: '账号已经注册'
+    //       });
+    //     }
+    //   }
     },
 
     Index_TableData() {
@@ -670,17 +680,17 @@ export default {
         PipName: this.Pipe.pipID,
         TmnId: this.Terminal.tmnId,
         TmnName: this.Terminal.tmnName,
-        Right_PP: this.UserRight.Right_PP,
+        Right_PP: this.addUserRight.Right_PP,
         // Area_Pip_Tmn:this.o_value,
       },{ arrayFormat: 'repeat' })
         this.a=params
         console.log(params)
-        if(this.UserRight.Right_PP == ""){
+        if(this.addUserRight.Right_PP == "" || this.addmessage.UClassID == '' || this.addmessage.UClassID == null){
           this.$message({
-            type: 'info',
-            message: '请选择对应权限'
+            type: 'warning',
+            message: '请选择对应权限及类别'
           });
-        }else{
+        } else{
           this.$axios.post('/addstaff', params).then(res => {
             if (res.data.code === 200)
               console.log(res);
@@ -721,7 +731,7 @@ this.searchstaff();
     },
     handleEdit(index, row) {
       console.log(index, row);
-      this.UserRight.Right_PP = this.UserRightList[0].value;
+      // this.UserRight.Right_PP = this.UserRightList[0].value;
       this.staffData = JSON.parse(JSON.stringify(row));
       console.log(this.staffData)
       this.preUserName = this.staffData.userName
@@ -732,17 +742,53 @@ this.searchstaff();
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        for (var i = 0; i < this.tableData.length; i++) {
-          if (this.staffData.userName == this.tableData[i].userName) {
-            this.$message({
-              type: 'info',
-              message: '账号已经注册'
-            });
-          } else {
-            console.log("flag1是真的")
-            this.flag1 = true;
+        // ------------------------------------------------------------------------------------
+        var count = 0
+        this.flag1 = false
+        this.flag2 = false
+        if(this.staffData.userName != this.preUserName){
+          for (var i = 0; i < this.tableData.length; i++) {
+            if (this.staffData.userName == this.tableData[i].userName) {
+              this.$message({
+                type: 'info',
+                message: '账号已经注册'
+              },
+              console.log("我的flag变成了啥",this.flag1));
+              count++
+            } else if(this.staffData.userName == ""){
+              this.$message({
+                type: 'info',
+                message: '账号不能为空'
+              });
+            }
           }
-        }
+          if(count == 0){
+            this.flag1 = true;
+          }else{
+            this.flag1 = false;
+          }
+          count = 0
+
+        }else if(this.staffData.userName == this.preUserName){
+
+              console.log("flag1是真的")
+              this.flag1 = true;
+          // }
+          }
+        // }
+        // ------------------------------------------------------------------------------------
+
+        // for (var i = 0; i < this.tableData.length; i++) {
+        //   if (this.staffData.userName == this.tableData[i].userName) {
+        //     this.$message({
+        //       type: 'info',
+        //       message: '账号已经注册'
+        //     });
+        //   } else {
+        //     console.log("flag1是真的")
+        //     this.flag1 = true;
+        //   }
+        // }
         // if(this.addmessage.UserPswd.length<=6 || this.addmessage.UserPswd.length>12){
         //     this.$message({
         //       type: 'info',
@@ -780,15 +826,15 @@ this.searchstaff();
             // Area_Pip_Tmn: this.staffData1,
 
           }, {arrayFormat: 'repeat'})
-          if (this.UserRight.Right_PP == "") {
+          if (this.UserRight.Right_PP == ""||this.staffData.uclassID == '' || this.staffData.uclassID == null) {
             this.$message({
               type: 'info',
               message: '请选择对应权限'
             });
           } else {
             this.$axios.post('/updstaff', params).then(res => {
-              console.log(res)
-              this.Index_TableData
+              console.log("修改完成",res)
+              this.Index_TableData()
             }).catch(() => {
               this.$message({
                 type: 'info',
@@ -812,7 +858,8 @@ this.searchstaff();
       this.currentPage = val;
     },
     test() {
-      console.log(this.UserRight.Right_PP)
+      console.log(this.addUserRight.Right_PP)
+      console.log(this.addmessage)
     }
 
   }

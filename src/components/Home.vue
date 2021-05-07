@@ -10,7 +10,7 @@
 
     </el-header>
     <el-container style="overflow: hidden">
-      <el-aside  width="15%" style="background-color:#3D7797">
+      <el-aside  width="15%" style="background-color:#2E6486">
         <nav-menu class="nav-menu"></nav-menu>
       </el-aside>
 
