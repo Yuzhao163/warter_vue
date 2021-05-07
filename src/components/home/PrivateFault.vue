@@ -207,6 +207,7 @@ export default {
           type: 'success',
           message: '提交成功!'
         });
+        this.getdata();
       }).catch(() => {
         this.$message({
           type: 'info',
