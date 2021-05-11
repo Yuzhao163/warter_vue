@@ -11,11 +11,11 @@
 
       </div>
       <div class="header-user-con">
-        <el-button v-if="this.$store.state.users.type==1 ||this.$store.state.users.type==3" type="success" round
-                   v-on:click="openall">一键开阀
+        <el-button  style="width: 120px;height: 40px; padding-left: 0px; position: relative" v-if="this.$store.state.users.type==1 ||this.$store.state.users.type==3" type="success" round
+                   v-on:click="openall">一键开阀<i class="iconfont icon-pip_on" style="position: absolute; top: 7px; font-size:24px;margin-left: 10px"></i>
         </el-button>
-        <el-button v-if="this.$store.state.users.type==1 ||this.$store.state.users.type==3" type="danger" round
-                   v-on:click="closeall">一键关阀
+        <el-button style="width: 120px;height: 40px; padding-left: 0px; position: relative" v-if="this.$store.state.users.type==1 ||this.$store.state.users.type==3" type="danger" round
+                   v-on:click="closeall">一键关阀<i class="iconfont icon-pip_off" style="position: absolute; top: 7px; font-size:24px;margin-left: 10px"></i>
         </el-button>
         <!--        用户头像-->
         <div class="user-avator">

@@ -9,6 +9,7 @@ import "element-ui/lib/theme-chalk/index.css";
 import echarts from 'echarts'
 import './assets/css/global.less'
 import VideoPlayer from 'vue-video-player'
+import './assets/icon/iconfont.css'
 
 require("video.js/dist/video-js.css");
 require("vue-video-player/node_modules/video.js/dist/video-js.css");
@@ -35,10 +36,13 @@ Vue.filter('formatDate', function(value) {
 //     }
 // )
 Vue.prototype.$echarts = echarts
+axios.defaults.baseURL = 'http://101.201.101.181:8443/api'
 // axios.defaults.baseURL = 'http://8.140.190.203:8443/api'
-axios.defaults.baseURL = 'http://localhost:8443/api'
+// axios_0.defaults.baseURL = 'http://localhost:8443/api'
+// axios.defaults.baseURL = 'http://localhost:8443/api'
 // 全局注册，之后可在其他组件中通过 this.$axios 发送数据
 Vue.prototype.$axios = axios;
+// Vue.prototype.$axios_0 = axios_0;
 new Vue({
     router,
     store,

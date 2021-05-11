@@ -1,0 +1,23 @@
+{
+  "id": "2539017",
+  "name": "pipeclean",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "21504059",
+      "name": "pip_icon_on",
+      "font_class": "pip_on",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "21505076",
+      "name": "pip_icon_off",
+      "font_class": "pip_off",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    }
+  ]
+}

@@ -138,7 +138,8 @@ import bus from '../common/bus';
 export default {
   name: "AppIndex",
   created() {
-    this.getTotalData()
+    this.getTotalData();
+    this.refreshOpen();
     // this.Index_TableData();
   },
   mounted() {
@@ -150,7 +151,7 @@ export default {
     return {
       tableData: [],
       errorData:'',
-      refresh: false,
+      refresh: true,
       timer: null,
       pageView: true,//控制分页显示，false为显示
       W_work: [],
