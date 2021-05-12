@@ -41,7 +41,7 @@
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange"
                   :current-page="currentPage"
-                  :page-sizes="[1, 5, 10, 20]"
+                  :page-sizes="[1, 5, 10, 20, 50]"
                   :page-size="pageSize"
                   layout="total, sizes, prev, pager, next, jumper"
                   :total=total>
@@ -404,10 +404,14 @@ export default {
                 this.nextTmn.tmnIndex=index
                 this.nextTmn.tmnid=this.tmnlist[index+1].tmnId
                 this.nextTmn.tmnname=this.tmnlist[index+1].tmnName
+                this.editTmnForm.d1TmnID= this.nextTmn.tmnid
             }
             else{
                 this.nextTmn.tmnid=0
-                this.nextTmn.tmnname='无'}
+                this.nextTmn.tmnname='无'
+                this.editTmnForm.d1TmnID = ''
+            }
+
 
         },
         // 提交添加请求
@@ -469,7 +473,8 @@ export default {
                 this.editTmnForm.u1TmnID = row.u1TmnID,
                 this.editTmnForm.u2TmnID = row.u2TmnID,
                 this.nextTmn.tmnname = row.d1TmnName,
-                this.editTmnForm.d1TmnID = row.d1TmnID,
+                this.editTmnForm.d1TmnID =this.nextTmn.tmnid,
+                // this.editTmnForm.d1TmnID = row.d1TmnID,
                 this.editTmnForm.d2TmnID = row.d2TmnID,
                 this.editTmnForm.conPont1 = row.conPont1,
                 this.editTmnForm.conPont2 = row.conPont2,
@@ -477,8 +482,9 @@ export default {
                 this.editTmnForm.tmnDesc = row.tmnDesc,
                 this.editTmnForm.pipID = row.pipID,
                 this.editTmnForm.AreaID = row.AreaID,
-                this.editTmnForm.AreaName = row.AreaName,
-                this.editTmnForm.tmnLeader = row.tmnLeader
+                this.editTmnForm.AreaName = row.AreaName
+
+            console.log("赋值之后的form",this.editTmnForm)
 
             // 拿到管理人员的id
             for (var i = 0; i < this.tmnTableData.length ; i++) {
@@ -502,13 +508,17 @@ export default {
         },
         // 发起编辑控制柜的请求
         editTmn() {
+            console.log("发起请求的form",this.editTmnForm)
+            if (this.editTmnForm.tmnLeader.length==0) {
+                this.editTmnForm.tmnLeader = []
+            }
             var params = qs.stringify({
                 id: this.editTmnForm.id,
                 TmnID: this.editTmnForm.tmnId,
                 TmnName: this.editTmnForm.tmnName,
                 U1TmnID: this.editTmnForm.u1TmnID,
                 U2TmnID: this.editTmnForm.u2TmnID,
-                D1TmnID: this.nextTmn.tmnname,
+                D1TmnID: this.editTmnForm.d1TmnID,
                 D2TmnID: this.editTmnForm.d2TmnID,
                 PipID: this.editTmnForm.pipID,
                 ConPont1:this.editTmnForm.conPont1,
