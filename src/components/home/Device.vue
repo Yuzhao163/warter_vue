@@ -7,8 +7,9 @@
           <el-row >
               <el-row :gutter="20">
                   <el-col :span="6">
-                      <!--                        <el-input prefix-icon="el-icon-search" placeholder="请搜索控制柜名称"-->
-                      <!--                                  v-model="tmnName" @input="changeSearch" clearable @clear="clear"></el-input>-->
+<!--                      <el-input prefix-icon="el-icon-search" placeholder="请搜索控制柜名称"-->
+<!--                                v-model="tmnName" @input="changeSearch" clearable @clear="clear">-->
+<!--                      </el-input>-->
                   </el-col>
                   <el-col :span="4">
                       <el-button type="primary" @click="addTmn">添加控制柜</el-button>
@@ -117,7 +118,7 @@
                       <el-input v-model="editTmnForm.tmnName" @input="onInput()" class="input"></el-input>
                   </el-form-item>
                   <el-form-item label="所属分区">
-                      <el-select v-model="editTmnForm.AreaID" @change="getAreas" clearable>
+                      <el-select v-model="editTmnForm.AreaID" @change="getAreas" clearable :clear="changePip">
                           <el-option v-for="item in arealist"
                                      :key="item.id"
                                      :label="item.areaName"
@@ -126,7 +127,7 @@
                       </el-select>
                   </el-form-item>
                   <el-form-item label="所属管线">
-                      <el-select v-model="editTmnForm.pipID" @change="getPips">
+                      <el-select v-model="editTmnForm.pipID" @change="getPips" clearable :clear="changeTmn">
                           <el-option v-for="item in piplist"
                                      :key="item.id"
                                      :label="item.pipName"
@@ -135,17 +136,19 @@
                       </el-select>
                   </el-form-item>
                   <el-form-item label="上一控制柜名称">
-                      <el-select v-model="editTmnForm.u1TmnID" placeholder="默认在该管线的第一个位置" @change="getTmns">
+                      <el-select v-model="editTmnForm.u1TmnID" placeholder="默认在该管线的第一个位置" @change="getTmns" clearable :clear="changeNextTmn">
                           <el-option v-for="(item,index) in tmnlist"
                                      :key="index"
                                      :label="item.tmnName"
-                                     :value="item.tmnId">
+                                     :value="item.tmnId"
+                                     :disabled="item.disabled"
+                          >
                               <div @click="setTmnindex(index)">{{item.tmnName}}</div>
                           </el-option>
                       </el-select>
                   </el-form-item>
                   <el-form-item label="下一控制柜名称">
-                      <el-input v-model="nextTmn.tmnname" class="input" disabled></el-input>
+                      <el-input  v-model="nextTmn.tmnname" class="input" disabled></el-input>
                   </el-form-item>
                   <el-form-item label="部件信息1" prop="conPont1">
                       <el-input v-model="editTmnForm.conPont1" @input="onInput()" class="input"></el-input>
@@ -164,6 +167,7 @@
                   </el-form-item>
               </el-form>
               <span slot="footer" class="dialog-footer">
+                  <el-button @click="test()">test</el-button>
                     <el-button @click="editClose()">取 消</el-button>
                     <el-button type="primary" @click="editTmn()">确 定</el-button>
                 </span>
@@ -350,7 +354,6 @@ export default {
                 // 分区变化时候下面置空
                 this.addTmnForm.pipID=''
                 this.addTmnForm.u1TmnID=''
-                this.nextTmn.tmnname=''
                 this.getPips()
             })
         },
@@ -390,7 +393,6 @@ export default {
                 .then(res => {
                     this.leaderlist = res.data
                 })
-
         },
         // 当分区发生变化时清空管线控制柜选项
         clearTmn() {
@@ -411,8 +413,6 @@ export default {
                 this.nextTmn.tmnname='无'
                 this.editTmnForm.d1TmnID = ''
             }
-
-
         },
         // 提交添加请求
         async addSubmit() {
@@ -423,6 +423,13 @@ export default {
             } else if (this.addTmnForm.pipID==='') {
                 this.$message.error('请选择管线！')
             } else {
+                console.log(this.addTmnForm,this.nextTmn.tmnid)
+                if (this.addTmnForm.u1TmnID===''){
+                    this.nextTmn.tmnid="";
+                }
+                if (this.addTmnForm.tmnLeaderID==='') {
+                    this.addTmnForm.tmnLeaderID=''
+                }
                 var params = qs.stringify({
                     TmnName:this.addTmnForm.tmnName,
                     U1TmnID:this.addTmnForm.u1TmnID,
@@ -440,6 +447,8 @@ export default {
                 const {data: res} = await this.$axios.post('/addTmn',params)
                 if(res == 1) {
                     this.addDialogVisible = false
+                    this.addTmnForm=[]
+                    this.arealist=[]
                     this.showTableData = []
                     this.nextTmn = []
                     this.getTmnList()
@@ -459,21 +468,23 @@ export default {
             this.leaderlist=[]
             this.nextTmn=[]
         },
-
+test(){
+    this.nextTmn.tmnname = '1234'
+},
         // 编辑控制柜
         editTmnList(row) {
+
             console.log("row",row)
             console.log("form",this.editTmnForm)
             this.editTmnForm = {}
             this.TmnLeaderID = []
-
-            // this.editTmnForm = row
+            this.nextTmn.tmnname = row.d1TmnName,
             this.editTmnForm.tmnId = row.tmnId
             this.editTmnForm.tmnName = row.tmnName,
                 this.editTmnForm.u1TmnID = row.u1TmnID,
                 this.editTmnForm.u2TmnID = row.u2TmnID,
-                this.nextTmn.tmnname = row.d1TmnName,
                 this.editTmnForm.d1TmnID =this.nextTmn.tmnid,
+                this.nextTmn.tmnname = row.d1TmnName
                 // this.editTmnForm.d1TmnID = row.d1TmnID,
                 this.editTmnForm.d2TmnID = row.d2TmnID,
                 this.editTmnForm.conPont1 = row.conPont1,
@@ -483,9 +494,7 @@ export default {
                 this.editTmnForm.pipID = row.pipID,
                 this.editTmnForm.AreaID = row.AreaID,
                 this.editTmnForm.AreaName = row.AreaName
-
             console.log("赋值之后的form",this.editTmnForm)
-
             // 拿到管理人员的id
             for (var i = 0; i < this.tmnTableData.length ; i++) {
                 if(this.tmnTableData[i].tmnId === row.tmnId) {
@@ -505,6 +514,18 @@ export default {
             this.getAreas()
             this.getTmnLeader()
 
+        },
+        changePip(){
+            this.editTmnForm.AreaID =[]
+            this.editTmnForm.pipID = []
+            this.changeTmn()
+        },
+        changeTmn(){
+            this.editTmnForm.u1TmnID=''
+            this.changeNextTmn()
+        },
+        changeNextTmn(){
+            this.nextTmn.tmnname=''
         },
         // 发起编辑控制柜的请求
         editTmn() {
