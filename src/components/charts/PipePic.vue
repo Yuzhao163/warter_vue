@@ -28,6 +28,7 @@
       控制柜ID：{{ this.boxmsg.tmnID}}<br>水位：{{ this.boxmsg.w_line}}
       <br>阀位：{{ this.boxmsg.v_per}}<br>
     </div>
+    <button @click="test">test</button>
     <el-switch
         v-model="chartswitch"
         active-text="动态数据"
@@ -55,7 +56,7 @@ export default {
   mounted() {
     this.getdata();
     this.timer = setInterval(() => {
-      setTimeout(this.getdata, 0);
+      setTimeout(this.updatemsg, 0);
     }, 1000 * 1);
 
 
@@ -141,9 +142,39 @@ export default {
             data: []
           })
           this.option.legend.data.push(k)
-          console.log(i)
           this.option.series[i].data.push(successResponse.data[k].w_line)
 
+          i++;
+        }
+        this.allData = list;
+        this.loading=false;
+        this.setchartdate();
+
+        this.linechart();
+        // console.log(JSON.parse(JSON.stringify(this.allData))['昌平控制柜'])
+      });
+    },
+    //更新数据
+    updatemsg(){
+      var param=qs.stringify({UserName:this.$store.state.users.username})
+      this.$axios.post("/getpipebyusername",param).then(successResponse => {
+        var list=[];
+        var i=0;
+        for(var k in successResponse.data){
+          list.push({
+            tmnname:k,
+            data:successResponse.data[k]
+          });
+          // this.option.series.push({
+          //   name: k,
+          //   type: 'line',
+          //   data: []
+          // })
+          // this.option.legend.data.push(k)
+          this.option.series[i].data.push(successResponse.data[k].w_line)
+if(this.option.series[i].data.length>10){
+  this.$delete(this.option.series[i].data,0)
+}
           i++;
         }
         this.allData = list;
@@ -159,7 +190,7 @@ export default {
 
       let date = new Date();
       let dateYear = date.getFullYear();             //获取年
-      let dateMonth = date.getMonth();               //获取月
+      let dateMonth = date.getMonth()+1;               //获取月
       let dateDate = date.getDate();                 //获取当日
       let dateHours = date.getHours();               //获取小时
       let dateMinutes = date.getMinutes();           //获取分钟
@@ -170,12 +201,13 @@ export default {
       if(this.option.xAxis.data.length>10)
       {
         this.$delete(this.option.xAxis.data,0)
+        // this.$delete(this.option.series.data,0)
       }
     },
     c_switch(){
       if(this.chartswitch==true){
         this.timer = setInterval(() => {
-          setTimeout(this.getdata, 0);
+          setTimeout(this.updatemsg, 0);
         }, 1000 * 1);
       }else {
         clearInterval(this.timer);
@@ -232,7 +264,7 @@ export default {
     },
 
     test(){
-      console.log(this.allData)
+      console.log(this.option.series)
     }
   },
   watch(){

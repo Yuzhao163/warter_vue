@@ -51,6 +51,7 @@
       <el-table-column
           prop="regTime"
           label="注册时间"
+          :formatter="dateFormat"
       >
       </el-table-column>
       <el-table-column label="操作">
@@ -282,6 +283,7 @@
 
 <script>
 import qs from 'qs';
+import moment from "moment";
 
 export default {
   name: "Staff",
@@ -375,16 +377,16 @@ export default {
         value: -1,
         label: '保留权限'
       },{
-       value: '0',
+       value: 0,
        label: '清空权限(警告：选中后权限清空)'
       },{
-      value: '1',
+      value: 1,
       label: '分区管理员'
     }, {
-      value: '2',
+      value: 2,
       label: '管线管理员'
     }, {
-      value: '3',
+      value: 3,
       label: '控制柜管理员'
     },
     ],
@@ -393,19 +395,24 @@ export default {
         UserID:'',
       },
       addUserRightList: [{
-        value: '1',
+        value: 1,
         label: '分区管理员'
       }, {
-        value: '2',
+        value: 2,
         label: '管线管理员'
       }, {
-        value: '3',
+        value: 3,
         label: '控制柜管理员'
       },
       ],
       AreaList:[],
       PipeList:[],
       TerminalList:[],
+
+      areaid:[],
+      pipid:[],
+      tmnid:[],
+      rightpp:""
 
     }
   },
@@ -465,9 +472,8 @@ export default {
 
     getTerminals(){
       this.$axios.get('/getTerminal').then(res =>{
-        console.log('33333333'+res.data)
         this.TerminalList = res.data
-        console.log('ccccccccccccccccccccccc',this.Terminal.tmnId)
+
       })
       .catch(failResponse =>{
         console.log(failResponse)
@@ -596,7 +602,7 @@ export default {
           .get('/staff')
           .then(res => {
             console.log("请求成功")
-            console.log(res)
+            console.log("拿到的这些员工数据都是些什么？！！！！！！！！！！！！！！！！！！！！！！！！！",res.data)
             this.tableData = res.data;
             this.tableDataShow= res.data;
           })
@@ -729,15 +735,50 @@ export default {
       this.tableDataShow=[];
 this.searchstaff();
     },
+    dateFormat:function(row,column){
+      var date = row[column.property];
+      if(date === undefined){
+        return ''
+      } ;
+      return moment(date).format("YYYY-MM-DD HH:mm:ss")
+    },
+
     handleEdit(index, row) {
       console.log(index, row);
       // this.UserRight.Right_PP = this.UserRightList[0].value;
       this.staffData = JSON.parse(JSON.stringify(row));
+      console.log("这一行的userID是",row.userID)
+      for(var i = 0; i < this.tableData.length; i++){
+        if(this.tableData[i].userID == row.userID){
+          console.log("这个当前行数匹配的userID是",this.tableData[i].userID)
+          this.rightpp = this.tableData[i].right_PP;
+          console.log("这个当前行数匹配的right_PP是",this.rightpp)
+          if(this.tableData[i].right_PP == 1){
+            this.areaid = this.tableData[i].areaID
+          } else if(this.tableData[i].right_PP == 2){
+            this.pipid = this.tableData[i].pipID
+          } else if(this.tableData[i].right_PP == 3){
+            this.tmnid = this.tableData[i].tmnID
+          }
+        }
+      }
+
+      console.log("这个当前行数匹配的right_PP是",this.rightpp)
+      this.UserRight.Right_PP =this.rightpp
+      if(this.rightpp == 1){
+        this.Area.areaID = this.areaid
+      } else if(this.rightpp == 2){
+        this.Pipe.pipID = this.pipid
+      } else if(this.rightpp == 3){
+        this.Terminal.tmnId = this.tmnid
+      }
       console.log(this.staffData)
       this.preUserName = this.staffData.userName
     },
+
     updatestaff() {
-      this.$confirm('将更新用户信息, 是否确定?', '提示', {
+      console.log("这里输出的是员工的UserRight的值",this.UserRight.Right_PP)
+      this.$confirm('将更新员工信息, 是否确定?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -805,8 +846,9 @@ this.searchstaff();
           console.log("flag2是真的")
           this.flag2 = true;
         }
-
+        console.log('10084')
         if (this.flag1 == true && this.flag2 == true) {
+          console.log('10085')
           var params = qs.stringify({
 
             UserID: this.staffData.userID,
@@ -826,14 +868,45 @@ this.searchstaff();
             // Area_Pip_Tmn: this.staffData1,
 
           }, {arrayFormat: 'repeat'})
-          if (this.UserRight.Right_PP == ""||this.staffData.uclassID == '' || this.staffData.uclassID == null) {
+         console.log(10086)
+         console.log(this.UserRight.Right_PP)
+         console.log(this.staffData.uclassID)
+
+          if (this.UserRight.Right_PP == null||this.staffData.uclassID == '') {
             this.$message({
               type: 'info',
               message: '请选择对应权限'
             });
-          } else {
+          }if(this.UserRight.Right_PP == 0){
+            this.$confirm('此操作会清除该员工所有权限, 是否确定?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.$axios.post('/updstaff', params).then(res => {
+                console.log("修改完成",res)
+                this.$message({
+                  type: 'success',
+                  message: '成功修改！'
+                });
+                this.Index_TableData()
+              })
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '操作取消'
+              });
+            });
+          }
+
+
+        else {
             this.$axios.post('/updstaff', params).then(res => {
               console.log("修改完成",res)
+              this.$message({
+                type: 'success',
+                message: '成功修改！'
+              });
               this.Index_TableData()
             }).catch(() => {
               this.$message({

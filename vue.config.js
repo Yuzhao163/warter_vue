@@ -16,7 +16,8 @@ module.exports = {
         hotOnly: false,
         proxy: { // 配置跨域
             '/api': {
-                target: 'http://8.140.190.203:8443/api',
+                // target: 'http://8.140.190.203:8443/api',
+                target: 'http://101.201.101.181:8443/api',
                 ws: true,
                 changOrigin: true,
                 pathRewrite: {

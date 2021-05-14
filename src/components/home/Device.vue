@@ -1,228 +1,182 @@
 <template>
   <div class="">
-    <!--        卡片视图区域-->
-    <el-card class="box-card">
-        <!-- 顶部搜索区域-->
-        <el-row class="cat_opt">
-            <!--        搜索与添加区域-->
-            <el-row :gutter="20">
-                <el-col :span="6">
-                    <el-input prefix-icon="el-icon-search" placeholder="请输入控制柜名称" v-model="tmnName" @input="changeSearch" clearable @clear="clear">
-                    </el-input>
-                </el-col>
-                <el-col :span="4">
-                    <el-button type="primary" @click="addButton">添加控制柜</el-button>
-                </el-col>
-            </el-row>
-        </el-row>
+      <!--    卡片视图区域    -->
+      <el-card class="box-card">
 
-      <!--        控制柜列表区域-->
-      <el-table :data="tmnTableDataShow" stripe style="width: 100%; margin-top: 35px; margin-bottom: 25px">
-<!--      <el-table :data="tmnTableDataShow" stripe style="width: 100%; margin-top: 35px; margin-bottom: 25px">-->
-<!--        <el-table-column label="#" type="index"></el-table-column>-->
-        <el-table-column prop="tmnId" label="控制柜id" width="50px" ></el-table-column>
-        <el-table-column prop="tmnName" label="控制柜名称"></el-table-column>
-        <el-table-column prop="u1TmnName" label="上一控制柜" ></el-table-column>
-<!--        <el-table-column prop="u2TmnName" label="上一控制柜名称" ></el-table-column>-->
-        <el-table-column prop="d1TmnName" label="下一控制柜" ></el-table-column>
-<!--        <el-table-column prop="d2TmnName" label="下一控制柜名称" ></el-table-column>-->
-        <el-table-column prop="AreaName" label="所属分区" ></el-table-column>
-        <el-table-column prop="pipName" label="所属管线" ></el-table-column>
-        <el-table-column prop="conPont1" label="部件信息" ></el-table-column>
-        <el-table-column prop="tmnDesc" label="描述信息"></el-table-column>
-        <el-table-column prop="tmnLeader" label="管理人员"></el-table-column>
-        <el-table-column label="操作信息">
-          <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-edit" size="mini" @click="editTmnList(scope.row)"></el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeById(scope.row)"></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+          <!--    顶部搜索区域    -->
+          <el-row >
+              <el-row :gutter="20">
+                  <el-col :span="6">
+<!--                      <el-input prefix-icon="el-icon-search" placeholder="请搜索控制柜名称"-->
+<!--                                v-model="tmnName" @input="changeSearch" clearable @clear="clear">-->
+<!--                      </el-input>-->
+                  </el-col>
+                  <el-col :span="4">
+                      <el-button type="primary" @click="addTmn">添加控制柜</el-button>
+                  </el-col>
+              </el-row>
+          </el-row>
 
-      <!--        分页区域-->
-      <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="[1, 5, 10, 20]"
-            :page-size="pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total=total>
-      </el-pagination>
 
-      <!--            添加控制柜对话框-->
-      <el-dialog
-          title="提示"
-          :visible.sync="addDialogVisible"
-          width="35%"
-          @close="addDialogClose"
-      >
-          <el-form :model="addTmnForm" :rules="addTmnFormRules" ref="addTmnFormRef" label-width="130px">
-          <el-form-item label="控制柜id" prop="tmnID">
-              <el-input v-model="addTmnForm.tmnID" class="input"></el-input>
+          <!--    控制柜列表区域    -->
+          <el-table :data="showTableData" stripe style="width: 100%; margin-top: 35px; margin-bottom: 25px">
+              <el-table-column prop="tmnId" label="控制柜id" width="50px" ></el-table-column>
+              <el-table-column prop="tmnName" label="控制柜名称"></el-table-column>
+              <el-table-column prop="u1TmnName" label="上一控制柜" ></el-table-column>
+              <el-table-column prop="d1TmnName" label="下一控制柜" ></el-table-column>
+              <el-table-column prop="AreaName" label="所属分区" ></el-table-column>
+              <el-table-column prop="pipName" label="所属管线" ></el-table-column>
+              <el-table-column prop="conPont1" label="部件信息" ></el-table-column>
+              <el-table-column prop="tmnDesc" label="描述信息"></el-table-column>
+              <el-table-column prop="tmnLeader" label="管理人员"></el-table-column>
+              <el-table-column label="操作信息">
+                  <template slot-scope="scope">
+                      <el-button type="primary" icon="el-icon-edit" size="mini" @click="editTmnList(scope.row)"></el-button>
+                      <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeById(scope.row)"></el-button>
+                  </template>
+              </el-table-column>
+          </el-table>
 
-          </el-form-item>
-          <el-form-item label="控制柜名称" prop="tmnName">
-              <el-input v-model="addTmnForm.tmnName" class="input"></el-input>
-          </el-form-item>
+          <!--        分页区域-->
+          <el-pagination
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  :current-page="currentPage"
+                  :page-sizes="[1, 5, 10, 20, 50]"
+                  :page-size="pageSize"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total=total>
+          </el-pagination>
 
-          <el-form-item label="所属分区">
-              <el-select v-model="addTmnForm.areaID" @change="getAreas">
-                  <el-option v-for="item in arealist"
-                             :key="item.id"
-                             :label="item.areaName"
-                             :value="item.areaID">
-                  </el-option>
-              </el-select>
-          </el-form-item>
-          <el-form-item label="所属管线">
-              <el-select v-model="addTmnForm.pipID"  @change="getPips">
-                  <el-option v-for="item in piplist"
-                             :key="item.id"
-                             :label="item.pipName"
-                             :value="item.pipID">
-                  </el-option>
-              </el-select>
-          </el-form-item>
-<!--          <el-form-item label="上一控制柜名称">-->
-<!--              <el-select v-model="addTmnForm.u1TmnID" @change="getTmns">-->
-<!--                  <el-option v-for="item in tmnlist"-->
-<!--                             :key="item.id"-->
-<!--                             :label="item.tmnName"-->
-<!--                             :value="item.tmnId">-->
-<!--                  </el-option>-->
-<!--              </el-select>-->
-<!--          </el-form-item>-->
 
-              <el-form-item label="上一控制柜名称">
-                  <el-select v-model="addTmnForm.u1TmnID" @change="getTmns">
-                      <el-option v-for="(item,index) in tmnlist"
-                                 :key="index"
-                                 :label="item.tmnName"
-                                 :value="item.tmnId">
-                          <div @click="setTmnindex(index)">{{item.tmnName}}</div>
-                      </el-option>
-                  </el-select>
-              </el-form-item>
-
-          <el-form-item label="下一控制柜名称">
-<!--              <el-select v-model="addTmnForm.d1TmnID" @change="getNextTmns">-->
-<!--                  <el-option v-for="item in tmnlist2"-->
-<!--                             :key="item.id"-->
-<!--                             :label="item.tmnName"-->
-<!--                             :value="item.tmnId"-->
-<!--                  @click="test">-->
-<!--                  </el-option>-->
-<!--              </el-select>-->
-              <el-input v-model="nextTmn.tmnname" class="input" disabled></el-input>
-          </el-form-item>
-
-          <el-form-item label="部件信息1" prop="conPont1">
-            <el-input v-model="addTmnForm.conPont1" class="input"></el-input>
-          </el-form-item>
-<!--          <el-form-item label="部件信息2" prop="conPont2">-->
-<!--            <el-input v-model="addTmnForm.conPont2" class="input"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="部件信息3" prop="conPont3">-->
-<!--            <el-input v-model="addTmnForm.conPont3" class="input"></el-input>-->
-<!--          </el-form-item>-->
-          <el-form-item label="描述信息" prop="tmnDesc">
-            <el-input type="textarea" v-model="addTmnForm.tmnDesc"></el-input>
-          </el-form-item>
-          <el-form-item label="管理人员">
-              <el-select v-model="addTmnForm.tmnLeaderID" @change="getAreas">
-                  <el-option v-for="item in leaderlist"
-                             :key="item.userID"
-                             :label="item.userName"
-                             :value="item.userID">
-                  </el-option>
-              </el-select>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
+          <!--            添加控制柜对话框-->
+          <el-dialog title="提示" :visible.sync="addDialogVisible" width="35%" @close="addDialogCancle('addTmnFormRef')">
+              <el-form :model="addTmnForm" :rules="addTmnFormRules" ref="addTmnFormRef" label-width="130px">
+                  <el-form-item label="控制柜名称" prop="tmnName">
+                      <el-input v-model="addTmnForm.tmnName" class="input"></el-input>
+                  </el-form-item>
+                  <el-form-item label="所属分区">
+                      <el-select v-model="addTmnForm.areaID" clearable @change="getAreas">
+                          <el-option v-for="item in arealist"
+                                     :key="item.id"
+                                     :label="item.areaName"
+                                     :value="item.areaID">
+                          </el-option>
+                      </el-select>
+                  </el-form-item>
+                  <el-form-item label="所属管线">
+                      <el-select v-model="addTmnForm.pipID" clearable @change="getPips">
+                          <el-option v-for="item in piplist"
+                                     :key="item.id"
+                                     :label="item.pipName"
+                                     :value="item.pipID">
+                          </el-option>
+                      </el-select>
+                  </el-form-item>
+                  <el-form-item label="上一控制柜名称">
+                      <el-select v-model="addTmnForm.u1TmnID" clearable @clear="clearTmn()"  placeholder="默认在该管线的第一个位置" @change="getTmns">
+                          <el-option v-for="(item,index) in tmnlist"
+                                     :key="index"
+                                     :label="item.tmnName"
+                                     :value="item.tmnId">
+                              <div @click="setTmnindex(index)">{{item.tmnName}}</div>
+                          </el-option>
+                      </el-select>
+                  </el-form-item>
+                  <el-form-item label="下一控制柜名称">
+                      <el-input v-model="nextTmn.tmnname" class="input" disabled></el-input>
+                  </el-form-item>
+                  <el-form-item label="部件信息1" prop="conPont1">
+                      <el-input v-model="addTmnForm.conPont1" class="input"></el-input>
+                  </el-form-item>
+                  <el-form-item label="描述信息" prop="tmnDesc">
+                      <el-input type="textarea" v-model="addTmnForm.tmnDesc"></el-input>
+                  </el-form-item>
+                  <el-form-item label="管理人员">
+                      <el-select v-model="addTmnForm.tmnLeaderID" multiple>
+                          <el-option v-for="item in leaderlist"
+                                     :key="item.userID"
+                                     :label="item.userName"
+                                     :value="item.userID">
+                          </el-option>
+                      </el-select>
+                  </el-form-item>
+              </el-form>
+              <span slot="footer" class="dialog-footer">
                     <el-button @click="addDialogCancle('addTmnFormRef')">取 消</el-button>
-                    <el-button type="primary" @click="addTmn">确 定</el-button>
+                    <el-button type="primary" @click="addSubmit">确 定</el-button>
                 </span>
-      </el-dialog>
+          </el-dialog>
 
-      <!--            编辑控制柜对话框-->
-      <el-dialog
-          title="提示"
-          :visible.sync="editTmnDialogVisible"
-          width="35%">
-          <button @click="test()"></button>
-        <el-form :model="editTmnForm" :rules="editTmnFormRules" ref="editTmnFormRef" label-width="145px">
-          <el-form-item label="控制柜id" prop="tmnId" >
-            <el-input v-model="editTmnForm.tmnId" class="input" :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="控制柜名称" prop="tmnName">
-            <el-input v-model="editTmnForm.tmnName" class="input"></el-input>
-          </el-form-item>
-            <el-form-item label="所属分区">
-                <el-select v-model="editTmnForm.AreaID" @change="getAreas">
-                    <el-option v-for="item in arealist"
-                               :key="item.id"
-                               :label="item.areaName"
-                               :value="item.areaID">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="所属管线">
-                <el-select v-model="editTmnForm.pipID"  @change="getPips">
-                    <el-option v-for="item in piplist"
-                               :key="item.id"
-                               :label="item.pipName"
-                               :value="item.pipID"
-                    >
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="上一控制柜名称">
-                <el-select v-model="editTmnForm.u1TmnID" @change="getTmns">
-                    <el-option v-for="(item,index) in tmnlist"
-                               :key="index"
-                               :label="item.tmnName"
-                               :value="item.tmnId">
-                        <div @click="setTmnindex(index)">{{item.tmnName}}</div>
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="下一控制柜名称">
-                <el-input v-model="nextTmn.tmnname" class="input" disabled></el-input>
-            </el-form-item>
-          <el-form-item label="部件信息1" prop="conPont1">
-            <el-input v-model="editTmnForm.conPont1" class="input"></el-input>
-          </el-form-item>
-<!--          <el-form-item label="部件信息2" prop="conPont2">-->
-<!--            <el-input v-model="editTmnForm.conPont2" class="input"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="部件信息3" prop="conPont3">-->
-<!--            <el-input v-model="editTmnForm.conPont3" class="input"></el-input>-->
-<!--          </el-form-item>-->
-          <el-form-item label="描述信息" prop="tmnDesc">
-            <el-input type="textarea" v-model="editTmnForm.tmnDesc"></el-input>
-          </el-form-item>
-            <el-form-item label="管理人员">
-                <el-select v-model="editTmnForm.tmnLeader" @change="getTmnLeader">
-                    <el-option v-for="item in leaderlist"
-                               :key="item.userID"
-                               :label="item.userName"
-                               :value="item.userID"
-                    >
-                    </el-option>
-                </el-select>
-            </el-form-item>
-
-        </el-form>
-
-
-        <span slot="footer" class="dialog-footer">
+          <!--            编辑控制柜对话框-->
+          <el-dialog title="提示" :visible.sync="editTmnDialogVisible" width="35%">
+              <el-form :model="editTmnForm" :rules="editTmnFormRules" ref="editTmnFormRef" label-width="145px">
+                  <el-form-item label="控制柜id" prop="tmnId" >
+                      <el-input v-model="editTmnForm.tmnId" class="input" :disabled="true"></el-input>
+                  </el-form-item>
+                  <el-form-item label="控制柜名称" prop="tmnName">
+                      <el-input v-model="editTmnForm.tmnName" @input="onInput()" class="input"></el-input>
+                  </el-form-item>
+                  <el-form-item label="所属分区">
+                      <el-select v-model="editTmnForm.AreaID" @change="getAreas" clearable :clear="changePip">
+                          <el-option v-for="item in arealist"
+                                     :key="item.id"
+                                     :label="item.areaName"
+                                     :value="item.areaID">
+                          </el-option>
+                      </el-select>
+                  </el-form-item>
+                  <el-form-item label="所属管线">
+                      <el-select v-model="editTmnForm.pipID" @change="getPips" clearable :clear="changeTmn">
+                          <el-option v-for="item in piplist"
+                                     :key="item.id"
+                                     :label="item.pipName"
+                                     :value="item.pipID">
+                          </el-option>
+                      </el-select>
+                  </el-form-item>
+                  <el-form-item label="上一控制柜名称">
+                      <el-select v-model="editTmnForm.u1TmnID" placeholder="默认在该管线的第一个位置" @change="getTmns" clearable :clear="changeNextTmn">
+                          <el-option v-for="(item,index) in tmnlist"
+                                     :key="index"
+                                     :label="item.tmnName"
+                                     :value="item.tmnId"
+                                     :disabled="item.disabled"
+                          >
+                              <div @click="setTmnindex(index)">{{item.tmnName}}</div>
+                          </el-option>
+                      </el-select>
+                  </el-form-item>
+                  <el-form-item label="下一控制柜名称">
+                      <el-input  v-model="nextTmn.tmnname" class="input" disabled></el-input>
+                  </el-form-item>
+                  <el-form-item label="部件信息1" prop="conPont1">
+                      <el-input v-model="editTmnForm.conPont1" @input="onInput()" class="input"></el-input>
+                  </el-form-item>
+                  <el-form-item label="描述信息" prop="tmnDesc">
+                      <el-input type="textarea" @input="onInput()" v-model="editTmnForm.tmnDesc"></el-input>
+                  </el-form-item>
+                  <el-form-item label="管理人员">
+                      <el-select v-model="editTmnForm.tmnLeader" multiple @change="getTmnLeader">
+                          <el-option v-for="item in leaderlist"
+                                     :key="item.userID"
+                                     :label="item.userName"
+                                     :value="item.userID">
+                          </el-option>
+                      </el-select>
+                  </el-form-item>
+              </el-form>
+              <span slot="footer" class="dialog-footer">
+                  <el-button @click="test()">test</el-button>
                     <el-button @click="editClose()">取 消</el-button>
                     <el-button type="primary" @click="editTmn()">确 定</el-button>
                 </span>
-      </el-dialog>
+          </el-dialog>
 
-    </el-card>
+
+
+
+      </el-card>
   </div>
 </template>
 
@@ -231,466 +185,435 @@
 
 export default {
   name: "Device",
-  data() {
-    return {
-        nextTmn:{
-            tmnIndex:'',
-            tmnid:'',
-            tmnname:'',
-        },
-        //
-        arealist:[],
-        //  记录拿到的id去找管线
-        piplist:[],
-        tmnlist:[],
-        //  记录下一控制柜信息
-        tmnlist2:[],
-        //  控制柜管理人员
-        leaderlist:[],
+    data() {
+        return {
+            // 存放控制柜信息
+            tmnTableData:[],
+            // 存放修改格式的控制柜信息
+            showTableData:[],
 
+            // 分页功能部分
+            currentPage: 1, // 前往第几页 默认为1
+            pageSize: 5,    // 当前页有多少条数据 默认5
+            total: 10,      //一共有多少条数据 默认20
 
-      // 搜索功能 存储搜索信息
-      tmnName: "",
+            // 添加控制柜
+            addDialogVisible: false,
+            addTmnForm: {
+                tmnID:'',
+                tmnName: '',
+                u1TmnID: '',
+                u1TmnName:'',
+                u2TmnID: '',
+                d1TmnID: '',
+                d2TmnID: '',
+                conPont1: '',
+                conPont2: '',
+                conPont3: '',
+                tmnDesc: '',
+                pipID:'',
+                areaID:'',
+                tmnLeaderID:''
+            },
+            // 添加控制柜表单规则
+            addTmnFormRules: {
+                tmnName: [
+                    { required: true, message: "请输入控制柜名称", trigger: "blur"},
+                    { min: 3, max:15, message: "长度在 3 到 15 个字符", trigger: "blur"}
+                ],
+                u1TmnID: [
+                    { required: true, message: "请输入上一控制柜id1", trigger: "blur"},
+                ],
+                d1TmnID: [
+                    { required: true, message: "请输入下一控制柜id1", trigger: "blur"},
+                ],
+                pipID: [
+                    { required: true, message: "请输入分区id", trigger: "blur"},
+                ],
+            },
 
-      // 分页功能  前往第4页
-      currentPage: 1,
-      // 当前页有多少数据
-      pageSize: 5,
-      // 共有多少数据
-      total: 20,
+            // 下拉框存储
+            arealist:[],    // 分区列表
+            piplist:[],     // 管线列表
+            tmnlist:[],     // 控制柜列表
+            nextTmn:{       // 下一控制柜
+                tmnIndex:'',
+                tmnid:'',
+                tmnname:'',
+            },
+            leaderlist:[],  // 控制柜管理人员
 
-      // 搜索后需要展示的内容
-      filterTableData: [],
-      // 用来判断是否检索过
-      flag: 0,
+            // 编辑控制柜
+            editTmnForm: {
+                tmnId: '',
+                tmnName: '',
+                u1TmnID: '',
+                u2TmnID: '',
+                d1TmnID: '',
+                d1TmnName: '',
+                d2TmnID: '',
+                d2TmnName: '',
+                conPont1: '',
+                conPont2: '',
+                conPont3: '',
+                tmnDesc: '',
+                pipID:'',
+                AreaID:'',
+                AreaName:'',
+                // tmnLeadID: '',
+                tmnLeader:[]
+            },
+            // 编辑控制柜表单规则
+            editTmnFormRules: {
+                tmnName: [
+                    { required: true, message: "请输入控制柜名称", trigger: "blur"},
+                    { min: 3, max:15, message: "长度在 3 到 15 个字符", trigger: "blur"}
+                ],
+                u1TmnID: [
+                    { required: true, message: "请输入上一控制柜id1", trigger: "blur"},
+                ],
+                u2TmnID: [
+                    { required: true, message: "请输入上一控制柜id2", trigger: "blur"},
+                ],
+                d1TmnID: [
+                    { required: true, message: "请输入下一控制柜id1", trigger: "blur"},
+                ],
+                d2TmnID: [
+                    { required: true, message: "请输入下一控制柜id2", trigger: "blur"},
+                ],
+                pipID: [
+                    { required: true, message: "请输入分区id", trigger: "blur"},
+                ],
+            },
+            // 编辑控制柜详细信息对话框的显示
+            editTmnDialogVisible: false,
+            leadermessage:[],
+            TmnLeaderID:[],
 
-      // 控制柜表信息
-      tmnTableData:[],
-      // 需要展示的控制柜
-      tmnTableDataShow:[],
-
-
-
-      // 添加控制柜对话框的显示与隐藏
-      addDialogVisible: false,
-      // 添加功能下拉框选项
-      // 添加控制柜表单
-      addTmnForm: {
-        tmnID:'',
-        tmnName: '',
-        u1TmnID: '',
-        u1TmmnName:'',
-        u2TmnID: '',
-        d1TmnID: '',
-        d2TmnID: '',
-        conPont1: '',
-        conPont2: '',
-        conPont3: '',
-        tmnDesc: '',
-        pipID:'',
-        areaID:'',
-        tmnLeaderID:''
-      },
-      // 添加控制柜表单规则
-      addTmnFormRules: {
-        tmnID: [
-          { required: true, message: "请输入控制柜id1", trigger: "blur"},
-        ],
-        tmnName: [
-          { required: true, message: "请输入用户名", trigger: "blur"},
-          // { min: 3, max:10, message: "长度在 3 到 10 个字符", trigger: "blur"}
-        ],
-        u1TmnID: [
-          { required: true, message: "请输入上一控制柜id1", trigger: "blur"},
-        ],
-        u2TmnID: [
-          { required: true, message: "请输入上一控制柜id2", trigger: "blur"},
-        ],
-        d1TmnID: [
-          { required: true, message: "请输入下一控制柜id1", trigger: "blur"},
-        ],
-        d2TmnID: [
-          { required: true, message: "请输入下一控制柜id2", trigger: "blur"},
-        ],
-        pipID: [
-          { required: true, message: "请输入分区id", trigger: "blur"},
-        ],
-        conPont1: [
-          { required: false, message: "请输入部件信息1", trigger: "blur"},
-        ],
-        conPont2: [
-          { required: false, message: "请输入部件信息2", trigger: "blur"},
-        ],
-        conPont3: [
-          { required: false, message: "请输入部件信息3", trigger: "blur"},
-        ],
-        tmnDesc: [
-          { required: false, message: "请输入控制柜描述信息", trigger: "blur"},
-        ],
-      },
-
-      // 编辑控制柜表单
-      editTmnForm: {
-        tmnId: '',
-        tmnName: '',
-        u1TmnID: '',
-        u2TmnID: '',
-        d1TmnID: '',
-          d1TmnName: '',
-        d2TmnID: '',
-          d2TmnName: '',
-        conPont1: '',
-        conPont2: '',
-        conPont3: '',
-        tmnDesc: '',
-        pipID:'',
-          AreaID:'',
-          AreaName:'',
-          tmnLeadID: '',
-          tmnLeader:''
-      },
-      // 编辑控制柜表单规则
-      editTmnFormRules: {},
-      // 编辑控制柜详细信息对话框的显示
-      editTmnDialogVisible: false,
-
-
-      // 解决下拉框问题新建的数组
-
-    }
-  },
+        }
+    },
   created() {
     // 获取列表信息
     this.getTmnList()
 
   },
-  methods:{
-    //获取控制柜列表信息
-    getTmnList() {
-      this.$axios.get('/getAllTmnList').then(res => {
-          this.total = res.data.length
-          console.log("res",res)
-        var params=qs.stringify({page:1,
-            size:this.pageSize})
-        console.log(params)
-        this.$axios.post('/getAllTmnListByPage',params).then(res => {
-            this.tmnTableData = res.data
-            console.log(this.tmnTableData)
-            this.handleTmnTableDataShow()
-        })
-      })
-    },
-    // 后端分页请求
-      getPageData() {
-          var params=qs.stringify({page:this.currentPage,
-              size:this.pageSize})
-          console.log(params)
-          this.$axios.post('/getAllTmnListByPage',params).then(res => {
-              this.tmnTableData = res.data
-              console.log(this.tmnTableData)
-              this.handleTmnTableDataShow()
-          })
-      },
-    //  分页功能
-      handleSizeChange(size) {
-          this.currentPage = 1;
-          this.pagesize = size;
-          this.getTmnList();
-          console.log(this.pagesize)  //每页下拉显示数据
-      },
-      handleCurrentChange(currentPage){
-          this.currentPage = currentPage;
-          console.log(this.currentPage)  //点击第几页
-          this.getPageData()
-      },
-      handleTmnTableDataShow() {
-        this.tmnTableDataShow = this.tmnTableData
-          console.log("show",this.tmnTableDataShow)
-      },
-    // 搜索功能（利用双向绑定）
-    changeSearch() {
-      this.tmnTableDataShow = []
-      var j = 0
-      if (this.tmnName === '') {
-        this.tmnTableDataShow = this.tmnTableData
-      } else {
-        for(var i=0; i<this.tmnTableData.length; i++) {
-          if(this.tmnTableData[i].tmnName.search(this.tmnName) >= 0) {
-            this.tmnTableDataShow[j] = this.tmnTableData[i]
-            j++
-          }
-        }
-      }
-    },
-    // 清空搜索框
-    clear() {
-      this.tmnTableDataShow = [];
-      this.getTmnList()
-        this.pagesize = 5
-        this.currentPage = 1
-    },
-
-    // 管线下拉框部分（二维数组的增加）
-    // arrayPipPush() {
-    //     this.pipArrayList.push({
-    //         arrayPipID: this.arrayPipID,
-    //         arrayPipName: this.arrayPipName
-    //     })
-    // },
-    // // 更新管线的下拉框
-    // updatePipOption() {
-    //     // addTmnNewList[0]
-    //     // 首先将第一个第一个值进行赋值
-    //     this.arrayPipID = this.tmnTableData[0].pipID
-    //     this.arrayPipName = this.tmnTableData[0].pipName
-    //     this.arrayPipPush()
-    //     // 定义变量记录循环的每一次pipid和pipname
-    //     for (var i=0; i<this.tmnTableData.length; i++) {
-    //         var a = this.tmnTableData[i].pipID
-    //         var b = this.tmnTableData[i].pipName
-    //         // 判断是否相等
-    //         for (var j=0; this.pipArrayList[j]; j++) {
-    //             if ((this.pipArrayList[j].arrayPipID===a) && (this.pipArrayList[j].arrayPipName===b)) {
-    //                 this.index++
-    //             }
-    //         }
-    //         // 不存在相等加入数组
-    //         if (this.index === 0) {
-    //             this.arrayPipID = a
-    //             this.arrayPipName = b
-    //             this.arrayPipPush()
-    //         }
-    //         this.index = 0
-    //     }
-    // },
-    // // 添加控制柜按钮
-    getAreas() {
-        //测试是否拿到分区
-        this.$axios.get('/getAllAreas').then(res => {
-            this.arealist = res.data
-            // this.areaid = this.arealist.areaid
-            console.log(this.arealist,"res",res)
-            this.getPips()
-        })
-
-    },
-    getPips() {
-        // 将分区id 传入 请求后端 获得管线名称和id
-        console.log(this.addTmnForm.areaID)
-        if (this.addDialogVisible === true) {
-            this.$axios.get('/getPips',{params:{areaID:this.addTmnForm.areaID}})
+    methods: {
+        // 获取控制柜信息
+        getTmnList() {
+            this.$axios.get('/getTmnListByPage',{ params: {
+                    page: this.currentPage,
+                    size: this.pageSize
+                }})
                 .then(res => {
-                    this.piplist = res.data
-                    console.log("piplist add",this.piplist,res)
+                    this.tmnTableData = res.data
+                    this.$axios.get('/getTmnSize')
+                        .then(res => {
+                            this.total = res.data
+                            this.showTableData = JSON.parse(JSON.stringify(this.tmnTableData))
+                            this.showLeader()
+                        })
                 })
-        } else if (this.editTmnDialogVisible === true) {
-            this.$axios.get('/getPips',{params:{areaID:this.editTmnForm.AreaID}})
-                .then(res2 => {
-                    this.piplist = res2.data
-                    console.log("piplist edit",this.piplist,res2)
-                })
-        }
-        this.getTmns()
-    },
-    getTmns() {
-        // 前端控制柜下拉框
-        // 如果管线内没有控制柜 要显示 我是第一个控制柜
-        // 如果管线内有控制柜 插在这个控制柜前面 上一控制柜显示 我是第一个控制柜 下一控制柜显示已经有的控制柜名称
-        //                    插在这个控制柜后面 上一控制柜显示已有控制柜名称 下一控制柜显示 我是最后一个控制柜
-        if (this.addDialogVisible === true) {
-            this.$axios.get('/getTmns',{params:{pipID:this.addTmnForm.pipID}})
-                .then(res => {
-                    console.log(res)
-                    this.tmnlist = res.data
-                    this.getNextTmns()
-                })
-        } else if (this.editTmnDialogVisible === true) {
-            this.$axios.get('/getTmns',{params:{pipID:this.editTmnForm.pipID}})
-                .then(res => {
-                    console.log(res)
-                    this.tmnlist = res.data
-                    this.getNextTmns()
-                })
-        }
+        },
+        // 解决管理人员名称拼接的问题
+        showLeader() {
+            for (var i = 0; i < this.showTableData.length; i++) {
+                var leader = '';
+                for(var j =0; j<this.showTableData[i].TmnLeader.length; j++) {
+                    var leaderName = this.showTableData[i].TmnLeader[j].userName
+                    var leaderPhone = this.showTableData[i].TmnLeader[j].MoPhone
+                    leader = leaderName+'-'+leaderPhone+";"+leader
+                }
+                this.showTableData[i].tmnLeader = leader;
+            }
+        },
 
-    },
-    getNextTmns() {
-        this.tmnlist2 = this.tmnlist
-    },
-    //获取控制柜管理人员列表
-    getTmnLeader() {
-          this.$axios.get('/getTmnLeader')
-              .then(res => {
-                  console.log(res.data)
-                  this.leaderlist = res.data
-              })
-
-      },
-
-
-    addButton() {
-        this.addDialogVisible = true
-        // this.updatePipOption()
-        this.getAreas()
-        this.getTmnLeader()
-    },
-    // 添加控制柜
-    async addTmn() {
-        const {data: res} = await this.$axios.get('/addTmn',{params:{
-                TmnID:this.addTmnForm.tmnID,
-                TmnName:this.addTmnForm.tmnName,
-                U1TmnID:this.addTmnForm.u1TmnID,
-                U2TmnID:this.addTmnForm.u2TmnID,
-                // D1TmnID:this.addTmnForm.d1TmnID,
-                D1TmnID:this.nextTmn.tmnid,
-                D2TmnID:this.addTmnForm.d2TmnID,
-
-                ConPont1:this.addTmnForm.conPont1,
-                ConPont2:this.addTmnForm.conPont2,
-                ConPont3:this.addTmnForm.conPont3,
-                TmnDesc:this.addTmnForm.tmnDesc,
-                PipID:this.addTmnForm.pipID,
-                AreaID:this.addTmnForm.areaID,
-                TmnLeadID: this.addTmnForm.tmnLeaderID
-            }})
-        if(res == 1) {
-            this.addDialogVisible = false
-            this.tmnTableDataShow = []
-            this.nextTmn = []
-            this.getTmnList()
+        // 分页功能
+        //  每页显示的条数 （点击后将当前页数重置为1）
+        handleSizeChange(size) {
+            this.pageSize = size
             this.currentPage = 1
-            this.$message.success("添加成功")
-        } else {
-            this.$message.error("添加失败")
-        }
-    },
-    // 取消添加控制柜
-    addDialogCancle(addTmnFormRef) {
-      this.addDialogVisible = false
-      this.$refs[addTmnFormRef].resetFields();
-      // 取消添加 列表置空
-      this.arealist=[]
-        this.piplist=[]
-        this.leaderlist=[]
-        this.nextTmn=[]
+            this.getTmnList()
+        },
+        //  当前点击的是第几页 （点击后相当于根据页数获取数据）
+        handleCurrentChange(currentPage) {
+            this.currentPage = currentPage
+            this.getTmnList()
+        },
 
-    },
-    // 关闭添加控制柜对话框
-    addDialogClose() {
-      this.addTmnForm = {}
-        this.nextTmn=[]
-    },
-    // 编辑控制柜
-    editTmnList(row) {
-      this.editTmnForm = row
-        console.log("row",row)
-        console.log("editForm",this.editTmnForm)
-        console.log("控制柜名称",this.editTmnForm.tmnId,this.editTmnForm.tmnName)
-      // this.updatePipOption()
-        this.editTmnForm.tmnLeader = row.tmnLeader
-        console.log(this.editTmnForm.tmnLeader,row.tmnLeader)
-      this.editTmnDialogVisible = true
-        this.getAreas()
-        this.getTmnLeader()
-
-    },
-      test(){
-console.log('11111111111')
-      },
-      setTmnindex(index){
-        console.log(index)
-        console.log(this.tmnlist.length)
-        if(index<this.tmnlist.length-1){
-            this.nextTmn.tmnIndex=index
-            this.nextTmn.tmnid=this.tmnlist[index+1].tmnId
-            this.nextTmn.tmnname=this.tmnlist[index+1].tmnName
-        }
-      else{
-            this.nextTmn.tmnid=0
-            this.nextTmn.tmnname='无'}
-
-      },
-    // 发起编辑控制柜的请求
-    editTmn(){
-      this.$axios.post('/modifyTmn',{
-        id: this.editTmnForm.id,
-        tmnID: this.editTmnForm.tmnId,
-        tmnName: this.editTmnForm.tmnName,
-        u1TmnID: this.editTmnForm.u1TmnID   ,
-        u2TmnID: this.editTmnForm.u2TmnID,
-          d1TmnID:this.nextTmn.tmnid,
-        d2TmnID: this.editTmnForm.d2TmnID,
-        pipID: this.editTmnForm.pipID,
-        conPont1:this.editTmnForm.conPont1,
-        conPont2:this.editTmnForm.conPont2,
-        conPont3:this.editTmnForm.conPont3,
-        tmnDesc: this.editTmnForm.tmnDesc,
-          tmnLeadID: this.editTmnForm.tmnLeader
-      }).then(successResponse => {
-        if (successResponse.data === 1) {
-          this.$message.success('更新成功')
-          this.editTmnDialogVisible = false
-          this.currentPage = 1
+        // 添加控制柜对话框
+        addTmn(){
+            this.addDialogVisible = true
+            this.getAreas()
+            this.getTmnLeader()
+        },
+        // 得到分区下拉框
+        getAreas() {
+            //测试是否拿到分区
+            this.$axios.get('/getAllAreas').then(res => {
+                this.arealist = res.data
+                // 分区变化时候下面置空
+                this.addTmnForm.pipID=''
+                this.addTmnForm.u1TmnID=''
+                this.getPips()
+            })
+        },
+        // 得到管线下拉框
+        getPips() {
+            if (this.addDialogVisible === true) {
+                this.addTmnForm.u1TmnID=''
+                this.nextTmn.tmnname=''
+                this.$axios.get('/getPips',{params:{areaID:this.addTmnForm.areaID}})
+                    .then(res => {
+                        this.piplist = res.data
+                    })
+            } else if (this.editTmnDialogVisible === true) {
+                this.$axios.get('/getPips',{params:{areaID:this.editTmnForm.AreaID}})
+                    .then(res2 => {
+                        this.piplist = res2.data
+                    })
+            }
+            this.getTmns()
+        },
+        getTmns() {
+            if (this.addDialogVisible === true) {
+                this.$axios.get('/getTmns',{params:{pipID:this.addTmnForm.pipID}})
+                    .then(res => {
+                        this.tmnlist = res.data
+                    })
+            } else if (this.editTmnDialogVisible === true) {
+                this.$axios.get('/getTmns',{params:{pipID:this.editTmnForm.pipID}})
+                    .then(res => {
+                        this.tmnlist = res.data
+                    })
+            }
+        },
+        // 获取控制柜管理人员列表
+        getTmnLeader() {
+            this.$axios.get('/getTmnLeader')
+                .then(res => {
+                    this.leaderlist = res.data
+                })
+        },
+        // 当分区发生变化时清空管线控制柜选项
+        clearTmn() {
+            this.nextTmn.tmnname=''
+        },
+        // 设置下一控制柜
+        setTmnindex(index){
+            console.log(index)
+            console.log(this.tmnlist.length)
+            if(index<this.tmnlist.length-1){
+                this.nextTmn.tmnIndex=index
+                this.nextTmn.tmnid=this.tmnlist[index+1].tmnId
+                this.nextTmn.tmnname=this.tmnlist[index+1].tmnName
+                this.editTmnForm.d1TmnID= this.nextTmn.tmnid
+            }
+            else{
+                this.nextTmn.tmnid=0
+                this.nextTmn.tmnname='无'
+                this.editTmnForm.d1TmnID = ''
+            }
+        },
+        // 提交添加请求
+        async addSubmit() {
+            if (this.addTmnForm.tmnName==='') {
+                this.$message.error('请填写控制柜名称！')
+            } else if (this.addTmnForm.areaID==='') {
+                this.$message.error('请选择分区！')
+            } else if (this.addTmnForm.pipID==='') {
+                this.$message.error('请选择管线！')
+            } else {
+                console.log(this.addTmnForm,this.nextTmn.tmnid)
+                if (this.addTmnForm.u1TmnID===''){
+                    this.nextTmn.tmnid="";
+                }
+                if (this.addTmnForm.tmnLeaderID==='') {
+                    this.addTmnForm.tmnLeaderID=''
+                }
+                var params = qs.stringify({
+                    TmnName:this.addTmnForm.tmnName,
+                    U1TmnID:this.addTmnForm.u1TmnID,
+                    U2TmnID:this.addTmnForm.u2TmnID,
+                    D1TmnID:this.nextTmn.tmnid,
+                    D2TmnID:this.addTmnForm.d2TmnID,
+                    ConPont1:this.addTmnForm.conPont1,
+                    ConPont2:this.addTmnForm.conPont2,
+                    ConPont3:this.addTmnForm.conPont3,
+                    TmnDesc:this.addTmnForm.tmnDesc,
+                    PipID:this.addTmnForm.pipID,
+                    AreaID:this.addTmnForm.areaID,
+                    TmnLeader: this.addTmnForm.tmnLeaderID
+                },{arrayFormat: 'repeat'})
+                const {data: res} = await this.$axios.post('/addTmn',params)
+                if(res == 1) {
+                    this.addDialogVisible = false
+                    this.addTmnForm=[]
+                    this.arealist=[]
+                    this.showTableData = []
+                    this.nextTmn = []
+                    this.getTmnList()
+                    this.$message.success("添加成功")
+                } else {
+                    this.$message.error("添加失败")
+                }
+            }
+        },
+        // 取消或关闭添加控制柜对话框
+        addDialogCancle(addTmnFormRef){
+            this.addDialogVisible = false
+            this.$refs[addTmnFormRef].resetFields();
+            // 取消添加 列表置空
+            this.arealist=[]
+            this.piplist=[]
+            this.leaderlist=[]
             this.nextTmn=[]
-          this.tmnTableDataShow = [];
-          this.getTmnList()
-        } else {
-            this.$message.error('更新失败')
-        }
-      }).catch(err => err)
-    },
-      editClose() {
-          this.editTmnDialogVisible = false
-          this.nextTmn=[]
-      },
+        },
+test(){
+    this.nextTmn.tmnname = '1234'
+},
+        // 编辑控制柜
+        editTmnList(row) {
 
-    // 删除控制柜
-    removeById(row) {
-      this.$confirm('此操作将永久删除该控制柜, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-          console.log(row)
-          console.log(row.tmnId)
+            console.log("row",row)
+            console.log("form",this.editTmnForm)
+            this.editTmnForm = {}
+            this.TmnLeaderID = []
+            this.nextTmn.tmnname = row.d1TmnName,
+            this.editTmnForm.tmnId = row.tmnId
+            this.editTmnForm.tmnName = row.tmnName,
+                this.editTmnForm.u1TmnID = row.u1TmnID,
+                this.editTmnForm.u2TmnID = row.u2TmnID,
+                this.editTmnForm.d1TmnID =this.nextTmn.tmnid,
+                this.nextTmn.tmnname = row.d1TmnName
+                // this.editTmnForm.d1TmnID = row.d1TmnID,
+                this.editTmnForm.d2TmnID = row.d2TmnID,
+                this.editTmnForm.conPont1 = row.conPont1,
+                this.editTmnForm.conPont2 = row.conPont2,
+                this.editTmnForm.conPont3 = row.conPont3,
+                this.editTmnForm.tmnDesc = row.tmnDesc,
+                this.editTmnForm.pipID = row.pipID,
+                this.editTmnForm.AreaID = row.AreaID,
+                this.editTmnForm.AreaName = row.AreaName
+            console.log("赋值之后的form",this.editTmnForm)
+            // 拿到管理人员的id
+            for (var i = 0; i < this.tmnTableData.length ; i++) {
+                if(this.tmnTableData[i].tmnId === row.tmnId) {
+                    this.leadMessage = this.tmnTableData[i].TmnLeader
+                }
+            }
+            for (var j = 0; j < this.leadMessage.length; j++) {
+                this.TmnLeaderID[j] = this.leadMessage[j].userID
+            }
+            if(this.leadMessage.length == 0) {
+                this.editTmnForm.tmnLeader = []
+            } else {
+                this.editTmnForm.tmnLeader = this.TmnLeaderID
+            }
 
-        this.$axios.post('/deleteTmn',{
-                tmnID: row.tmnId,
-                tmnName: row.tmnName,
-                u1TmnID: row.u1TmnID,
-                u2TmnID: row.u2TmnID,
-                d1TmnID: row.d1TmnID,
-                d2TmnID: row.d2TmnID,
-                conPont1:row.conPont1,
-                conPont2:row.conPont2,
-                conPont3:row.conPont3,
-                tmnDesc: row.tmnDesc,
-                pipID: row.pipID,
-                areaID: row.AreaID,
-        }
-        // {
-        //     tmnId:row.tmnId}
-            )
-          .then(successResponse => {
-              if (successResponse.data === 1){
-                  this.$message.success('删除成功')
-                  this.currentPage = 1
-                  this.tmnTableDataShow = [];
-                  this.getTmnList()
-              } else {
-                  this.$message.error('删除失败')
-              }
-          })
-          .catch(failResponse => {
-              alert(failResponse)
-          })
-      }).catch(err => err)
-    },
-    // 选项部分
-    changeValue(value) {
-      console.log(value)
+            this.editTmnDialogVisible = true
+            this.getAreas()
+            this.getTmnLeader()
+
+        },
+        changePip(){
+            this.editTmnForm.AreaID =[]
+            this.editTmnForm.pipID = []
+            this.changeTmn()
+        },
+        changeTmn(){
+            this.editTmnForm.u1TmnID=''
+            this.changeNextTmn()
+        },
+        changeNextTmn(){
+            this.nextTmn.tmnname=''
+        },
+        // 发起编辑控制柜的请求
+        editTmn() {
+            console.log("发起请求的form",this.editTmnForm)
+            if (this.editTmnForm.tmnLeader.length==0) {
+                this.editTmnForm.tmnLeader = []
+            }
+            var params = qs.stringify({
+                id: this.editTmnForm.id,
+                TmnID: this.editTmnForm.tmnId,
+                TmnName: this.editTmnForm.tmnName,
+                U1TmnID: this.editTmnForm.u1TmnID,
+                U2TmnID: this.editTmnForm.u2TmnID,
+                D1TmnID: this.editTmnForm.d1TmnID,
+                D2TmnID: this.editTmnForm.d2TmnID,
+                PipID: this.editTmnForm.pipID,
+                ConPont1:this.editTmnForm.conPont1,
+                ConPont2:this.editTmnForm.conPont2,
+                ConPont3:this.editTmnForm.conPont3,
+                TmnDesc: this.editTmnForm.tmnDesc,
+                TmnLeader: this.editTmnForm.tmnLeader,
+                AreaID: this.editTmnForm.AreaID
+            },{arrayFormat: 'repeat'})
+            this.$axios.post('/modifyTmn',params)
+                .then(res => {
+                    if (res.data === 200) {
+                        this.$message.success('更新成功')
+                        this.editTmnDialogVisible = false
+                        this.nextTmn=[]
+                        this.getTmnList()
+                    } else if (res.data === 201){
+                        this.$message.error('该控制柜名称已存在')
+                    } else {
+                        this.$message.error('修改失败')
+                    }
+                }).catch(err => err)
+        },
+        // 取消或关闭编辑对话框
+        editClose() {
+            this.editTmnDialogVisible = false
+            this.nextTmn=[]
+            this.editTmnForm = []
+            this.editTmnForm.tmnLeader=[]
+            this.getTmnList()
+        },
+        // 解决input框不能输入的问题
+        onInput() {this.$forceUpdate();},
+
+        // 删除控制柜
+        removeById(row) {
+            this.$confirm('此操作将永久删除该控制柜, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$axios.post('/deleteTmn',{
+                        tmnID: row.tmnId,
+                        tmnName: row.tmnName,
+                        u1TmnID: row.u1TmnID,
+                        u2TmnID: row.u2TmnID,
+                        d1TmnID: row.d1TmnID,
+                        d2TmnID: row.d2TmnID,
+                        conPont1:row.conPont1,
+                        conPont2:row.conPont2,
+                        conPont3:row.conPont3,
+                        tmnDesc: row.tmnDesc,
+                        pipID: row.pipID,
+                        areaID: row.AreaID,
+                    }
+                )
+                    .then(successResponse => {
+                        if (successResponse.data === 1){
+                            this.$message.success('删除成功')
+                            this.showTableData = [];
+                            this.getTmnList()
+                        } else {
+                            this.$message.error('删除失败')
+                        }
+                    })
+                    .catch(failResponse => {
+                        alert(failResponse)
+                    })
+            }).catch(err => err)
+        },
+
+
+
     }
-  }
 }
 </script>
 
