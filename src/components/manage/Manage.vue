@@ -193,7 +193,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$axios
-            .post('http://localhost:8443/api/order', params)
+            .post('/order', params)
             .then(successResponse => {
 
               if (successResponse.data.code === 200) {

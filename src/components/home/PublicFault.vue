@@ -30,7 +30,8 @@
       <el-table-column
           prop="time"
           label="故障时间"
-          width="160">
+          width="160"
+          :formatter="dateFormat">
       </el-table-column>
       <el-table-column
           prop="error_Position"
@@ -56,7 +57,7 @@
           <el-button
               size="mini"
               type="primary"
-              @click="details=true;detailbutton(scope.$index,scope.row)">详情
+              @click="details=true,detailbutton(scope.$index,scope.row),gettableDatas()">详情
           </el-button>
         </template>
       </el-table-column>
@@ -82,6 +83,7 @@
     <el-dialog style="text-align: left" title="详情信息" :visible.sync="details">
             <div >控制柜名称：{{ this.row_msg.tmnName }}</div>
             <div style="margin: 20px 0px">控制柜编号：{{ this.row_msg.tmnId }}</div>
+            <div style="margin: 20px 0px">异常部位：{{this.row_msg.error_Position}}</div>
 <!--      <div class="pipearea">-->
 <!--        <span>所属管线：</span>-->
 <!--        <el-select id="select1" v-model="PipName" ref="select1" clearable placeholder="&#45;&#45;所属管线&#45;&#45;" class="handle-select"-->
@@ -96,13 +98,41 @@
 <!--          <div>所属分区：{{ this.AreaName }}</div>-->
 <!--        </div>-->
 <!--      </div>-->
-      <div class="faultdetail">
-        <div>故障详情：</div>
-        <div  class="fault-text">{{ this.row_msg.exception }}</div>
-      </div>
-      <div class="faultdetail" style="margin-top: 20px">
-        <div>解决方案：</div>
-        <div  class="fault-text"> {{ this.row_msg.result }}</div>
+<!--      <div class="faultdetail">-->
+<!--        <div>故障详情：</div>-->
+<!--        <div  class="fault-text">{{ this.row_msg.exception }}</div>-->
+<!--      </div>-->
+<!--      <div class="faultdetail" style="margin-top: 20px">-->
+<!--        <div>解决方案：</div>-->
+<!--        <div  class="fault-text"> {{ this.row_msg.result }}</div>-->
+<!--      </div>-->
+
+      <div class="text_form">
+        <el-table
+                :data="tableDatas"
+                style="width: 100%"
+                :default-sort="{prop: 'date', order: 'descending'}"
+        >
+          <el-table-column
+                  prop="c_t"
+                  label="时间 "
+                  sortable
+                  width="210"
+                  :formatter="dateFormat">
+          </el-table-column>
+          <el-table-column
+                  prop="exception"
+                  label="故障详情"
+                  sortable
+                  width="210">
+          </el-table-column>
+          <el-table-column
+                  prop="result"
+                  label="解决方案"
+                  :formatter="formatter"
+                  width="210">
+          </el-table-column>
+        </el-table>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="details = false">取 消</el-button>
@@ -118,6 +148,7 @@
 
 <script>
 import qs from "qs";
+import moment from "moment";
 
 export default {
   name: "PublicFault",
@@ -133,6 +164,7 @@ export default {
     return {
       pageView:false,//控制分页显示，false为显示
       tableData: [],
+      tableDatas: [],//用于存储某控制柜的异常情况和处理结果
       loading:true,
       daindex:0,//记录每页的第几个数(没用了)
       refresh: true,//动态刷新
@@ -150,6 +182,7 @@ export default {
         tmnId:'',
         exception:'',
         result:'',
+        error_Position:'',
       },
       Tmnname: "北方工业大学",
       TmnID: '10009',
@@ -175,6 +208,16 @@ export default {
         })
       })
     },
+    gettableDatas(){//用来获取某控制柜的异常和处理结果
+      var params = qs.stringify({
+        TmnID:this.row_msg.tmnId
+      })
+      this.$axios.post('/getTerminalError',params).then(res=>{
+        console.log(res)
+        this.tableDatas = res.data
+      })
+    },
+
     //后端分页请求
     getPageData(){
       var params=qs.stringify({page:this.currentPage,
@@ -183,6 +226,13 @@ export default {
         this.tableData=res.data
 console.log(res.data)
       })
+    },
+    dateFormat:function(row,column){
+      var date = row[column.property];
+      if(date === undefined){
+        return ''
+      } ;
+      return moment(date).format("YYYY-MM-DD HH:mm:ss")
     },
     // getdata() {
     //   this.$axios.post("/error").then(res => {
@@ -228,7 +278,9 @@ console.log(res.data)
       this.row_msg.tmnId=row.tmnId
       this.row_msg.exception=row.exception
       this.row_msg.result=row.result
-      console.log(row)
+      this.row_msg.error_Position = row.error_Position
+
+      console.log(row.error_Position)
     },
     if_deal(row){
       switch (row.if_deal){
@@ -263,6 +315,7 @@ console.log(res.data)
       console.log('11111')
       console.log(this.tableindex)
       console.log(this.tableData[0].tmnName)
+      console.log("异常部位",this.tableData)
 
     },
   },

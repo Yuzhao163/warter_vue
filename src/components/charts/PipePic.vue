@@ -190,7 +190,7 @@ if(this.option.series[i].data.length>10){
 
       let date = new Date();
       let dateYear = date.getFullYear();             //获取年
-      let dateMonth = date.getMonth();               //获取月
+      let dateMonth = date.getMonth()+1;               //获取月
       let dateDate = date.getDate();                 //获取当日
       let dateHours = date.getHours();               //获取小时
       let dateMinutes = date.getMinutes();           //获取分钟

@@ -36,6 +36,7 @@
             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
+        <div  class="logout"><img @click="full_screen_open" src="../../assets/img/icon_full_screen.png"/></div>
 <div  class="logout"><img @click="login" src="../../assets/img/out.png"/></div>
 
       </div>
@@ -46,7 +47,11 @@
 <script>
 export default {
   name: "Head",
-
+data(){
+    return{
+      if_fs:false,
+    }
+},
   computed: {
     username() {
       let username = localStorage.getItem('ms_username');
@@ -56,6 +61,49 @@ export default {
   methods: {
     login() {
       this.$router.push({path: '/main'})
+    },
+    full_screen_open(){
+      // if(this.if_fs==false){
+      //   var docElm = document.documentElement;
+      //   //W3C
+      //   if (docElm.requestFullscreen) {
+      //     docElm.requestFullscreen();
+      //     this.if_fs=true;
+      //   }
+      //   //FireFox
+      //   else if (docElm.mozRequestFullScreen) {
+      //     docElm.mozRequestFullScreen();
+      //     this.if_fs=true;
+      //   }
+      //   //Chrome等
+      //   else if (docElm.webkitRequestFullScreen) {
+      //     docElm.webkitRequestFullScreen();
+      //     this.if_fs=true;
+      //   }
+      //   //IE11
+      //   else if (docElm.msRequestFullscreen) {
+      //     docElm.msRequestFullscreen();
+      //     this.if_fs=true;
+      //   }
+      // }else{
+      //   if (docElm.exitFullscreen) {
+      //     docElm.exitFullscreen();
+      //   }
+      //   else if (docElm.mozCancelFullScreen) {
+      //     docElm.mozCancelFullScreen();
+      //   }
+      //   else if (docElm.webkitCancelFullScreen) {
+      //     docElm.webkitCancelFullScreen();
+      //   }
+      //   else if (docElm.msExitFullscreen) {
+      //     docElm.msExitFullscreen();
+      //   }
+      // }
+      if (document.fullscreenElement) {
+        document.exitFullscreen()
+      } else {
+        document.documentElement.requestFullscreen()
+      }
     },
     handleCommand(command) {
       if (command == 'loginout') {
