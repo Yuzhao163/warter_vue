@@ -14,7 +14,6 @@
           inactive-text="静态数据"
           @change="this.refreshOpen">
       </el-switch>
-      <el-button @click="details=true,test()">详情测试</el-button>
     </div>
     <el-table
         :data="tableData"
