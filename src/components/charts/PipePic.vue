@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button v-on:click="test()"></button>
     <div class="pip_view"
          v-loading="loading"
          element-loading-text="管路状态加载中..."
@@ -28,7 +27,6 @@
       控制柜ID：{{ this.boxmsg.tmnID}}<br>水位：{{ this.boxmsg.w_line}}
       <br>阀位：{{ this.boxmsg.v_per}}<br>
     </div>
-    <button @click="test">test</button>
     <el-switch
         v-model="chartswitch"
         active-text="动态数据"

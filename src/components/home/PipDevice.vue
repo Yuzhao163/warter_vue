@@ -5,8 +5,14 @@
         <el-card class="box-card">
 
 <!--    顶部添加按钮       -->
-            <el-row>
-                <el-button type="primary" @click="addPip">添加管线</el-button>
+            <el-row >
+                <el-row :gutter="20">
+                    <el-col :span="6">
+                    </el-col>
+                    <el-col :span="4">
+                        <el-button type="primary" @click="addPip">添加管线</el-button>
+                    </el-col>
+                </el-row>
             </el-row>
 
 <!--    管线列表区域        -->
@@ -36,9 +42,9 @@
             </el-pagination>
 
 <!--    添加管线对话框     -->
-            <el-dialog title="添加管线" :visible.sync="addDialogVisible" width="35%" @close="addCancel">
-                <el-form :model="addPipForm" label-width="130px">
-                    <el-form-item label="管线名称">
+            <el-dialog title="添加管线" :visible.sync="addDialogVisible" width="35%" @close="addCancel('addPipFormRef')">
+                <el-form :model="addPipForm" :rules="addPipFormRules" ref="addPipFormRef" label-width="130px">
+                    <el-form-item label="管线名称" prop="pipName">
                         <el-input v-model="addPipForm.pipName"></el-input>
                     </el-form-item>
                     <el-form-item label="所属分区">
@@ -62,23 +68,23 @@
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="addCancel">取 消</el-button>
-                    <el-button type="primary" @click="addSubmit">确 定</el-button>
+                    <el-button @click="addCancel('addPipFormRef')">取 消</el-button>
+                    <el-button type="primary" @click="addSubmit('addPipFormRef')">确 定</el-button>
                 </span>
             </el-dialog>
 
 
 <!--     修改管线对话框       -->
-            <el-dialog title="修改管线" :visible.sync="editDialogVisible" width="35%" @close="modifyCancel">
-                <el-form :model="editPipForm" label-width="130px">
+            <el-dialog title="修改管线" :visible.sync="editDialogVisible" width="35%" @close="modifyCancel('editPipFormRef')">
+                <el-form :model="editPipForm" :rules="editPipFormRules" ref="editPipFormRef" label-width="130px">
                     <el-form-item label="管线id" prop="pipID">
                         <el-input v-model="editPipForm.PipID" class="el-input" :disabled="true"></el-input>
                     </el-form-item>
-                    <el-form-item label="管线名称" prop="pipName">
+                    <el-form-item label="管线名称" prop="PipName">
                         <el-input v-model="editPipForm.PipName" class="el-input"></el-input>
                     </el-form-item>
                     <el-form-item label="所属分区">
-                        <el-select v-model="editPipForm.AreaID" @change="getArea">
+                        <el-select v-model="editPipForm.AreaID" @change="getArea" clearable>
                             <el-option v-for="item in arealist"
                                        :key="item.id"
                                        :label="item.areaName"
@@ -98,8 +104,8 @@
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="modifyCancel">取 消</el-button>
-                    <el-button type="primary" @click="modifySubmit()">确 定</el-button>
+                    <el-button @click="modifyCancel('editPipFormRef')">取 消</el-button>
+                    <el-button type="primary" @click="modifySubmit('editPipFormRef')">确 定</el-button>
                 </span>
             </el-dialog>
 
@@ -130,10 +136,16 @@
 
                 // 添加管线
                 addDialogVisible: false,
-                addPipForm:{
+                addPipForm: {
                     pipName:'',
                     areaID:'',
-                    pipLeader:''
+                    pipLeader:[]
+                },
+                addPipFormRules: {
+                    pipName: [
+                        { required: true, message: "请输入管线名称", trigger: "blur"},
+                        { min: 2, max:30, message: "长度在 2 到 30 个字符", trigger: "blur"}
+                    ]
                 },
 
                 // 修改管线
@@ -143,6 +155,12 @@
                     PipName:'',
                     AreaID:'',
                     PipLeader: []
+                },
+                editPipFormRules: {
+                    PipName: [
+                        { required: true, message: "请输入管线名称", trigger: "blur"},
+                        { min: 2, max:30, message: "长度在 2 到 30 个字符", trigger: "blur"}
+                    ]
                 },
                 PipLeaderID: [],
 
@@ -158,6 +176,7 @@
 
         created() {
             this.getPipList()
+
         },
         methods: {
             // 获取管线信息(分页)
@@ -248,32 +267,49 @@
                 this.addDialogVisible = true
                 this.getArea()
                 this.getPipLeader()
+                console.log("添加",this.addPipForm)
+
             },
-            addSubmit() {
+            addSubmit(addPipFormRef) {
                 console.log(this.addPipForm)
-                var params = qs.stringify({
-                    PipName:this.addPipForm.pipName,
-                    AreaID:this.addPipForm.areaID,
-                    PipLeader:this.addPipForm.pipLeader
-                },{ arrayFormat: 'repeat' })
-                this.$axios.post('/addPip',params)
-                    .then(res => {
-                        console.log(res)
-                        if (res.data == 200) {
-                            this.$message.success("添加成功")
-                            this.getPipList()
-                            this.addPipForm = []
-                            this.addDialogVisible = false
-                        } else if (res.data == 201) {
-                            this.$message.warning("该用管线名已存在")
-                        } else {
-                            this.$message.error("添加失败")
-                        }
-                    })
+                if (this.addPipForm.pipName == ''){
+                    this.$message.error('请输入管线名称')
+                }else if (this.addPipForm.pipName.length <2) {
+                    this.$message.error('管线名称为2-30个字符')
+                }else if (this.addPipForm.pipName.length >30) {
+                    this.$message.error('管线名称为2-30个字符')
+                }else {
+                    this.$refs['addPipFormRef'].validateField('addPipFormRule')
+                    if (this.addPipForm.pipLeader.length==0) {
+                        this.addPipForm.pipLeader = -1
+                    }
+                    var params = qs.stringify({
+                        PipName:this.addPipForm.pipName,
+                        AreaID:this.addPipForm.areaID,
+                        PipLeader:this.addPipForm.pipLeader
+                    },{ arrayFormat: 'repeat' })
+                    this.$axios.post('/addPip',params)
+                        .then(res => {
+                            console.log(res)
+                            if (res.data == 200) {
+                                this.$message.success("添加成功")
+                                this.getPipList()
+                                this.addPipForm = []
+                                this.addDialogVisible = false
+                                this.$refs[addPipFormRef].resetFields();
+                            } else if (res.data == 201) {
+                                this.$message.error("该用管线名已存在")
+                            } else {
+                                this.$message.error("添加失败")
+                            }
+                        })
+                }
+
             },
-            addCancel() {
+            addCancel(addPipFormRef) {
                 this.addDialogVisible = false
                 this.addPipForm = []
+                this.$refs[addPipFormRef].resetFields();
             },
 
             // 修改管线
@@ -281,6 +317,8 @@
                 this.editDialogVisible = true
                 this.getArea()
                 this.getPipLeader()
+                // this.editPipForm.PipLeader=[]
+                this.PipLeaderID=[]
 
                 this.editPipForm = row
 
@@ -301,33 +339,48 @@
                 }
 
                 console.log(this.editPipForm,row,"++++++")
+6
+            },
+            modifySubmit(editPipFormRef) {
+                console.log(this.editPipForm)
+                if (this.editPipForm.PipName=='') {
+                    this.$message.error("请输入管线名称")
+                } else if (this.editPipForm.PipName.length<2) {
+                    this.$message.error("管线名称为2-30个字符")
+                } else if (this.editPipForm.PipName.length>30) {
+                    this.$message.error("管线名称为2-30个字符")
+                } else {
+                    if (this.editPipForm.PipLeader.length==0) {
+                        this.editPipForm.PipLeader = -1
+                    }
+                    var params = qs.stringify({
+                        PipID:this.editPipForm.PipID,
+                        PipName:this.editPipForm.PipName,
+                        AreaID:this.editPipForm.AreaID,
+                        PipLeader:this.editPipForm.PipLeader
+                    },{ arrayFormat: 'repeat' })
+                    this.$axios.post('/updatePip',params)
+                        .then(res => {
+                            console.log(res)
+                            if (res.data == 200) {
+                                this.$message.success('修改成功！')
+                                this.getPipList()
+                                this.editPipForm = []
+                                this.editDialogVisible = false
+                                this.editPipForm.PipLeader = []
+                                this.$refs[editPipFormRef].resetFields();
+                            } else if (res.data == 201) {
+                                this.$message.error('该管线名称已存在')
+                            } else {
+                                this.$message.error('修改失败')
+                            }
+                        })
+                }
 
             },
-            modifySubmit() {
-                console.log(this.editPipForm)
-                var params = qs.stringify({
-                    PipID:this.editPipForm.PipID,
-                    PipName:this.editPipForm.PipName,
-                    AreaID:this.editPipForm.AreaID,
-                    PipLeader:this.editPipForm.PipLeader
-                },{ arrayFormat: 'repeat' })
-                this.$axios.post('/updatePip',params)
-                    .then(res => {
-                        console.log(res)
-                        if (res.data == 200) {
-                            this.$message.success('修改成功！')
-                            this.getPipList()
-                            this.editDialogVisible = false
-                            this.editPipForm = []
-                        } else if (res.data == 201) {
-                            this.$message.warning('改管线名称已存在')
-                        } else {
-                            this.$message.error('修改失败')
-                        }
-                    })
-            },
-            modifyCancel() {
+            modifyCancel(editPipFormRef) {
                 this.editPipForm = []
+                this.$refs[editPipFormRef].resetFields();
                 this.getPipList()
             },
 
