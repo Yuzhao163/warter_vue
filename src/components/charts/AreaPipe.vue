@@ -1,6 +1,5 @@
 <template>
   <div class="maindiv">
-    <button @click="test">test</button>
     <div class="select">
       <el-select class="selecttext" v-model="sarea" @change="getPipeData">
         <el-option
@@ -210,6 +209,7 @@ padding-bottom: 160px;
   display: flex;
 }
 .selecttext{
+  margin-top: 15px;
   margin-left: 20px;
 }
 .card {

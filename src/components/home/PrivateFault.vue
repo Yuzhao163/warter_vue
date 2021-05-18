@@ -3,9 +3,6 @@
         <div class="title">
             <div></div>
         </div>
-        <div>
-            <el-button @click="details=true">详情测试</el-button>
-        </div>
         <!--    异常处理表格-->
         <div class="table">
             <el-table
@@ -30,11 +27,11 @@
                         label="异常部位"
                         width="80">
                 </el-table-column>
-                <el-table-column
-                        prop="error_level"
-                        label="异常等级"
-                        width="80">
-                </el-table-column>
+<!--                <el-table-column-->
+<!--                        prop="error_level"-->
+<!--                        label="异常等级"-->
+<!--                        width="80">-->
+<!--                </el-table-column>-->
                 <el-table-column
                         prop="if_deal"
                         label="处理状态"
