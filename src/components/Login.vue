@@ -50,6 +50,7 @@ export default {
             password: this.loginForm.password
           })
           .then(successResponse => {
+            console.log(successResponse)
             if (successResponse.data.code === 100) {
               this.$store.state.users.username=this.loginForm.username;
               this.$store.state.users.password=this.loginForm.password;

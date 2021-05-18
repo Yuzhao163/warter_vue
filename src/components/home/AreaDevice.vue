@@ -5,8 +5,14 @@
     <el-card class="box-card">
 
 <!--    顶部添加按钮区域    -->
-        <el-row class="cat_opt">
-            <el-button type="primary" @click="addArea">添加分区</el-button>
+        <el-row >
+            <el-row :gutter="20">
+                <el-col :span="6">
+                </el-col>
+                <el-col :span="4">
+                    <el-button type="primary" @click="addArea">添加分区</el-button>
+                </el-col>
+            </el-row>
         </el-row>
 
 <!--    分区列表区域    -->
@@ -37,11 +43,10 @@
         </el-pagination>
 
 <!--    添加分区对话框    -->
-        <el-dialog title="添加分区" :visible.sync="addDialogVisible" width="35%" @close="addCancel">
-            <el-form :model="addAreaForm" label-width="130px">
-<!--                rules="addAreaFormRules" ref="addAreaFormRef" -->
-                <el-form-item label="分区名称">
-                    <el-input v-model="addAreaForm.areaName"></el-input>
+        <el-dialog title="添加分区" :visible.sync="addDialogVisible" width="35%" @close="addCancel('addAreaFormRef')">
+            <el-form :model="addAreaForm" :rules="addAreaFormRules" ref="addAreaFormRef" label-width="130px">
+                <el-form-item label="分区名称" prop="areaName">
+                    <el-input v-model="addAreaForm.areaName" @input="onInput()"></el-input>
                 </el-form-item>
                 <el-form-item label="分区管理人员">
                     <el-select v-model="addAreaForm.areaLeader" multiple @change="addLeader" >
@@ -55,20 +60,19 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="addCancel">取 消</el-button>
-                <el-button type="primary" @click="addSubmit">确 定</el-button>
+                <el-button @click="addCancel('addAreaFormRef')">取 消</el-button>
+                <el-button type="primary" @click="addSubmit('addAreaFormRef')">确 定</el-button>
             </span>
         </el-dialog>
 
 <!--    修改分区对话框    -->
-        <el-dialog title="修改分区" :visible.sync="modifyDialogVisible" width="35%" @close="modifyCancel">
-            <el-form :model="modifyAreaForm" label-width="130px">
-<!--                rules="modifyAreaFormRules" ref="modifyAreaFormRef"-->
+        <el-dialog title="修改分区" :visible.sync="modifyDialogVisible" width="35%" @close="modifyCancel('modifyAreaFormRef')">
+            <el-form :model="modifyAreaForm" :rules="modifyAreaFormRules" ref="modifyAreaFormRef" label-width="130px">
                 <el-form-item label="分区id" >
-                    <el-input v-model="modifyAreaForm.AreaID" :disabled="true"></el-input>
+                    <el-input v-model="modifyAreaForm.AreaID" :disabled="true" ></el-input>
                 </el-form-item>
-                <el-form-item label="分区名称">
-                    <el-input v-model="modifyAreaForm.AreaName"></el-input>
+                <el-form-item label="分区名称" prop="AreaName">
+                    <el-input v-model="modifyAreaForm.AreaName" @input="onInput()"></el-input>
                 </el-form-item>
                 <el-form-item label="分区管理员" >
                     <el-select v-model="modifyAreaForm.AreaLeader" multiple @change="getAreaLeader">
@@ -82,8 +86,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="modifyCancel">取 消</el-button>
-                <el-button type="primary" @click="modifySubmit">确 定</el-button>
+                <el-button @click="modifyCancel('modifyAreaFormRef')">取 消</el-button>
+                <el-button type="primary" @click="modifySubmit('modifyAreaFormRef')">确 定</el-button>
             </span>
         </el-dialog>
     </el-card>
@@ -96,6 +100,7 @@
     import qs from "qs";
 
 export default {
+    inject:['reload'],
   name: "AreaDevice.vue",
 
     data() {
@@ -116,6 +121,12 @@ export default {
                 areaName:[],
                 areaLeader:[]
             },
+            addAreaFormRules: {
+                areaName:[
+                    { required: true, message: "请输入分区名称", trigger: "blur"},
+                    { min: 2, max:30, message: "长度在 2 到 30 个字符", trigger: "blur"}
+                ],
+            },
 
             // 修改分区
             modifyDialogVisible: false, //修改对话框的显示与隐藏
@@ -123,6 +134,12 @@ export default {
                 AreaID:[],
                 AreaName:[],
                 AreaLeader:[]
+            },
+            modifyAreaFormRules: {
+                AreaName:[
+                    { required: true, message: "请输入分区名称", trigger: "blur"},
+                    { min: 2, max:30, message: "长度在 2 到 30 个字符", trigger: "blur"}
+                ]
             },
             AreaLeaderID:[],
 
@@ -226,29 +243,47 @@ export default {
             console.log(value)
         },
     //  确定添加
-        addSubmit() {
-            console.log(this.addAreaForm)
-            var params = qs.stringify({
-                areaName:this.addAreaForm.areaName,
-                areaLeader:this.addAreaForm.areaLeader
-            },{ arrayFormat: 'repeat' })
-            this.$axios.post('/addArea',params)
-            .then(res => {
-                console.log(res)
-                if(res.data === 201) {
-                    this.$message.error('改分区名称已存在')
-                } else {
-                    this.$message.success('添加成功')
-                    this.addDialogVisible = false
-                    this.addAreaForm = {}
-                    this.getAreaList()
+        addSubmit(addAreaFormRef) {
+            if (this.addAreaForm.areaName=='') {
+                this.$message.error("请输入分区名称")
+            } else if (this.addAreaForm.areaName.length<2) {
+                this.$message.error("分区名称为2-30个字符")
+            } else if (this.addAreaForm.areaName.length>30) {
+                this.$message.error("分区名称为2-30个字符")
+            } else {
+                if (this.addAreaForm.areaLeader.length!=0) {
+                    console.log(this.addAreaForm.areaLeader)
                 }
-            })
+                if (this.addAreaForm.areaLeader.length==0){
+                    this.addAreaForm.areaLeader=-1
+                }
+                console.log(this.addAreaForm)
+                var params = qs.stringify({
+                    areaName:this.addAreaForm.areaName,
+                    areaLeader:this.addAreaForm.areaLeader
+                },{ arrayFormat: 'repeat' })
+                this.$axios.post('/addArea',params)
+                    .then(res => {
+                        console.log(res)
+                        if(res.data === 201) {
+                            this.$message.error('改分区名称已存在')
+                        } else {
+                            this.$message.success('添加成功')
+                            this.addDialogVisible = false
+                            this.addAreaForm = {}
+                            this.$refs[addAreaFormRef].resetFields();
+                            this.reload()
+                            this.getAreaList()
+                        }
+                    })
+            }
+
         },
     //  取消添加或关闭对话框
-        addCancel() {
+        addCancel(addAreaFormRef) {
             this.addDialogVisible=false
             this.addAreaForm = {}
+            this.$refs[addAreaFormRef].resetFields();
         },
 
     //  修改分区（只修改分区管理员名称以及分区名称）
@@ -270,63 +305,87 @@ export default {
                     this.leadMessage = this.areaTableData[i].AreaLeader
                 }
             }
-            console.log("++++++++++",this.leadMessage)
             // 遍历得到想要userid
             for (var j = 0; j < this.leadMessage.length; j++) {
                 this.AreaLeaderID[j] = this.leadMessage[j].userID
-                console.log("------",this.AreaLeaderID[j])
             }
-            console.log("***********",this.AreaLeaderID)
             if (this.leadMessage.length == 0) {
                 this.modifyAreaForm.AreaLeader = []
             } else {
                 this.modifyAreaForm.AreaLeader = this.AreaLeaderID
             }
-            console.log(this.modifyAreaForm)
         },
     //  确定进行修改
-        modifySubmit() {
-            console.log(this.modifyAreaForm)
-            var params = qs.stringify({
-                areaID:this.modifyAreaForm.AreaID,
-                areaName:this.modifyAreaForm.AreaName,
-                areaLeader:this.modifyAreaForm.AreaLeader
-            },{ arrayFormat: 'repeat' })
-            this.$axios.post('/modifyArea',params)
-                .then(res => {
-                    console.log(res)
-                    if(res.data === 200) {
-                        this.$message.success('修改成功')
-                        this.modifyAreaForm = {}
-                        this.modifyDialogVisible = false
-                        this.getAreaList()
-                    } else if (res.data === 201){
-                        this.$message.error('改分区名称已存在')
-                    } else {
-                        this.$message.error('修改失败')
-                    }
-                })
+        modifySubmit(modifyAreaFormRef) {
+            if (this.modifyAreaForm.AreaName=='') {
+                this.$message.error("请输入分区名称")
+            } else if (this.modifyAreaForm.AreaName.length<2) {
+                this.$message.error("分区名称为2-30个字符")
+            } else if (this.modifyAreaForm.AreaName.length>30) {
+                this.$message.error("分区名称为2-30个字符")
+            } else {
+                console.log(this.modifyAreaForm)
+                if (this.modifyAreaForm.AreaLeader.length==0){
+                    this.modifyAreaForm.AreaLeader=-1
+                }
+                var params = qs.stringify({
+                    areaID:this.modifyAreaForm.AreaID,
+                    areaName:this.modifyAreaForm.AreaName,
+                    areaLeader:this.modifyAreaForm.AreaLeader
+                },{ arrayFormat: 'repeat' })
+                this.$axios.post("/testLeader",params)
+                console.log(params)
+                this.$axios.post('/modifyArea',params)
+                    .then(res => {
+                        console.log(res)
+                        if(res.data === 200) {
+                            this.$message.success('修改成功')
+                            this.modifyAreaForm = {}
+                            this.modifyDialogVisible = false
+                            this.$refs[modifyAreaFormRef].resetFields();
+                            this.getAreaList()
+                        } else if (res.data === 201){
+                            this.$message.error('改分区名称已存在')
+                        } else {
+                            this.$message.error('修改失败')
+                        }
+                    })
+            }
+
         },
     //  关闭修改对话框与取消修改
-        modifyCancel() {
+        modifyCancel(modifyAreaFormRef) {
+            this.modifyDialogVisible = false
             this.modifyAreaForm = {}
+            this.$refs[modifyAreaFormRef].resetFields();
         },
 
     //  删除分区
         deleteArea(row) {
             console.log("**********",row)
-            var params = qs.stringify({
-                areaID:row.AreaID
-            })
-            this.$axios.post('/deleteArea',params)
-                .then( res=> {
-                    console.log(res)
-                    if (res.data == 200) {
-                        this.$message.success("删除成功")
-                        this.getAreaList()
-                    }
+            this.$confirm('此操作将永久删除该管线, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                var params = qs.stringify({
+                    areaID:row.AreaID
                 })
+                this.$axios.post('/deleteArea',params)
+                    .then( res=> {
+                        console.log(res)
+                        if (res.data == 200) {
+                            this.$message.success("删除成功")
+                            this.getAreaList()
+                        } else {
+                            this.$message.error("删除失败")
+                        }
+                    })
+            })
         },
+
+        // 解决input框不能输入的问题
+        onInput() {this.$forceUpdate();},
     }
 }
 </script>

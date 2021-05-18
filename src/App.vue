@@ -2,6 +2,7 @@
   <div id="app">
 
     <router-view/>
+    <router-view v-if="isReload"></router-view>
 
   </div>
 </template>
@@ -13,6 +14,11 @@ import qs from "qs";
 
 export default {
   name: "App",
+  provide(){
+    return {
+      reload:this.reload
+    }
+  },
   components: {
     // Login,
   },
@@ -20,9 +26,16 @@ export default {
     return{
       tree:[],//测试用
       treearea:[],
+      isReload: true,
     }
   },
   methods:{
+    reload() {
+      this.isReload = false
+      this.$nextTick(() => {
+        this.isReload = true
+      })
+    },
     async getTreeData(){
       await this.$axios.post("/getAreas").then(res => {
         this.treearea = res.data;
