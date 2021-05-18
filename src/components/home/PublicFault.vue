@@ -24,29 +24,29 @@
       <el-table-column
           prop="tmnName"
           label="控制柜名称"
-          width="120">
+          width="240">
       </el-table-column>
       <el-table-column
           prop="time"
           label="故障时间"
-          width="160"
+          width="320"
           :formatter="dateFormat">
       </el-table-column>
       <el-table-column
           prop="error_Position"
           label="异常部位"
-          width="80">
+          width="160">
       </el-table-column>
       <el-table-column
           prop="user"
           label="维护人员"
-          width="80">
+          width="160">
       </el-table-column>
       <el-table-column
           prop="if_deal"
           sortable
           label="处理状态"
-          width="100"
+          width="200"
       :formatter="if_deal">
       </el-table-column>
       <el-table-column

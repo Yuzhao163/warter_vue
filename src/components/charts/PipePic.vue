@@ -28,6 +28,7 @@
       <br>阀位：{{ this.boxmsg.v_per}}<br>
     </div>
     <el-switch
+        style="display: block"
         v-model="chartswitch"
         active-text="动态数据"
         inactive-text="暂停数据"
@@ -127,6 +128,7 @@ export default {
     getdata() {
       var param=qs.stringify({UserName:this.$store.state.users.username})
       this.$axios.post("/getpipebyusername",param).then(successResponse => {
+        console.log(successResponse)
         var list=[];
         var i=0;
         for(var k in successResponse.data){
@@ -302,9 +304,11 @@ if(this.option.series[i].data.length>10){
   line-height: 30px;
 }
 .charts{
+  display: inline-block;
+
   background-color: #f0f8ff;
   padding: 20px;
   width: 800px;
-  height: 600px;
+  height: 500px;
 }
 </style>

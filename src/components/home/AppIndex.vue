@@ -53,42 +53,53 @@
           prop="tmnID"
           label="控制柜名称"
           sortable
-          width="180">
+          width="140">
       </el-table-column>
       <el-table-column
           label="异常状态"
-          sortable
-          width="100">
+          width="80">
         <template slot-scope="scope">
-          <div v-if="scope.row.send_error==1"><div class="gif1"></div></div>
-          <div v-if="scope.row.send_error==2"><div class="gif2"></div></div>
-          <div v-if="scope.row.send_error==3"><div class="gif3"></div></div>
-          <div v-if="scope.row.send_error==4"><div class="gif4"></div></div>
+          <div v-if="scope.row.send_error==4"><div class="gif1"></div></div>
+          <div v-if="scope.row.send_error==3"><div class="gif2"></div></div>
+          <div v-if="scope.row.send_error==2"><div class="gif3"></div></div>
+          <div v-if="scope.row.send_error==1"><div class="gif4"></div></div>
         </template>
       </el-table-column>
       <el-table-column
-          prop="v_actiontime"
-          label="最长阀动作时间"
+          prop="w_line"
+          label="水位(厘米)"
           sortable
           width="150">
       </el-table-column>
       <el-table-column
-          prop="ov_waterline"
-          label="开阀水位"
+          prop="v_per"
+          label="阀位(%)"
           sortable
-          width="100">
+          width="150">
+      </el-table-column>
+        <el-table-column
+          prop="v_actiontime"
+          label="最长阀动作时间(秒)"
+          sortable
+          width="170">
+      </el-table-column>
+      <el-table-column
+          prop="ov_waterline"
+          label="开阀水位(厘米)"
+          sortable
+          width="140">
       </el-table-column>
       <el-table-column
           prop="cv_waterline"
-          label="关阀水位"
+          label="关阀水位(厘米)"
           sortable
-          width="100">
+          width="140">
       </el-table-column>
       <el-table-column
           prop="ov_period"
-          label="开阀周期"
+          label="开阀周期(分钟)"
           sortable
-          width="100">
+          width="140">
       </el-table-column>
       <el-table-column
           prop="w_work"
@@ -99,16 +110,16 @@
       </el-table-column>
       <el-table-column
           prop="ov_keeptime"
-          label="开阀保持时间"
+          label="开阀保持时间(分钟)"
           sortable
-          width="140">
+          width="180">
       </el-table-column>
-      <el-table-column
-          prop="b_status"
-          label="蓄电池状态"
-          sortable
-          width="120">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--          prop="b_status"-->
+<!--          label="蓄电池状态"-->
+<!--          sortable-->
+<!--          width="120">-->
+<!--      </el-table-column>-->
       <el-table-column
           prop="f_Volume"
           label="流量"
@@ -196,6 +207,7 @@ export default {
       this.$axios
           .get('/allmessage')
           .then(res => {
+            console.log(res)
             console.log("请求成功")
             this.tableData = res.data;
           })
@@ -311,15 +323,15 @@ export default {
     },
     tableRowClassName({row}) {
 
-      if (row.send_error == 3) {
+      if (row.send_error == 2) {
 
         return 'three_row';
-      } else if (row.send_error == 1) {
+      } else if (row.send_error == 4) {
         return 'one_row';
-      }else if (row.send_error == 2) {
+      }else if (row.send_error == 3) {
         return 'two_row';
       }
-      else if (row.send_error == 4) {
+      else if (row.send_error == 1) {
         return 'four_row';
       }
       return '';
