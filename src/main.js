@@ -36,10 +36,10 @@ Vue.filter('formatDate', function(value) {
 //     }
 // )
 Vue.prototype.$echarts = echarts
-axios.defaults.baseURL = 'http://101.201.101.181:8443/api'
+// axios.defaults.baseURL = 'http://101.201.101.181:8443/api'
 // axios.defaults.baseURL = 'http://8.140.190.203:8443/api'
 // axios_0.defaults.baseURL = 'http://localhost:8443/api'
-// axios.defaults.baseURL = 'http://localhost:8443/api'
+axios.defaults.baseURL = 'http://localhost:8443/api'
 // 全局注册，之后可在其他组件中通过 this.$axios 发送数据
 Vue.prototype.$axios = axios;
 // Vue.prototype.$axios_0 = axios_0;

@@ -88,40 +88,56 @@ export default {
 
 
     // 修改用户信息
-    async modify() {
+    modify() {
       console.log(this.data)
 
       // 判断用户是否进行用户名称的修改
       // 如果没有修改 就直接进行更新
       // 如果修改了 判断用户名称是否存在
 
-      // var param=qs.stringify({userName: this.data.userName})
-      // const {data: res1} = await this.$axios.post(`/checkUserName`,param);
-      // if (res1==201) {
-      //   this.$message.error("该用户名已存在")
-      // } else {
-        var params = qs.stringify({
-          UserID: this.data.userID,
-          UserName: this.data.userName,
-          UserPswd: this.data.userPswd,
-          MoPhone: this.data.moPhone,
-          RealName: this.data.realName,
-          DPTName: this.data.dptname,
-          ModTime: this.data.ModTime
-        });
-        const {data: res} = await this.$axios.post(`/updateUserInfo`,params);
-        if (res == 201) {
-          this.$message.error("该用户名已存在")
-        } else if (res == 200) {
-          this.$message.success("更新成功")
-          this.$store.state.users.username=this.data.userName;
-          window.localStorage.setItem('ms_username',JSON.stringify(this.data.userName))
-          this.$store.state.users.password=this.data.userPswd;
-        } else {
-          this.$message.error("更新失败")
-        }
-        this.getmessage();
-      // }
+      if (this.data.userName == '') {
+        this.$message.error('请填写用户名称')
+      } else if (this.data.userName.length<3) {
+        this.$message.error('用户名称长度为2-30个字符')
+      } else if (this.data.userName.lenght>30) {
+        this.$message.error('用户名称长度为2-30个字符')
+      } else {
+        this.$confirm('确定要修改您的信息？(请牢记您的密码)', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+          var params = qs.stringify({
+            UserID: this.data.userID,
+            UserName: this.data.userName,
+            UserPswd: this.data.userPswd,
+            MoPhone: this.data.moPhone,
+            RealName: this.data.realName,
+            DPTName: this.data.dptname,
+            ModTime: this.data.ModTime
+          });
+          const {data: res} = await this.$axios.post(`/updateUserInfo`,params);
+          if (res == 201) {
+            this.$message.error("该用户名已存在")
+          } else if (res == 200) {
+            this.$message.success("更新成功")
+            this.$store.state.users.username=this.data.userName;
+            window.localStorage.setItem('ms_username',JSON.stringify(this.data.userName))
+            this.$store.state.users.password=this.data.userPswd;
+            this.getmessage();
+          } else {
+            this.$message.error("更新失败")
+          }
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消修改'
+          });
+          this.getmessage()
+        })
+
+      }
+
     },
 
     // confirm() {
