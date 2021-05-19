@@ -25,7 +25,7 @@
         <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
                         {{ this.$store.state.users.username }}
-                        <i class="el-icon-caret-bottom"></i>
+<!--                        <i class="el-icon-caret-bottom"></i>-->
                     </span>
           <el-dropdown-menu slot="dropdown">
             <a href="https://github.com/Yuzhao163/warter_vue" target="_blank">
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import qs from 'qs';
 export default {
   name: "Head",
 data(){
@@ -113,13 +114,17 @@ data(){
     },
     //一件开阀
     openall() {
+      var param = qs.stringify({
+        openorclose: 0,
+      })
       this.$confirm('此操作将完全开启辖区内全部阀门, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$axios.post('/一件开阀').then(res => {
-          if (res.data === 200) {
+        this.$axios.post('/sendall',param).then(res => {
+          console.log(res)
+          if (res.data.code === 200) {
             this.$message({
               type: 'success',
               message: '开启成功!'
@@ -135,13 +140,16 @@ data(){
     },
     //一件关阀
     closeall() {
+      var param = qs.stringify({
+        openorclose: 100,
+      })
       this.$confirm('此操作将完全关闭辖区内全部阀门, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$axios.post('/一键关阀').then(res => {
-          if (res.data === 200) {
+        this.$axios.post('/sendall',param).then(res => {
+          if (res.data.code === 200) {
             this.$message({
               type: 'success',
               message: '关闭成功!'

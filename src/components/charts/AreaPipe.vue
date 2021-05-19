@@ -170,12 +170,13 @@ export default {
     getTmnData() {
       for(var i=0;i<this.pipedata.length;i++)
       {
-        if(this.spipe.pipName==this.pipedata.pipName)
-          this.spipe.pipID=this.pipedata.pipID
+        if(this.spipe.pipName==this.pipedata[i].pipName)
+          this.spipe.pipID=this.pipedata[i].pipID
       }
       var params = qs.stringify({
         PipID: this.spipe.pipID
       })
+      console.log(params)
       this.$axios.post("/getTerminals", params).then(res => {
         this.tmndata = res.data;
         this.lineshow=true;

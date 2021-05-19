@@ -18,7 +18,7 @@
 
     <div class="form" v-show="details">
       <a name="formmao"></a>
-      <button @click="test"></button>
+
       <span style="font:24px arial,sans-serif;color: #134d6e;font-weight: bolder">设置控制指令</span>
       <el-form style="width:600px;" ref="form" :model="form" label-width="200px">
         <el-form-item label="控制柜名称">
