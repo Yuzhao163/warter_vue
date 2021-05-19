@@ -34,7 +34,7 @@
         <el-form-item v-if="modeselected==51" label="上传周期设置">
           <el-input :disabled="updatetime" v-model="form.uploadcycle"></el-input>
         </el-form-item>
-        <el-form-item v-if="modeselected==11" label="阀位设置">
+        <el-form-item v-if="modeselected==11" label="阀位设置(0-100)">
           <el-input :disabled="manual" v-model="form.vpre"></el-input>
         </el-form-item>
 
