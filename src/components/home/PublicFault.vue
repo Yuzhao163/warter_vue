@@ -189,7 +189,7 @@ export default {
       faultdetil: '222',//故障详情
       currentPage: 1, // 当前页码
       total: 20, // 总条数
-      pageSize: 5 // 每页的数据条数
+      pageSize: 10 // 每页的数据条数
     }
   },
   methods: {
