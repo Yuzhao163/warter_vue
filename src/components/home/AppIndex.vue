@@ -10,13 +10,14 @@
         <el-option key="3" label="自动方式2" value="22"></el-option>
         <el-option key="4" label="自动方式3" value="23"></el-option>
       </el-select>
-      <el-select id="select2" v-model="screendata.defult" ref="select2" placeholder="--异常状态--" class="handle-select"
-                 style="margin-right: 10px">
-        <el-option key="1" label="正常" value="601"></el-option>
-        <el-option key="2" label="轻微" value="602"></el-option>
-        <el-option key="3" label="严重" value="603"></el-option>
-        <el-option key="4" label="紧急" value="604"></el-option>
-      </el-select>
+      <!-- 故障筛选功能-->
+<!--      <el-select id="select2" v-model="screendata.defult" ref="select2" placeholder="&#45;&#45;异常状态&#45;&#45;" class="handle-select"-->
+<!--                 style="margin-right: 10px">-->
+<!--        <el-option key="1" label="正常" value="601"></el-option>-->
+<!--        <el-option key="2" label="轻微" value="602"></el-option>-->
+<!--        <el-option key="3" label="严重" value="603"></el-option>-->
+<!--        <el-option key="4" label="紧急" value="604"></el-option>-->
+<!--      </el-select>-->
       <el-button type="success" icon="el-icon-delete" @click="clearScreen">清除</el-button>
       <el-button type="primary" icon="el-icon-search" @click="Screen">筛选</el-button>
       <el-button v-if="this.$store.state.users.type!=2" type="danger" icon="el-icon-place" @click="test">我的控制柜</el-button>
@@ -27,7 +28,7 @@
           inactive-color="#ff4949"
           active-text="动态刷新"
           inactive-text="静态数据"
-          @change="this.refreshOpen">
+          @change="refreshOpen">
       </el-switch>
     </div>
     <!--    表格区-->
@@ -245,12 +246,11 @@ export default {
     }
     },
     clearScreen() {
-      // var elselect1=document.getElementById("select1");
-      // this.$refs.select1.getAttribute('placeholder');
       this.$refs.select1.value = '';
       this.screendata.W_work = '';
-      this.$refs.select2.value = '';
-      this.screendata.defult = '';
+      // this.$refs.select2.value = '';
+      // this.screendata.defult = '';
+      this.pageView=true;
       this.getTotalData();
     },
     screenEvent() {
@@ -265,6 +265,7 @@ export default {
 
         console.log(this.screendata)
         this.$axios.post('/SelectMessage', params).then(res => {
+          this.pageView=false;
           console.log("请求成功")
           this.tableData = res.data;
         })
