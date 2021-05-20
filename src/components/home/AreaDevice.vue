@@ -280,7 +280,9 @@ export default {
     //  取消添加或关闭对话框
         addCancel(addAreaFormRef) {
             this.addDialogVisible=false
-            this.addAreaForm = {}
+            this.addAreaForm = {
+              areaName:[],
+              areaLeader:[]}
             this.$refs[addAreaFormRef].resetFields();
         },
 

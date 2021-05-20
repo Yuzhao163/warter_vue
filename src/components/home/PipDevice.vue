@@ -308,7 +308,9 @@
             },
             addCancel(addPipFormRef) {
                 this.addDialogVisible = false
-                this.addPipForm = []
+                this.addPipForm = {  pipName:'',
+                  areaID:'',
+                  pipLeader:[]}
                 this.$refs[addPipFormRef].resetFields();
             },
 

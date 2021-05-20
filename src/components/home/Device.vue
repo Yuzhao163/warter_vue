@@ -51,7 +51,7 @@
 
             <!--            添加控制柜对话框-->
             <el-dialog title="提示" :visible.sync="addDialogVisible" width="35%" @close="addDialogCancle('addTmnFormRef')">
-                <el-form :model="addTmnForm" :rules="addTmnFormRules" ref="addTmnFormRef" label-width="130px">
+                <el-form :model="{addTmnForm}" :rules="addTmnFormRules" ref="addTmnFormRef" label-width="130px">
                     <el-form-item label="控制柜名称" prop="tmnName">
                         <el-input v-model="addTmnForm.tmnName" class="input" ></el-input>
                     </el-form-item>
@@ -398,6 +398,8 @@
                     // 分区变化时候下面置空
                     // this.addTmnForm.pipID=''
                     // this.addTmnForm.u1TmnID=''
+              console.log(this.addTmnForm)
+              console.log(this.addTmnForm.areaID!=null)
                     if (this.addTmnForm.areaID!=null) {
                         this.piplist0=''
                        await this.getPips()
@@ -613,7 +615,7 @@ console.log(this.tmnlist)
                         AreaID:this.addTmnForm.areaID,
                         TmnLeader: this.addTmnForm.tmnLeaderID
                     },{arrayFormat: 'repeat'})
-                    const {data: res} = await this.$axios.post('/addTmn',params)
+                    const {data:  res} = await this.$axios.post('/addTmn',params)
                     if(res == 1) {
                         this.addDialogVisible = false
                         this.addTmnForm=[]
@@ -635,12 +637,27 @@ console.log(this.tmnlist)
                 // 取消添加 列表置空
                 this.addTmnForm.tmnName=''
                 this.addTmnForm.areaID=''
-                this.addTmnForm={}
+                this.addTmnForm={
+                  tmnID:'',
+                  tmnName: '',
+                  u1TmnID: '',
+                  u1TmnName:'',
+                  u2TmnID: '',
+                  d1TmnID: '',
+                  d2TmnID: '',
+                  conPont1: '',
+                  conPont2: '',
+                  conPont3: '',
+                  tmnDesc: '',
+                  pipID:'',
+                  areaID:'',
+                  tmnLeaderID: []}
                 this.arealist=[]
                 this.piplist=[]
                 this.piplist0=''
                 this.leaderlist=[]
                 this.nextTmn=[]
+              this.$forceUpdate();
             },
             // 编辑控制柜
          async  editTmnList(row) {
