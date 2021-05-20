@@ -109,9 +109,9 @@
             </el-dialog>
 
             <!--            编辑控制柜对话框-->
-            <el-dialog title="修改控制柜信息" :visible.sync="editTmnDialogVisible" width="50%" @close="editClose('editTmnFormRef')">
-                <el-form :model="editTmnForm" :rules="editTmnFormRules" ref="editTmnFormRef" label-width="140px">
-                    <el-form-item label="控制柜id" prop="tmnId" >
+            <el-dialog title="修改控制柜信息" :visible.sync="editTmnDialogVisible" v-if="editTmnDialogVisible" width="50%" @close="editClose('editTmnFormRef')">
+                <el-form :model="{editTmnForm}" :rules="editTmnFormRules" ref="editTmnFormRef" label-width="140px">
+                  <el-form-item label="控制柜id" prop="tmnId" >
                         <el-input v-model="editTmnForm.tmnId" class="input" :disabled="true"></el-input>
                     </el-form-item>
                     <el-form-item label="控制柜名称" prop="tmnName">
@@ -129,7 +129,7 @@
                     </el-form-item>
                     <el-form-item label="修改所属分区">
                         <el-col :span="9">
-                            <el-select v-model="editTmnForm.AreaID" @change="getAreas"  :clear="changePip">
+                            <el-select v-model="editTmnForm.AreaID" @change="getPips2"  :clear="changePip">
                                 <el-option v-for="item in arealist"
                                            :key="item.id"
                                            :label="item.areaName"
@@ -139,7 +139,7 @@
                         </el-col>
                         <el-col :span="5">修改所属管线</el-col>
                         <el-col :span="10">
-                            <el-select v-model="editTmnForm.pipID" @change="getPips"  :clear="changeTmn">
+                            <el-select v-model="editTmnForm.pipID" @change="getTmns2"  :clear="changeTmn">
                                 <el-option v-for="item in piplist"
                                            :key="item.id"
                                            :label="item.pipName"
@@ -150,14 +150,14 @@
                     </el-form-item>
                     <el-form-item label="修改控制柜位置">
                         <el-col :span="9">
-                                <el-select v-model="editTmnForm.u1TmnID"  @change="getTmns" clearable :clear="changeNextTmn">
-                                    <el-option v-for="(item,index) in tmnlist"
+                                <el-select v-model="editTmnForm.u1TmnID" @change="editnexttmn()"  clearable :clear="changeNextTmn">
+                                    <el-option v-for="(item,index) in tmnlist2"
                                                :key="index"
                                                :label="item.tmnName"
                                                :value="item.tmnId"
                                                :disabled="item.disabled"
                                     >
-                                        <div @click="setTmnindex(index)">{{item.tmnName}}</div>
+
                                     </el-option>
                                 </el-select>
                         </el-col>
@@ -215,6 +215,7 @@
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
+                    <el-button @click="test()">test</el-button>
                     <el-button @click="editClose('editTmnFormRef')">取 消</el-button>
                     <el-button type="primary" @click="editTmn()">确 定</el-button>
                 </span>
@@ -390,59 +391,111 @@
                 this.getTmnLeader()
             },
             // 得到分区下拉框
-            getAreas() {
+            async getAreas() {
                 //测试是否拿到分区
-                this.$axios.get('/getAllAreas').then(res => {
+            await  this.$axios.get('/getAllAreas').then(async res => {
                     this.arealist = res.data
                     // 分区变化时候下面置空
                     // this.addTmnForm.pipID=''
                     // this.addTmnForm.u1TmnID=''
                     if (this.addTmnForm.areaID!=null) {
                         this.piplist0=''
-                        this.getPips()
+                       await this.getPips()
                     }
                     if (this.editTmnForm.AreaID!=null) {
-                        this.getPips()
+                      await this.getPips()
                     }
 
                 })
             },
             // 得到管线下拉框
-            getPips() {
+           async  getPips() {
                 if (this.addDialogVisible === true) {
                     this.addTmnForm.u1TmnID=''
                     this.nextTmn.tmnname=''
                     if (this.addTmnForm.areaID!='') {
-                        this.$axios.get('/getPips',{params:{areaID:this.addTmnForm.areaID}})
-                            .then(res => {
+                    await   this.$axios.get('/getPips',{params:{areaID:this.addTmnForm.areaID}})
+                            .then(async res => {
                                 this.piplist = res.data
                                 console.log(this.piplist[0].pipName)
 
                                 this.piplist0=this.piplist[0].pipName
                                 console.log(this.piplist0)
+                             await this.getTmns();
                             })
                     }
                 } else if (this.editTmnDialogVisible === true) {
-                    this.$axios.get('/getPips',{params:{areaID:this.editTmnForm.AreaID}})
-                        .then(res2 => {
+                  await this.$axios.get('/getPips',{params:{areaID:this.editTmnForm.AreaID}})
+                        .then(async res2 => {
                             this.piplist = res2.data
+                        await  this.getTmns();
+
+
                         })
                 }
-                this.getTmns()
+
             },
-            getTmns() {
+          async  getPips2() {
+            if (this.addDialogVisible === true) {
+              this.addTmnForm.u1TmnID=''
+              this.nextTmn.tmnname=''
+              if (this.addTmnForm.areaID!='') {
+                await   this.$axios.get('/getPips',{params:{areaID:this.addTmnForm.areaID}})
+                    .then(async res => {
+                      this.piplist = res.data
+                      console.log(this.piplist[0].pipName)
+
+                      this.piplist0=this.piplist[0].pipName
+                      console.log(this.piplist0)
+                      await this.getTmns();
+                    })
+              }
+            } else if (this.editTmnDialogVisible === true) {
+              await this.$axios.get('/getPips',{params:{areaID:this.editTmnForm.AreaID}})
+                  .then(async res2 => {
+                    this.piplist = res2.data
+                    this.editTmnForm.pipID=this.piplist[0].pipID;
+                    await  this.getTmns2();
+
+
+                  })
+            }
+
+          },
+          setpiplist_0(){
+            this.editTmnForm.pipID=this.piplist[0].pipID;
+          },
+            async getTmns() {
                 if (this.addDialogVisible === true) {
-                    this.$axios.get('/getTmns',{params:{pipID:this.addTmnForm.pipID}})
+                await this.$axios.get('/getTmns',{params:{pipID:this.addTmnForm.pipID}})
                         .then(res => {
                             this.tmnlist = res.data
                         })
                 } else if (this.editTmnDialogVisible === true) {
-                    this.$axios.get('/getTmns',{params:{pipID:this.editTmnForm.pipID}})
-                        .then(res => {
+                 await  this.$axios.get('/getTmns',{params:{pipID:this.editTmnForm.pipID}})
+                        .then( res => {
                             this.tmnlist = res.data
+console.log(this.tmnlist)
+                          console.log('我先来')
                         })
                 }
             },
+          async getTmns2() {
+            if (this.addDialogVisible === true) {
+              await this.$axios.get('/getTmns',{params:{pipID:this.addTmnForm.pipID}})
+                  .then(res => {
+                    this.tmnlist = res.data
+                  })
+            } else if (this.editTmnDialogVisible === true) {
+              await  this.$axios.get('/getTmns',{params:{pipID:this.editTmnForm.pipID}})
+                  .then( res => {
+                    this.tmnlist = res.data
+                    this.tmnlist2=JSON.parse(JSON.stringify(this.tmnlist));
+                    this.editTmnForm.u1TmnID='';
+                    console.log('我先来')
+                  })
+            }
+          },
             // 获取控制柜管理人员列表
             getTmnLeader() {
                 this.$axios.get('/getTmnLeader')
@@ -470,7 +523,20 @@
                     this.editTmnForm.d1TmnID = ''
                 }
             },
-
+          editnexttmn(){
+              console.log(this.editTmnForm.u1TmnID)
+              console.log(this.tmnlist2)
+            for (var a=0;a<=this.tmnlist2.length-1;a++){
+              if(this.editTmnForm.u1TmnID==this.tmnlist2[a].tmnId)
+              {
+                if(a<this.tmnlist2.length-1)
+                 this.nextTmn.tmnname=this.tmnlist2[a+1].tmnName;
+                else
+                  this.nextTmn.tmnname=''
+              }
+            }
+            this.$forceUpdate();
+          },
             // 设置disabled
             setdisabled(tmnname){
                 console.log("这一行的控制古名称",tmnname,this.tmnlist)
@@ -486,8 +552,10 @@
 
             //除去本身以及上一控制柜的控制柜数组
             deltmnlist(tmnname){
+
+              console.log('我后来')
                 var b=0;
-                this.tmnlist2=this.tmnlist;
+                this.tmnlist2=JSON.parse(JSON.stringify(this.tmnlist));
                 for(var a=0;a<=this.tmnlist.length-1;a++)
                 {
                     if (tmnname==this.tmnlist[a].tmnName)
@@ -575,15 +643,12 @@
                 this.nextTmn=[]
             },
             // 编辑控制柜
-            editTmnList(row) {
-
-                console.log("row",row)
-
-                console.log("form",this.editTmnForm)
+         async  editTmnList(row) {
+              console.log(row)
                 this.editTmnForm = {}
                 this.TmnLeaderID = []
                 this.nextTmn.tmnname = row.d1TmnName,
-                    this.editTmnForm.tmnId = row.tmnId
+                this.editTmnForm.tmnId = row.tmnId,
                 this.editTmnForm.tmnName = row.tmnName,
                     this.editTmnForm.u1TmnID = row.u1TmnID,
                     this.editTmnForm.u1TmnName = row.u1TmnName,
@@ -600,29 +665,37 @@
                     this.editTmnForm.pipID = row.pipID,
                     this.editTmnForm.pipName = row.pipName,
                     this.editTmnForm.AreaID = row.AreaID,
-                    this.editTmnForm.AreaName = row.AreaName
+                    this.editTmnForm.AreaName = row.AreaName,
                 console.log("赋值之后的form",this.editTmnForm)
                 // 拿到管理人员的id
                 for (var i = 0; i < this.tmnTableData.length ; i++) {
                     if(this.tmnTableData[i].tmnId === row.tmnId) {
-                        this.leadMessage = this.tmnTableData[i].TmnLeader
+                        this.leadMessage = this.tmnTableData[i].TmnLeader;
                     }
                 }
                 for (var j = 0; j < this.leadMessage.length; j++) {
-                    this.TmnLeaderID[j] = this.leadMessage[j].userID
+                    this.TmnLeaderID[j] = this.leadMessage[j].userID;
                 }
                 if(this.leadMessage.length == 0) {
                     this.editTmnForm.tmnLeader = []
                 } else {
-                    this.editTmnForm.tmnLeader = this.TmnLeaderID
+                    this.editTmnForm.tmnLeader = this.TmnLeaderID;
                 }
 
-                this.editTmnDialogVisible = true
-                this.getAreas()
-                this.getTmnLeader()
-                this.deltmnlist(row.tmnName)
-                console.log('tmn1',this.tmnlist)
-                console.log('tmn2',this.tmnlist2)
+                this.editTmnDialogVisible = true;
+
+             await this.getAreas()
+
+                this.deltmnlist(this.editTmnForm.tmnName);
+                this.editTmnForm.u1TmnID=null;
+
+
+
+                this.getTmnLeader();
+
+                console.log(this.tmnlist);
+                console.log('tmn2',this.tmnlist2);
+
 
             },
             changePip(){
@@ -688,6 +761,9 @@
             },
             // 取消或关闭编辑对话框
             editClose(editTmnFormRef) {
+
+              // this.$router.replace("/device");
+
                 this.editTmnDialogVisible = false
                 this.nextTmn=[]
                 this.editTmnForm = []
@@ -697,6 +773,7 @@
                 this.arealist=[]
                 this.piplist=[]
                 this.tmnlist=[]
+                this.tmnlist2=[]
 
                 this.getTmnList()
 
@@ -741,7 +818,11 @@
                         })
                 }).catch(err => err)
             },
+test(){
 
+  console.log(this.tmnlist2)
+  console.log(this.editTmnForm)
+},
 
 
         }
