@@ -625,7 +625,7 @@
             checkname() {
                 if (this.addmessage.RealName.length == 0) {
                     this.$message({
-                        type: 'info',
+                        type: 'warning',
                         message: '请填写真实姓名'
                     });
                 }
@@ -633,7 +633,7 @@
             edit_checkname() {
                 if (this.staffData.realName.length == 0) {
                     this.$message({
-                        type: 'info',
+                        type: 'warning',
                         message: '请填写真实姓名'
                     });
                 }
@@ -643,7 +643,7 @@
                 if (this.addmessage.MoPhone.length == 0) {
                     this.ifmbptipok = false;
                     this.$message({
-                        type: 'info',
+                        type: 'warning',
                         message: '请填写手机号'
                     });
                 } else if (this.addmessage.MoPhone.length == 11) {
@@ -655,7 +655,7 @@
                 if (this.staffData.moPhone.length == 0) {
                     this.ifmbptipok = false;
                     this.$message({
-                        type: 'info',
+                        type: 'warning',
                         message: '请填写手机号'
                     });
                 } else if (this.staffData.moPhone.length == 11) {
@@ -669,7 +669,7 @@
                 if (this.addmessage.UserPswd.length < 6 || this.addmessage.UserPswd.length > 12) {
                     this.ifpswtipok = false;
                     this.$message({
-                        type: 'info',
+                        type: 'warning',
                         message: '密码长度应大于等于6位且小于12位'
                     });
                 } else {
@@ -681,7 +681,7 @@
                 if (this.staffData.userPswd.length < 6 || this.staffData.userPswd.length > 12) {
                     this.ifpswtipok = false;
                     this.$message({
-                        type: 'info',
+                        type: 'warning',
                         message: '密码长度应大于等于6位且小于12位'
                     });
                 } else {
@@ -706,7 +706,7 @@
                     var result = res.data
                     if(result == "no"){
                         this.$message({
-                            type: 'info',
+                            type: 'warning',
                             message: '账号已经注册'
                                      });
                     }
@@ -730,7 +730,7 @@
                         var result = res.data
                         if(result == "no"){
                             this.$message({
-                                type: 'info',
+                                type: 'warning',
                                 message: '账号已经注册'
                             });
                         }
@@ -851,7 +851,7 @@
                     if(result == "no"){
                         this.flag1 = false;
                         this.$message({
-                            type: 'info',
+                            type: 'error',
                             message: '添加失败,账号已经注册'
                         });
                     } else if(result == "ok"){
@@ -865,7 +865,7 @@
                 if (this.addmessage.UserPswd.length < 6 || this.addmessage.UserPswd.length > 12) {
                     this.flag2 = false;
                     this.$message({
-                        type: 'info',
+                        type: 'error',
                         message: '添加失败，密码长度应大于等于6位且小于12位'
                     });
                 } else {
@@ -877,7 +877,7 @@
                 if (this.addmessage.RealName.length == 0) {
                     this.flag3 = false;
                     this.$message({
-                        type: 'info',
+                        type: 'error',
                         message: '添加失败，请输入真实姓名'
                     });
                 } else {
@@ -887,14 +887,14 @@
                 if (this.addmessage.MoPhone.length == 0) {
                     this.flag4 = false;
                     this.$message({
-                        type: 'info',
+                        type: 'error',
                         message: '添加失败，请输入手机号'
                     });
                 } else if (this.addmessage.MoPhone.length == 11) {
                     this.flag4 = true;
                 } else {
                     this.$message({
-                        type: 'info',
+                        type: 'error',
                         message: '添加失败，手机号位数不正确'
                     });
                 }
@@ -928,7 +928,7 @@
                             this.addmessage.UClassID == null ||
                             this.form.rightnum == null) {
                             this.$message({
-                                type: 'warning',
+                                type: 'error',
                                 message: '请选择对应权限及类别'
                             });
                         } else {
@@ -956,7 +956,7 @@
                             this.form.rightnum == null ||
                             this.addUserRight.Right_PP == '') {
                             this.$message({
-                                type: 'warning',
+                                type: 'error',
                                 message: '请选择对应权限及类别'
                             });
                         } else {
@@ -1139,7 +1139,7 @@
                                     this.flag1 = false;
                                     console.log("这里的账号是已经发生了重复!!!!!!!!!!!!!!!!!!")
                                     this.$message({
-                                        type: 'info',
+                                        type: 'error',
                                         message: '修改失败,账号已经注册'
                                     });
                                 }else if(result == "ok"){
@@ -1149,7 +1149,7 @@
                                 }
                         } else{
                             this.$message({
-                                type: 'info',
+                                type: 'error',
                                 message: '修改失败,账号为空'
                             });
                         }
@@ -1159,7 +1159,7 @@
                     if (this.staffData.userPswd.length < 6 || this.staffData.userPswd.length > 12) {
                         this.flag2 = false;
                         this.$message({
-                            type: 'info',
+                            type: 'error',
                             message: '修改失败，密码长度应大于等于6位且小于12位'
                         });
                     } else {
@@ -1170,7 +1170,7 @@
                     if (this.staffData.realName.length == 0) {
                         this.flag3 = false;
                         this.$message({
-                            type: 'info',
+                            type: 'error',
                             message: '修改失败，请输入真实姓名'
                         });
                     } else {
@@ -1181,7 +1181,7 @@
                     if (this.staffData.moPhone.length == 0) {
                         this.flag4 = false;
                         this.$message({
-                            type: 'info',
+                            type: 'error',
                             message: '修改失败，请输入手机号'
                         });
                     } else if (this.staffData.moPhone.length == 11) {
