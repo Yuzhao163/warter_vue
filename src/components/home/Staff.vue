@@ -82,12 +82,13 @@
         </el-pagination>
 
         <!--    修改员工信息-->
-        <el-dialog @close="pswfalse(),mbpfalse()" class="dialog" style="text-align: left" title="修改用户信息" :visible.sync="editbox">
+        <el-dialog @close="pswfalse(),mbpfalse()" class="dialog" style="text-align: left" title="修改用户信息"
+                   :visible.sync="editbox">
             <!--      <button @click="test"></button>-->
             <div class="input">
                 <div class="left">
                     <div class="text"><span style="color: red">*</span>用户名：</div>
-                    <el-input v-model="staffData.userName" placeholder=staffData.userName
+                    <el-input v-model="staffData.userName" placeholder="请输入用户名"
                               v-on:blur="compname2"></el-input>
                     <div class="text"><span style="color: red">*</span>密码：</div>
                     <el-input v-model="staffData.userPswd" placeholder="请输入密码" v-on:focus="pswtipon"
@@ -98,12 +99,14 @@
                     <div class="text"><span style="color: red">*</span>真实姓名：</div>
                     <el-input v-model="staffData.realName" placeholder="请输入真实名称" @blur="edit_checkname"></el-input>
                     <div class="text"><span style="color: red">*</span>手机号：</div>
-                    <el-input v-model="staffData.moPhone" v-on:focus="mbptipon" placeholder="请输入手机号" @blur="edit_checkphone"></el-input>
+                    <el-input v-model="staffData.moPhone" v-on:focus="mbptipon" placeholder="请输入手机号"
+                              @blur="edit_checkphone"></el-input>
                     <div style="color: red;font-size: 12px"
-                         v-show="ifmbptip">手机号规则:长度应该为11位</div>
+                         v-show="ifmbptip">手机号规则:长度应该为11位
+                    </div>
                     <div style="color: limegreen;font-size: 12px" v-show="ifmbptipok">手机号通过</div>
 
-                    <div class="text">单位名称：</div>
+                    <div class="text"><span style="color: red">*</span>单位名称：</div>
                     <el-input v-model="staffData.dptname" placeholder="请输入单位名称"></el-input>
                 </div>
 
@@ -182,7 +185,8 @@
 
 
         <!--    添加员工弹框内容-->
-        <el-dialog @close="clearboxes(),pswfalse(),mbpfalse()" class="dialog" style="text-align: left" title="添加用户" :visible.sync="addbox">
+        <el-dialog @close="clearboxes(),pswfalse(),mbpfalse()" class="dialog" style="text-align: left" title="添加用户"
+                   :visible.sync="addbox">
             <!--      <button @click="test"></button>-->
             <div class="input">
                 <div class="left">
@@ -193,15 +197,18 @@
                               @blur="complength()"></el-input>
                     <!--          <span style="color:#2496ee;font-size: 10px">不填写则设置初始密码为123456 changduwei 8</span>-->
                     <div style="color: red;font-size: 12px"
-                         v-show="ifpswtip">密码规则:密码长度应该在6-12位</div>
+                         v-show="ifpswtip">密码规则:密码长度应该在6-12位
+                    </div>
                     <div style="color: limegreen;font-size: 12px" v-show="ifpswtipok">密码通过</div>
 
                     <div class="text"><span style="color: red">*</span>真实姓名：</div>
                     <el-input v-model="addmessage.RealName" placeholder="请输入真实名称" @blur="checkname"></el-input>
                     <div class="text"><span style="color: red">*</span>手机号：</div>
-                    <el-input v-model="addmessage.MoPhone" placeholder="请输入手机号" v-on:focus="mbptipon" @blur="checkphone"></el-input>
+                    <el-input v-model="addmessage.MoPhone" placeholder="请输入手机号" v-on:focus="mbptipon"
+                              @blur="checkphone"></el-input>
                     <div style="color: red;font-size: 12px"
-                         v-show="ifmbptip">手机号规则:长度应该为11位</div>
+                         v-show="ifmbptip">手机号规则:长度应该为11位
+                    </div>
                     <div style="color: limegreen;font-size: 12px" v-show="ifmbptipok">手机号通过</div>
 
                     <div class="text">
@@ -281,8 +288,9 @@
             </div>
             <div slot="footer" class="dialog-footer">
 
+                <el-button @click="test">取 消</el-button>
                 <el-button @click="addbox = false,clearboxes()">取 消</el-button>
-                <el-button type="primary" @click="addstaff(),clearboxes()">确 定</el-button>
+                <el-button type="primary" @click="addstaff()">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -430,16 +438,16 @@
                 pipid: [],
                 tmnid: [],
                 rightpp: "",
-                tests:{
+                tests: {
                     right: 0,
                 },//
-                title:''
+                title: ''
 
             }
         },
         methods: {
-            ifuclassid(){
-                if(this.staffData.uclassID == '2'||this.staffData.uclassID == '201'||this.staffData.uclassID == '202'||this.staffData.uclassID == '203')
+            ifuclassid() {
+                if (this.staffData.uclassID == '2' || this.staffData.uclassID == '201' || this.staffData.uclassID == '202' || this.staffData.uclassID == '203')
                     return true
             },
             pswtipon() {
@@ -450,7 +458,7 @@
                 this.ifpswtip = false;
                 this.ifpswtipok = false;
             },
-            mbptipon(){
+            mbptipon() {
                 this.ifmbptip = true;
                 this.ifmbptipok = false;
             },
@@ -469,8 +477,8 @@
             //-----------------------------------------------------------------------------------------------------------------
             //清理填框内容
             clearbox() {
-                if(this.staffData.uclassID==2){
-                    this.form.rightnum=201;
+                if (this.staffData.uclassID == 2) {
+                    this.form.rightnum = 201;
                 }
 
                 this.addmessage = {}
@@ -479,12 +487,43 @@
                 this.Pipe = {}
                 this.Terminal = {}
             },
-            clearboxes(){
-                this.addmessage = {}
-                this.addUserRight = {}
-                this.Area = {}
-                this.Pipe = {}
-                this.Terminal = {}
+            clearboxes() {
+                console.log('woshi li2jie')
+                this.addmessage = {
+                    UserName: '',
+                    UserPswd: '',
+                    UClassID: '',
+                    MoPhone: '',
+                    RealName: '',
+                    DPTName: '',
+                    // AreaName:'',
+                    // PipName:'',
+                    // TmnName:'',
+                    Area_Pip_Tmn: '',
+                },
+                    this.addUserRight = {
+                        Right_PP: '',
+                        UserID: '',
+                    }
+                this.Area = {
+                    areaID: '',
+                    areaName: '',
+                    areaCreateDate: '',
+                    areaLeader: '',
+                    areaLeaderPhone: '',
+                }
+                this.Pipe = {
+                    pipID: '',
+                    pipName: '',
+                    pipCreateDate: '',
+                    pipLeader: '',
+                    pipLeaderPhone: '',
+                }
+                this.Terminal = {
+                    tmnId: '',
+                    tmnName: '',
+                    tmnLeader: '',
+                }
             },
             //清理下拉框内容
             clears() {
@@ -583,43 +622,43 @@
             },
 
             //真实姓名判断
-            checkname(){
-                if(this.addmessage.RealName.length == 0){
+            checkname() {
+                if (this.addmessage.RealName.length == 0) {
                     this.$message({
                         type: 'info',
                         message: '请填写真实姓名'
                     });
                 }
             },
-            edit_checkname(){
-                if(this.staffData.realName.length == 0){
+            edit_checkname() {
+                if (this.staffData.realName.length == 0) {
                     this.$message({
                         type: 'info',
                         message: '请填写真实姓名'
                     });
                 }
             },
-            checkphone(){
+            checkphone() {
                 this.ifmbptip = false;
-                if(this.addmessage.MoPhone.length == 0){
+                if (this.addmessage.MoPhone.length == 0) {
                     this.ifmbptipok = false;
                     this.$message({
                         type: 'info',
                         message: '请填写手机号'
                     });
-                } else if(this.addmessage.MoPhone.length == 11){
+                } else if (this.addmessage.MoPhone.length == 11) {
                     this.ifmbptipok = true;
                 }
             },
-            edit_checkphone(){
+            edit_checkphone() {
                 this.ifmbptip = false;
-                if(this.staffData.moPhone.length == 0){
+                if (this.staffData.moPhone.length == 0) {
                     this.ifmbptipok = false;
                     this.$message({
                         type: 'info',
                         message: '请填写手机号'
                     });
-                } else if(this.staffData.moPhone.length == 11){
+                } else if (this.staffData.moPhone.length == 11) {
                     this.ifmbptipok = true;
                 }
             },
@@ -633,7 +672,7 @@
                         type: 'info',
                         message: '密码长度应大于等于6位且小于12位'
                     });
-                } else{
+                } else {
                     this.ifpswtipok = true;
                 }
             },
@@ -650,41 +689,71 @@
                 }
             },
             compname() {
-                var i = 0
-                console.log(this.addmessage.UserName);
-                console.log(this.tableData[i].userName);
-                for (i; i < this.tableData.length; i++) {
-                    if (this.addmessage.UserName == this.tableData[i].userName) {
+                // for (i; i < this.tableData.length; i++) {
+                //     if (this.addmessage.UserName == this.tableData[i].userName) {
+                //         this.$message({
+                //             type: 'info',
+                //             message: '账号已经注册'
+                //         });
+                //     }
+                // }
+                //更换为后端对比判断名称是否重复
+                var param = qs.stringify(
+                    {UserName: this.addmessage.UserName}
+                )
+                this.$axios.post('/getNameRepulicate',param).then(res => {
+                    console.log("这是新增的员工的名称",res.data)
+                    var result = res.data
+                    if(result == "no"){
                         this.$message({
                             type: 'info',
                             message: '账号已经注册'
-                        });
+                                     });
                     }
-                }
+                })
             },
             compname2() {
-                var i = 0
+                // var i = 0
                 console.log("这个人的名称是" + this.staffData.userName);
-                console.log(this.tableData[i].userName);
+                // console.log(this.tableData[i].userName);
                 console.log("这个人之前的名字是", this.preUserName)
                 //-----------------------------------------------------------------------------------
-                var param = qs.stringify({UserName: this.staffData.userName})
-                this.$axios.post('/getstaff', param).then(res => {
-                    console.log("这是我获取到的后端除了该名称之外的人的信息" + res.data)
-                    this.staffDatas = res.data
-                    console.log(this.staffDatas)
-                })
-
+                //首先我需要进行判断,新的名字和旧的名字是否相同
+                //如果相同,则不需要进行判断
+                //如果不相同.则将该名字传到后端,与数据库中的名字进行判断
                 if (this.staffData.userName != this.preUserName) {
-                    for (i; i < this.tableData.length; i++) {
-                        if (this.staffData.userName == this.tableData[i].userName) {
+                    var param = qs.stringify(
+                        {UserName: this.staffData.userName}
+                    )
+                    this.$axios.post('/getNameRepulicate',param).then(res => {
+                        console.log("这是新增的员工的名称",res.data)
+                        var result = res.data
+                        if(result == "no"){
                             this.$message({
                                 type: 'info',
                                 message: '账号已经注册'
                             });
                         }
-                    }
+                    })
                 }
+
+                // var param = qs.stringify({UserName: this.staffData.userName})
+                // this.$axios.post('/getstaff', param).then(res => {
+                //     console.log("这是我获取到的后端除了该名称之外的人的信息" + res.data)
+                //     this.staffDatas = res.data
+                //     console.log(this.staffDatas)
+                // })
+
+                // if (this.staffData.userName != this.preUserName) {
+                //     for (i; i < this.tableData.length; i++) {
+                //         if (this.staffData.userName == this.tableData[i].userName) {
+                //             this.$message({
+                //                 type: 'info',
+                //                 message: '账号已经注册'
+                //             });
+                //         }
+                //     }
+                // }
 
 
             },
@@ -703,25 +772,28 @@
             // },
             Index_TableData() {
                 this.$axios
-                    .get('/staff',{ params:{
-                        UserName: this.searchtext,
-                        page: this.currentPage,
+                    .get('/staff', {
+                        params: {
+                            UserName: this.searchtext,
+                            page: this.currentPage,
                             size: this.pageSize,
-                        }})
+                        }
+                    })
                     .then(res => {
                         console.log(res)
                         this.tableData = res.data;
                         this.tableDataShow = res.data
-                        this.$axios.get('/getSize',{params:{
-                            UserName: this.searchtext,
+                        this.$axios.get('/getSize', {
+                            params: {
+                                UserName: this.searchtext,
                             }
 
                         })
-                        .then(res =>{
-                            console.log(res)
-                            this.title = res.data;
+                            .then(res => {
+                                console.log(res)
+                                this.title = res.data;
+                            })
                     })
-                })
                     .catch(failResponse => {
                         console.log(failResponse)
                         alert(failResponse)
@@ -741,7 +813,7 @@
                     this.$axios
                         .post('/delstaff', params).then(res => {
                         console.log(res);
-                        if(res.data == 200){
+                        if (res.data == 200) {
                             this.$message({
                                 type: 'success',
                                 message: '成功删除！'
@@ -756,25 +828,40 @@
                     });
                 });
             },
-            addstaff() {
-                for (var i = 0; i < this.tableData.length; i++) {
-                    if (this.addmessage.UserName == this.tableData[i].userName) {
-                        console.log(this.addmessage.UserName);
-                        console.log(this.tableData[i].userName);
+            async addstaff() {
+                // for (var i = 0; i < this.tableData.length; i++) {
+                //     if (this.addmessage.UserName == this.tableData[i].userName) {
+                //         console.log(this.addmessage.UserName);
+                //         console.log(this.tableData[i].userName);
+                //         this.$message({
+                //             type: 'info',
+                //             message: '添加失败，账号已经注册'
+                //         });
+                //     } else {
+                //         this.flag1 = true;
+                //     }
+                // }
+                var param = qs.stringify(
+                    {UserName: this.addmessage.UserName}
+                )
+                const{data:res} = await this.$axios.post('/getNameRepulicate',param)
+
+                    console.log("这是新增的员工的名称",res)
+                    var result = res
+                    if(result == "no"){
+                        this.flag1 = false;
                         this.$message({
                             type: 'info',
-                            message: '添加失败，账号已经注册'
+                            message: '添加失败,账号已经注册'
                         });
-                    } else {
+                    } else if(result == "ok"){
+                        console.log("新增员工的名称的状态是不重复的",result)
                         this.flag1 = true;
+                        console.log("这个旗子的状态",this.flag1)
                     }
-                }
-                // if(this.addmessage.UserPswd.length<=6 || this.addmessage.UserPswd.length>12){
-                //     this.$message({
-                //       type: 'info',
-                //       message: '密码长度应大于6位且小于12位'
-                //     });
-                // }
+
+                console.log("到达下一步骤")
+
                 if (this.addmessage.UserPswd.length < 6 || this.addmessage.UserPswd.length > 12) {
                     this.flag2 = false;
                     this.$message({
@@ -787,7 +874,7 @@
                 console.log(this.flag1);
                 console.log(this.flag2);
                 //判断姓名
-                if(this.addmessage.RealName.length == 0){
+                if (this.addmessage.RealName.length == 0) {
                     this.flag3 = false;
                     this.$message({
                         type: 'info',
@@ -797,14 +884,19 @@
                     this.flag3 = true;
                 }
                 //判断电话号码
-                if(this.addmessage.MoPhone.length == 0){
+                if (this.addmessage.MoPhone.length == 0) {
                     this.flag4 = false;
                     this.$message({
                         type: 'info',
                         message: '添加失败，请输入手机号'
                     });
-                } else if(this.addmessage.MoPhone.length == 11){
+                } else if (this.addmessage.MoPhone.length == 11) {
                     this.flag4 = true;
+                } else {
+                    this.$message({
+                        type: 'info',
+                        message: '添加失败，手机号位数不正确'
+                    });
                 }
 
                 if (this.flag1 == true && this.flag2 == true && this.flag3 == true && this.flag4 == true) {
@@ -831,31 +923,89 @@
                     }, {arrayFormat: 'repeat'})
                     this.a = params
                     console.log(params)
-                    if (this.addmessage.UClassID == '' ||
-                        this.addmessage.UClassID == null ||
-                        this.form.rightnum == null ||
-                        this.addUserRight.Right_PP == '') {
-                        this.$message({
-                            type: 'warning',
-                            message: '请选择对应权限及类别'
-                        });
-                    } else {
-                        this.$axios.post('/addstaff', params).then(res => {
-                            if (res.data === 200)
-                                this.$message({
-                                    type: 'success',
-                                    message: '成功添加！'
-                                });
+                    if(this.form.rightnum == '3'){
+                        if (this.addmessage.UClassID == '' ||
+                            this.addmessage.UClassID == null ||
+                            this.form.rightnum == null) {
+                            this.$message({
+                                type: 'warning',
+                                message: '请选择对应权限及类别'
+                            });
+                        } else {
+                            this.$axios.post('/addstaff', params).then(res => {
+                                console.log('woshi liyijie')
+                                if (res.data === 200)
+                                    this.$message({
+                                        type: 'success',
+                                        message: '成功添加！'
+                                    });
                                 this.Index_TableData();
-                            this.addbox = false;
+                                this.addbox = false;
+                                this.clearboxes();
 
-                        })
-                            .catch(failResponse => {
-                                console.log(params)
-                                console.log(failResponse)
-                                alert(failResponse)
                             })
+                                .catch(failResponse => {
+                                    console.log(params)
+                                    console.log(failResponse)
+                                    alert(failResponse)
+                                })
+                        }
+                    } else{
+                        if (this.addmessage.UClassID == '' ||
+                            this.addmessage.UClassID == null ||
+                            this.form.rightnum == null ||
+                            this.addUserRight.Right_PP == '') {
+                            this.$message({
+                                type: 'warning',
+                                message: '请选择对应权限及类别'
+                            });
+                        } else {
+                            this.$axios.post('/addstaff', params).then(res => {
+                                console.log('woshi liyijie')
+                                if (res.data === 200)
+                                    this.$message({
+                                        type: 'success',
+                                        message: '成功添加！'
+                                    });
+                                this.Index_TableData();
+                                this.addbox = false;
+                                this.clearboxes();
+
+                            })
+                                .catch(failResponse => {
+                                    console.log(params)
+                                    console.log(failResponse)
+                                    alert(failResponse)
+                                })
+                        }
                     }
+                    // if (this.addmessage.UClassID == '' ||
+                    //     this.addmessage.UClassID == null ||
+                    //     this.form.rightnum == null ||
+                    //     this.addUserRight.Right_PP == '') {
+                    //     this.$message({
+                    //         type: 'warning',
+                    //         message: '请选择对应权限及类别'
+                    //     });
+                    // } else {
+                    //     this.$axios.post('/addstaff', params).then(res => {
+                    //         console.log('woshi liyijie')
+                    //         if (res.data === 200)
+                    //             this.$message({
+                    //                 type: 'success',
+                    //                 message: '成功添加！'
+                    //             });
+                    //         this.Index_TableData();
+                    //         this.addbox = false;
+                    //         this.clearboxes();
+                    //
+                    //     })
+                    //         .catch(failResponse => {
+                    //             console.log(params)
+                    //             console.log(failResponse)
+                    //             alert(failResponse)
+                    //         })
+                    // }
 
                 }
 
@@ -893,15 +1043,15 @@
             },
 
             handleEdit(index, row) {
-                console.log("我所取的这一行数据",index, row);
+                console.log("我所取的这一行数据", index, row);
                 // this.UserRight.Right_PP = this.UserRightList[0].value;
                 this.staffData = JSON.parse(JSON.stringify(row));
                 this.form.rightnum = this.staffData.uclassID;
                 this.form.rightnum = Number(this.form.rightnum);
                 //新增的变量
                 this.tests.right =
-                this.staffData.uclassID = this.staffData.uclassID.substring(0, 1);
-                console.log("我所取的这一行数据",index, row);
+                    this.staffData.uclassID = this.staffData.uclassID.substring(0, 1);
+                console.log("我所取的这一行数据", index, row);
                 for (var i = 0; i < this.tableData.length; i++) {
                     if (this.tableData[i].userID == row.userID) {
                         console.log("这个当前行数匹配的userID是", this.tableData[i].userID)
@@ -937,45 +1087,73 @@
                 this.preUserName = this.staffData.userName
             },
 
-            updatestaff() {
+             updatestaff() {
                 console.log("这里输出的是员工的UserRight的值", this.UserRight.Right_PP)
-                this.$confirm('将更新员工信息, 是否确定?', '提示', {
+                 this.$confirm('将更新员工信息, 是否确定?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
-                }).then(() => {
+                }).then(async() => {
                     // ------------------------------------------------------------------------------------
-                    var count = 0
+                    // var count = 0
                     this.flag1 = false
                     this.flag2 = false
-                    if (this.staffData.userName != this.preUserName) {
-                        for (var i = 0; i < this.tableData.length; i++) {
-                            if (this.staffData.userName == this.tableData[i].userName) {
-                                this.$message({
-                                        type: 'info',
-                                        message: '修改失败，账号已经注册'
-                                    },
-                                    console.log("我的flag变成了啥", this.flag1));
-                                count++
-                            } else if (this.staffData.userName == "") {
-                                this.$message({
-                                    type: 'info',
-                                    message: '修改失败，账号不能为空'
-                                });
-                            }
-                        }
-                        if (count == 0) {
-                            this.flag1 = true;
-                        } else {
-                            this.flag1 = false;
-                        }
-                        count = 0
-
-                    } else if (this.staffData.userName == this.preUserName) {
+                    // if (this.staffData.userName != this.preUserName) {
+                    //     for (var i = 0; i < this.tableData.length; i++) {
+                    //         if (this.staffData.userName == this.tableData[i].userName) {
+                    //             this.$message({
+                    //                     type: 'info',
+                    //                     message: '修改失败，账号已经注册'
+                    //                 },
+                    //                 console.log("我的flag变成了啥", this.flag1));
+                    //             count++
+                    //         } else if (this.staffData.userName == "") {
+                    //             this.$message({
+                    //                 type: 'info',
+                    //                 message: '修改失败，账号不能为空'
+                    //             });
+                    //         }
+                    //     }
+                    //     if (count == 0) {
+                    //         this.flag1 = true;
+                    //     } else {
+                    //         this.flag1 = false;
+                    //     }
+                    //     count = 0
+                    //
+                    // }
+                    if (this.staffData.userName == this.preUserName) {
 
                         console.log("flag1是真的")
                         this.flag1 = true;
                         // }
+                    } else if (this.staffData.userName != this.preUserName) {
+                        if(this.staffData.userName != ""){
+                            var param = qs.stringify(
+                                {UserName: this.staffData.userName}
+                            )
+                            const{data:res} = await this.$axios.post('/getNameRepulicate',param)
+                                console.log("这是新增的员工的名称",res)
+                                var result = res
+                                if(result == "no"){
+                                    this.flag1 = false;
+                                    console.log("这里的账号是已经发生了重复!!!!!!!!!!!!!!!!!!")
+                                    this.$message({
+                                        type: 'info',
+                                        message: '修改失败,账号已经注册'
+                                    });
+                                }else if(result == "ok"){
+                                    console.log("修改员工的名称的状态是不重复的",result)
+                                    this.flag1 = true;
+                                    console.log("这个旗子的状态",this.flag1)
+                                }
+                        } else{
+                            this.$message({
+                                type: 'info',
+                                message: '修改失败,账号为空'
+                            });
+                        }
+
                     }
 
                     if (this.staffData.userPswd.length < 6 || this.staffData.userPswd.length > 12) {
@@ -989,7 +1167,7 @@
                         this.flag2 = true;
                     }
                     //判断姓名
-                    if(this.staffData.realName.length == 0){
+                    if (this.staffData.realName.length == 0) {
                         this.flag3 = false;
                         this.$message({
                             type: 'info',
@@ -999,14 +1177,14 @@
                         this.flag3 = true;
                     }
                     //判断电话号码
-                    console.log("这里是输出的修改框中的手机号的长度",this.staffData.moPhone.length)
-                    if(this.staffData.moPhone.length == 0){
+                    console.log("这里是输出的修改框中的手机号的长度", this.staffData.moPhone.length)
+                    if (this.staffData.moPhone.length == 0) {
                         this.flag4 = false;
                         this.$message({
                             type: 'info',
                             message: '修改失败，请输入手机号'
                         });
-                    } else if(this.staffData.moPhone.length == 11){
+                    } else if (this.staffData.moPhone.length == 11) {
                         this.flag4 = true;
                     }
 
@@ -1048,19 +1226,19 @@
                                 message: '请选择对应权限'
                             });
                         }
-                            this.$axios.post('/updstaff', params).then(res => {
-                                console.log("修改完成", res)
-                                this.$message({
-                                    type: 'success',
-                                    message: '成功修改！'
-                                });
-                                this.Index_TableData()
-                            }).catch(() => {
-                                this.$message({
-                                    type: 'info',
-                                    message: '已取消修改'
-                                })
+                        this.$axios.post('/updstaff', params).then(res => {
+                            console.log("修改完成", res)
+                            this.$message({
+                                type: 'success',
+                                message: '成功修改！'
+                            });
+                            this.Index_TableData()
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '已取消修改'
                             })
+                        })
 
                     }
                 })
@@ -1083,8 +1261,12 @@
                 this.Index_TableData();
             },
             test() {
-                console.log(this.form.rightnum);
-                console.log(this.staffData.uclassID)
+                console.log(this.addmessage.UClassID == '');
+                console.log(
+                    this.addmessage.UClassID == null);
+                console.log(
+                    this.form.rightnum == null);
+                console.log(this.addUserRight.Right_PP == '');
             }
 
         }

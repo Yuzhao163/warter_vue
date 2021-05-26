@@ -341,7 +341,7 @@
                 }
 
                 console.log(this.editPipForm,row,"++++++")
-6
+
             },
             modifySubmit(editPipFormRef) {
                 console.log(this.editPipForm)
@@ -352,38 +352,47 @@
                 } else if (this.editPipForm.PipName.length>30) {
                     this.$message.error("管线名称为2-30个字符")
                 } else {
-                    if (this.editPipForm.PipLeader.length==0) {
-                        this.editPipForm.PipLeader = -1
-                    }
-                    var params = qs.stringify({
-                        PipID:this.editPipForm.PipID,
-                        PipName:this.editPipForm.PipName,
-                        AreaID:this.editPipForm.AreaID,
-                        PipLeader:this.editPipForm.PipLeader
-                    },{ arrayFormat: 'repeat' })
-                    this.$axios.post('/updatePip',params)
-                        .then(res => {
-                            console.log(res)
-                            if (res.data == 200) {
-                                this.$message.success('修改成功！')
-                                this.getPipList()
-                                this.editPipForm = []
-                                this.editDialogVisible = false
-                                this.editPipForm.PipLeader = []
-                                this.$refs[editPipFormRef].resetFields();
-                            } else if (res.data == 201) {
-                                this.$message.error('该管线名称已存在')
-                            } else {
-                                this.$message.error('修改失败')
-                            }
-                        })
+                    this.$confirm('此操作将修改该管线, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        if (this.editPipForm.PipLeader.length==0) {
+                            this.editPipForm.PipLeader = -1
+                        }
+                        var params = qs.stringify({
+                            PipID:this.editPipForm.PipID,
+                            PipName:this.editPipForm.PipName,
+                            AreaID:this.editPipForm.AreaID,
+                            PipLeader:this.editPipForm.PipLeader
+                        },{ arrayFormat: 'repeat' })
+                        this.$axios.post('/updatePip',params)
+                            .then(res => {
+                                console.log(res)
+                                if (res.data == 200) {
+                                    this.$message.success('修改成功！')
+                                    this.getPipList()
+                                    this.editPipForm = []
+                                    this.editDialogVisible = false
+                                    this.editPipForm.PipLeader = []
+                                    this.$refs[editPipFormRef].resetFields();
+                                } else if (res.data == 201) {
+                                    this.$message.error('该管线名称已存在')
+                                } else {
+                                    this.$message.error('修改失败')
+                                }
+                            })
+                    })
+
                 }
 
             },
             modifyCancel(editPipFormRef) {
-                this.editPipForm = []
+                this.editDialogVisible = false
+                this.editPipForm = {}
                 this.$refs[editPipFormRef].resetFields();
                 this.getPipList()
+
             },
 
             // 删除管线
