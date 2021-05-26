@@ -56,6 +56,18 @@
                     </template>
                 </el-table-column>
             </el-table>
+
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[1,5,10,20]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total=total>
+                >
+            </el-pagination>
+
         </div>
         <!--    弹框内容-->
 
@@ -120,7 +132,6 @@
                 <el-button type="primary" @click="details = false,check_fault()">确 定</el-button>
 
             </div>
-            <button @click="test">test</button>
         </el-dialog>
     </div>
 </template>
@@ -175,6 +186,10 @@
                 TmnID: '10009',
                 ERId: '',//故障编码
 
+                currentPage: 1, // 当前页码
+                total: 20, // 总条数
+                pageSize: 5 // 每页的数据条数
+
             }
         },
         created() {
@@ -183,14 +198,23 @@
         methods: {
 
             getdata() {
-                var param = qs.stringify({
+                var params = qs.stringify({
                     TmnLeader: this.$store.state.users.username
                 })
-                this.$axios.post('/geterrorbyusername', param).then(res => {
-                    console.log(res)
-                    this.tableData = res.data;
-                })
-                    .catch(failResponse => {
+                this.$axios.post('/getCountNum',params).then(res =>{
+                    console.log("我收到的记录总条数是",res.data)
+                    this.total = res.data
+
+                    var param = qs.stringify({
+                        TmnLeader: this.$store.state.users.username,
+                        page: this.currentPage,
+                        size: this.pageSize,
+                    })
+                    this.$axios.post('/geterrorbyusername', param).then(res => {
+                        console.log(res)
+                        this.tableData = res.data;
+                    })
+                }).catch(failResponse => {
 
                         console.log(failResponse)
                         alert(failResponse)
@@ -200,9 +224,10 @@
           getdatas(){
             var param = qs.stringify({
               // TmnLeader: this.$store.state.users.username
-              TmnID:this.row_msg.tmnId
+              Erid:this.row_msg.erid
             })
-            this.$axios.post('/geterrorbytmnleader', param).then(res => {
+              //5.19将该接口从geterrorbytmnleader修改为geterrorbyerid
+            this.$axios.post('/geterrorbyerid', param).then(res => {
               console.log(res)
               this.tableDatas = res.data;
             })
@@ -246,22 +271,40 @@
                     cancelButtonText: '我再想想',
                     type: 'warning'
                 }).then(() => {
-                    var parames = qs.stringify({
-                        ERId: this.row_msg.erid,
-                        TmnId: this.row_msg.tmnId,
-                        User: this.$store.state.users.username,
-                        Exception: this.fault_detil,
-                        Result: this.res_olvent,
-                    });
-                    console.log(parames)
-                    this.$axios.post('/dealerror', parames).then(() => {
+                    if(this.fault_detil.length == 0 || this.res_olvent.length == 0){
+                        this.$message({
+                            type: 'info',
+                            message: '请填写具体的故障及解决方案'
+                        });
+                    } else if(this.fault_detil.length > 255){
+                        this.$message({
+                            type: 'info',
+                            message: '故障详情太复杂啦'
+                        });
+                    } else if(this.res_olvent.length > 255){
+                        this.$message({
+                            type: 'info',
+                            message: '异常处理方案太复杂啦'
+                        });
+                    } else{
+                        var parames = qs.stringify({
+                            ERId: this.row_msg.erid,
+                            TmnId: this.row_msg.tmnId,
+                            User: this.$store.state.users.username,
+                            Exception: this.fault_detil,
+                            Result: this.res_olvent,
+                        });
+                        console.log(parames)
+                        this.$axios.post('/dealerror', parames).then(() => {
 
-                    })
-                    this.$message({
-                        type: 'success',
-                        message: '提交成功!'
-                    });
-                    this.getdata();
+                        })
+                        this.$message({
+                            type: 'success',
+                            message: '提交成功!'
+                        });
+                        this.getdata();
+                    }
+
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -270,17 +313,26 @@
                 });
 
             },
+
+            //每页条数改变时触发 选择一页显示多少行
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+                this.currentPage = 1;
+                this.pageSize = val;
+                this.getdata();
+            },
+            //当前页改变时触发 跳转其他页
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+                this.currentPage = val;
+                this.getdata()
+            },
+
+            //清空
             clearbox(){
                 this.res_olvent = ""
             },
-            test() {
-                console.log(this.resolvent)
-                console.log(this.resolvent)
-                console.log(this.$store.state.users.username)
-                console.log("我的tableDatas是这些数据", this.tableDatas)
-              console.log(this.row_msg.tmnId)
 
-            },
         },
 
     }

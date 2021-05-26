@@ -324,32 +324,39 @@ export default {
             } else if (this.modifyAreaForm.AreaName.length>30) {
                 this.$message.error("分区名称为2-30个字符")
             } else {
-                console.log(this.modifyAreaForm)
-                if (this.modifyAreaForm.AreaLeader.length==0){
-                    this.modifyAreaForm.AreaLeader=-1
-                }
-                var params = qs.stringify({
-                    areaID:this.modifyAreaForm.AreaID,
-                    areaName:this.modifyAreaForm.AreaName,
-                    areaLeader:this.modifyAreaForm.AreaLeader
-                },{ arrayFormat: 'repeat' })
-                this.$axios.post("/testLeader",params)
-                console.log(params)
-                this.$axios.post('/modifyArea',params)
-                    .then(res => {
-                        console.log(res)
-                        if(res.data === 200) {
-                            this.$message.success('修改成功')
-                            this.modifyAreaForm = {}
-                            this.modifyDialogVisible = false
-                            this.$refs[modifyAreaFormRef].resetFields();
-                            this.getAreaList()
-                        } else if (res.data === 201){
-                            this.$message.error('改分区名称已存在')
-                        } else {
-                            this.$message.error('修改失败')
-                        }
-                    })
+                this.$confirm('此操作将修改该分区, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    console.log(this.modifyAreaForm)
+                    if (this.modifyAreaForm.AreaLeader.length==0){
+                        this.modifyAreaForm.AreaLeader=-1
+                    }
+                    var params = qs.stringify({
+                        areaID:this.modifyAreaForm.AreaID,
+                        areaName:this.modifyAreaForm.AreaName,
+                        areaLeader:this.modifyAreaForm.AreaLeader
+                    },{ arrayFormat: 'repeat' })
+                    this.$axios.post("/testLeader",params)
+                    console.log(params)
+                    this.$axios.post('/modifyArea',params)
+                        .then(res => {
+                            console.log(res)
+                            if(res.data === 200) {
+                                this.$message.success('修改成功')
+                                this.modifyAreaForm = {}
+                                this.modifyDialogVisible = false
+                                this.$refs[modifyAreaFormRef].resetFields();
+                                this.getAreaList()
+                            } else if (res.data === 201){
+                                this.$message.error('改分区名称已存在')
+                            } else {
+                                this.$message.error('修改失败')
+                            }
+                        })
+                })
+
             }
 
         },
@@ -363,7 +370,7 @@ export default {
     //  删除分区
         deleteArea(row) {
             console.log("**********",row)
-            this.$confirm('此操作将永久删除该管线, 是否继续?', '提示', {
+            this.$confirm('此操作将永久删除该分区, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

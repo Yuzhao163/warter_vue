@@ -189,7 +189,7 @@ export default {
       faultdetil: '222',//故障详情
       currentPage: 1, // 当前页码
       total: 20, // 总条数
-      pageSize: 10 // 每页的数据条数
+      pageSize: 5 // 每页的数据条数
     }
   },
   methods: {
@@ -209,7 +209,8 @@ export default {
     },
     gettableDatas(){//用来获取某控制柜的异常和处理结果
       var params = qs.stringify({
-        TmnID:this.row_msg.tmnId
+        //TmnID:this.row_msg.tmnId
+        Erid:this.row_msg.erid
       })
       this.$axios.post('/getTerminalError',params).then(res=>{
         console.log(res)
@@ -278,6 +279,7 @@ console.log(res.data)
       this.row_msg.exception=row.exception
       this.row_msg.result=row.result
       this.row_msg.error_Position = row.error_Position
+      this.row_msg.erid = row.erid
 
       console.log(row.error_Position)
     },
