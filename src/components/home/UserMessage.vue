@@ -7,23 +7,28 @@
       <div class="userid">用户ID--{{ this.data.userID }}</div>
     </div>
     <div class="linetext">
-      <div style="width: 150px;line-height:40px;margin-left: 10px">用户名：</div>
+      <div style="width: 10px; color: red;font-size: 15px;margin-left: 30px; margin-top: 10px">*</div>
+      <div style="width: 80px;line-height:40px">用户名：</div>
       <el-input style="width: 450px" ref="inputunm" v-model="data.userName" ></el-input>
     </div>
     <div class="linetext">
-      <div style="width: 150px;line-height:40px;margin-left: 10px">密码：</div>
+      <div style="width: 10px; color: red;font-size: 15px;margin-left: 30px; margin-top: 10px">*</div>
+      <div style="width: 80px;line-height:40px">密码：</div>
       <el-input style="width: 450px" ref="inputpsw" v-model="data.userPswd" show-password></el-input>
     </div>
     <div class="linetext">
-      <div style="width: 150px;line-height:40px;margin-left: 10px">真实姓名：</div>
+      <div style="width: 10px; color: red;font-size: 15px;margin-left: 30px; margin-top: 10px">*</div>
+      <div style="width: 80px;line-height:40px">真实姓名：</div>
       <el-input style="width: 450px" ref="inputunm" v-model="data.realName"></el-input>
     </div>
     <div class="linetext">
-      <div style="width: 150px;line-height:40px;margin-left: 10px">联系电话：</div>
+      <div style="width: 10px; color: red;font-size: 15px;margin-left: 30px; margin-top: 10px">*</div>
+      <div style="width: 80px;line-height:40px">联系电话：</div>
       <el-input style="width: 450px" ref="inputunm" v-model="data.moPhone"></el-input>
     </div>
     <div class="linetext">
-      <div style="width: 150px;line-height:40px;margin-left: 10px">单位名称：</div>
+      <div style="width: 10px; color: red;font-size: 15px;margin-left: 30px; margin-top: 10px">*</div>
+      <div style="width: 80px;line-height:40px">单位名称：</div>
       <el-input style="width: 450px" ref="inputunm" v-model="data.dptname"></el-input>
     </div>
     <div class="boxfoot">
@@ -44,13 +49,6 @@ export default {
       data: [],
       resnumber:'',//记录是否更新成功
       ModTime: '',
-      // disabled: {
-      //   disabledunm: true,
-      //   disabledpsw: true,
-      //   disabledrn: true,
-      //   disabledph: true,
-      //   disableddpt: true,
-      // },
     }
   },
   mounted() {
@@ -100,28 +98,50 @@ export default {
       // if (res1==201) {
       //   this.$message.error("该用户名已存在")
       // } else {
-        var params = qs.stringify({
-          UserID: this.data.userID,
-          UserName: this.data.userName,
-          UserPswd: this.data.userPswd,
-          MoPhone: this.data.moPhone,
-          RealName: this.data.realName,
-          DPTName: this.data.dptname,
-          ModTime: this.data.ModTime
-        });
-        const {data: res} = await this.$axios.post(`/updateUserInfo`,params);
-        if (res == 201) {
-          this.$message.error("该用户名已存在")
-        } else if (res == 200) {
-          this.$message.success("更新成功")
-          this.$store.state.users.username=this.data.userName;
-          window.localStorage.setItem('ms_username',JSON.stringify(this.data.userName))
-          this.$store.state.users.password=this.data.userPswd;
-        } else {
-          this.$message.error("更新失败")
-        }
-        this.getmessage();
-      // }
+      if (this.data.userName == '') {
+        this.$message.error("用户名称不能为空")
+      } else if (this.data.userPswd == '') {
+        this.$message.error("用户密码不能为空")
+      } else if (this.data.realName == ''){
+        this.$message.error("真实姓名不能为空")
+      } else if(this.data.moPhone == '') {
+        this.$message.error("手机号码不能为空")
+      } else if (this.data.dptname =='') {
+        this.$message.error("单位名称不能为空")
+      } else {
+        this.$confirm('此操作将修改您的个人信息, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+
+          var params = qs.stringify({
+            UserID: this.data.userID,
+            UserName: this.data.userName,
+            UserPswd: this.data.userPswd,
+            MoPhone: this.data.moPhone,
+            RealName: this.data.realName,
+            DPTName: this.data.dptname,
+            ModTime: this.data.ModTime
+          });
+          const {data: res} = await this.$axios.post(`/updateUserInfo`,params);
+          if (res == 201) {
+            this.$message.error("该用户名已存在")
+          } else if (res == 200) {
+            this.$message.success("更新成功")
+            this.$store.state.users.username=this.data.userName;
+            window.localStorage.setItem('ms_username',JSON.stringify(this.data.userName))
+            this.$store.state.users.password=this.data.userPswd;
+          } else {
+            this.$message.error("更新失败")
+          }
+          this.getmessage();
+        }).catch(()=>{
+          this.$message.info("已取消修改个人信息")
+          this.getmessage()
+        })
+      }
+
     },
 
     // confirm() {
