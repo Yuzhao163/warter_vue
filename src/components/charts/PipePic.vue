@@ -132,19 +132,22 @@ export default {
         var list=[];
         var i=0;
         for(var k in successResponse.data){
-          list.push({
-            tmnname:k,
-            data:successResponse.data[k]
-          });
-          this.option.series.push({
-            name: k,
-            type: 'line',
-            data: []
-          })
-          this.option.legend.data.push(k)
-          this.option.series[i].data.push(successResponse.data[k].w_line)
+          if(successResponse.data[k]!=null){
+            list.push({
+              tmnname:k,
+              data:successResponse.data[k]
+            });
+            this.option.series.push({
+              name: k,
+              type: 'line',
+              data: []
+            })
+            this.option.legend.data.push(k)
+            this.option.series[i].data.push(successResponse.data[k].w_line)
+            i++;
+          }
 
-          i++;
+
         }
         this.allData = list;
         this.loading=false;
@@ -161,21 +164,20 @@ export default {
         var list=[];
         var i=0;
         for(var k in successResponse.data){
-          list.push({
-            tmnname:k,
-            data:successResponse.data[k]
-          });
-          // this.option.series.push({
-          //   name: k,
-          //   type: 'line',
-          //   data: []
-          // })
-          // this.option.legend.data.push(k)
-          this.option.series[i].data.push(successResponse.data[k].w_line)
-if(this.option.series[i].data.length>10){
-  this.$delete(this.option.series[i].data,0)
-}
-          i++;
+          if(successResponse.data[k]!=null){
+            list.push({
+              tmnname:k,
+              data:successResponse.data[k]
+            });
+            this.option.series.push({
+              name: k,
+              type: 'line',
+              data: []
+            })
+            this.option.legend.data.push(k)
+            this.option.series[i].data.push(successResponse.data[k].w_line)
+            i++;
+          }
         }
         this.allData = list;
         this.loading=false;
