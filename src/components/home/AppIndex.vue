@@ -130,7 +130,7 @@
 
     </el-table>
     <el-pagination
-        v-show="pageView"
+        v-if="pageView"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
@@ -151,7 +151,7 @@ export default {
   name: "AppIndex",
   created() {
     this.getTotalData();
-    this.refreshOpen();
+    this.indexrefresh();
     // this.Index_TableData();
   },
   mounted() {
@@ -182,40 +182,50 @@ export default {
     //请求总条数
     getTotalData(){
     this.$axios.post('/count').then(res=>{
-    console.log(res)
       this.total=res.data;
       var params=qs.stringify({page:1,
         size:this.pageSize})
       this.$axios.post('/SelectMessageByPage',params).then(res=>{
         this.tableData=res.data
         this.loading=false;
-        console.log(this.tableData)
       })
 })
     },
-    //后端分页请求
+    //后端分页请求无筛选状态————有筛选状态
     getPageData(){
       var params=qs.stringify({page:this.currentPage,
       size:this.pageSize})
-      this.$axios.post('/SelectMessageByPage',params).then(res=>{
-        this.tableData=res.data
+      var params1=qs.stringify({
+        W_work: this.screendata.W_work,
+        page:this.currentPage,
+        size:this.pageSize})
+      console.log(params)
+      if(this.screendata.W_work==''){
+        this.$axios.post('/SelectMessageByPage',params).then(res=>{
+          this.tableData=res.data
+        })
+      }else{
+        this.$axios.post('/SelectMessage',params1).then(res=>{
+          this.tableData=res.data
+        })
+        }
 
-      })
+
     },
     //静态时请求的数据
     Index_TableData() {
       console.log("调用了")
-      this.$axios
-          .get('/allmessage')
-          .then(res => {
-            console.log(res)
-            console.log("请求成功")
-            this.tableData = res.data;
-          })
-          .catch(failResponse => {
-            console.log(failResponse)
-            alert(failResponse)
-          })
+      // this.$axios
+      //     .get('/allmessage')
+      //     .then(res => {
+      //       console.log(res)
+      //       console.log("请求成功")
+      //       this.tableData = res.data;
+      //     })
+      //     .catch(failResponse => {
+      //       console.log(failResponse)
+      //       alert(failResponse)
+      //     })
     },
     //动态时请求的数据，每几秒请求10条数据
     Index_refreshData() {
@@ -248,19 +258,46 @@ export default {
     clearScreen() {
       this.$refs.select1.value = '';
       this.screendata.W_work = '';
-      // this.$refs.select2.value = '';
-      // this.screendata.defult = '';
-      this.pageView=true;
-      this.getTotalData();
+
+      if(this.refresh==true){
+        this.pageView=false;
+        this.getTotalData();
+        this.indexrefresh();
+      }else {
+
+        this.getTotalData();
+document.getElementsByClassName('number')[0].click();
+        this.pageView=true;
+      }
+
     },
+    //得到筛选后数据总条数
+    getscreennum(){
+      var param1 = qs.stringify({
+        W_work: this.screendata.W_work,
+      })
+      this.$axios.post('/SelectMessageCount',param1).then(res=>{
+        this.total=res.data;
+        var params=qs.stringify({
+          W_work: this.screendata.W_work,
+          page:1,
+          size:this.pageSize})
+        console.log(params)
+        this.$axios.post('/SelectMessage',params).then(res=>{
+          this.tableData=res.data
+          this.loading=false;
+
+        })
+      })
+    },
+    //筛选条件
     screenEvent() {
 
-      if (this.screendata.W_work == '' && this.screendata.defult == '') {
+      if (this.screendata.W_work == '') {
         this.Index_TableData();
       } else {
         var params = qs.stringify({
           W_work: this.screendata.W_work,
-          defult: this.screendata.defult,
         })
 
         console.log(this.screendata)
@@ -275,8 +312,10 @@ export default {
             })
       }
     },
-    Screen() {
-      this.screenEvent();
+  async  Screen() {
+      this.refreshOpen();
+     // await this.getscreennum();
+     // await this.screenEvent();
     },
     //每页条数改变时触发 选择一页显示多少行
     handleSizeChange(val) {
@@ -289,21 +328,47 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.currentPage = val;
+
+      //判断有无筛选状态
       this.getPageData()
+    },
+    indexrefresh(){
+      clearInterval(this.timer);
+      this.timer = setInterval(() => {
+        setTimeout(this.Index_refreshData, 0);
+      }, 1000 * 1);//1s刷新一次
+      this.pageView = false;
     },
     //动态静态切换时触发
     refreshOpen() {
-      if (this.refresh == true) {
-        this.timer = setInterval(() => {
-          setTimeout(this.Index_refreshData, 0);
-        }, 1000 * 1);//1s刷新一次
-        this.pageView = false;
-      }
-      if (this.refresh == false) {
+      if(this.screendata.W_work==''){
+        if (this.refresh == true) {
+          this.timer = setInterval(() => {
+            setTimeout(this.Index_refreshData, 0);
+          }, 1000 * 1);//1s刷新一次
+          this.pageView = false;
+        }
+        if (this.refresh == false) {
+          clearInterval(this.timer);
+          this.pageView = true;
+          this.Index_TableData();
+        }
+      }else{
         clearInterval(this.timer);
-        this.pageView = true;
-        this.Index_TableData;
+        if (this.refresh == true) {
+          this.timer = setInterval(() => {
+            setTimeout(this.getscreennum, 0);
+          }, 1000 * 1);//1s刷新一次
+
+          this.pageView = false;
+        }
+        if (this.refresh == false) {
+          clearInterval(this.timer);
+          this.pageView = true;
+          this.getscreennum();
+        }
       }
+
     },
     //判断故障紧急程度控制css
     errtips(errtip) {
